@@ -1,0 +1,32 @@
+3
+
+HEAD /Web-2s/lab2/file.tar.gz HTTP/1.1
+Host: u82384.kubsu-dev.ru 
+Connection: close 
+
+
+4
+HEAD /Web-2s/lab2/image.png HTTP/1.1
+Host: u82384.kubsu-dev.ru 
+Connection: close 
+
+5
+
+POST /Web-2s/lab2/index.php HTTP/1.1
+Host: u82384.kubsu-dev.ru 
+Content-Type: application/x-www-form-urlencoded
+Content-Length:20
+
+name=Web&comment=Web
+
+6
+
+POST /Web-2s/lab2/index.php HTTP/1.1
+Host: u82384.kubsu-dev.ru 
+Range: bytes=0-99
+Connection: close
+
+7
+HEAD /Web-2s/lab2/index.php HTTP/1.1
+Host: u82384.kubsu-dev.ru 
+Connection: close 
