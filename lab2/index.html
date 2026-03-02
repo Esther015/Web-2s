@@ -1,26 +1,105 @@
-</div>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>ЗАДАЧА 2</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #a7a2a2;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #86898c;
+        }
+
+        .photo-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .photo {
+            width: 300px;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .photo img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        
+        .photo p {
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ЗАДАЧА 2</h1>
             
-            <!-- Photo 7 -->
+        <div class="photo-container">
             <div class="photo">
-                <img src="capture7.png" alt="Capture 7 - Charset">
-                <p>7. Кодировка ресурса /index.php</p>
-                <small style="color: #666;">charset=UTF-8</small>
+                <img src="1.png" alt="Capture 1">
+                <p>1. GET HTTP 1.0</p>
+            </div>
+            
+            <div class="photo">
+                <img src="2.png" alt="Capture 2">
+                <p>2. GET HTTP 1.1</p>
+            </div>
+            
+            <div class="photo">
+                <img src="3.png" alt="Capture 3">
+                <p>3.file.tar.gz</p>
+            </div>
+            
+            <div class="photo">
+                <img src="4.png" alt="Capture 4">
+                <p>4. /image.png</p>
+            </div>
+            
+            <div class="photo">
+                <img src="5.png" alt="Capture 5">
+                <p>5. POST</p>
+            </div>
+            
+            <div class="photo">
+                <img src="6.png" alt="Capture 6">
+                <p>6. Первые 100 байт</p>
+            </div>
+            
+            <div class="photo">
+                <img src="7.png" alt="Capture 7">
+                <p>7./index.php</p>
             </div>
         </div>
         
-        <div class="footer">
-            <p> TP2 - Программно-аппаратные средства Web</p>
-            <p>© 2024 - Tous droits réservés</p>
-        </div>
     </div>
-    
-    <script>
-        // Ajouter la date actuelle
-        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('ru-RU', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    </script>
 </body>
 </html>
