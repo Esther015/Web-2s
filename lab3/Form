@@ -70,13 +70,6 @@
     <option value="3">C++</option>
     <option value="4">JavaScript</option>
     <option value="5">PHP</option>
-    <option value="6">Python</option>
-    <option value="7">Java</option>
-    <option value="8">Haskel</option>
-    <option value="9">Clojure</option>
-    <option value="10">Prolog</option>
-    <option value="11">Scala</option>
-    <option value="12">Go</option>
   </select>
 
   <label>Биография:</label>
