@@ -1,8 +1,0 @@
-CREATE TABLE application_language (
-  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  application_id INT UNSIGNED NOT NULL,
-  language_id INT UNSIGNED NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (application_id) REFERENCES application(id) ON DELETE CASCADE,
-  FOREIGN KEY (language_id) REFERENCES programming_language(id) ON DELETE CASCADE
-);
