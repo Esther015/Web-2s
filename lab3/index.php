@@ -77,6 +77,8 @@ try {
     $pass,
     [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
   );
+  echo "Base connectee :" .$dbname;
+  exit();
 } catch (PDOException $e) {
   die("Erreur connexion BD : " . $e->getMessage());
 }
