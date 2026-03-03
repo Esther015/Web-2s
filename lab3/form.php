@@ -64,12 +64,14 @@
   <br><br>
 
   <label>Любимый язык программирования:</label>
-  <select name="languages[]" multiple size="6" required>
+  <select name="languages[]" multiple size="3" required>
     <option value="1">Pascal</option>
     <option value="2">C</option>
     <option value="3">C++</option>
     <option value="4">JavaScript</option>
     <option value="5">PHP</option>
+    <option value="6">Java</option>
+    <option value="7">Python</option>
   </select>
 
   <label>Биография:</label>
