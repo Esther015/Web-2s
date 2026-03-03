@@ -121,5 +121,7 @@ try {
 
 /* ===== SUCCES ===== */
 
-header('Location: ?save=1');
+// header('Location: ?save=1');
+
+echo "INSERT OK";
 exit();
