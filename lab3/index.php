@@ -68,17 +68,15 @@ if ($errors) {
 
 $user = 'u82384';      // TON LOGIN
 $pass = 'd5#RdgdgH';    // TON PASSWORD
-$dbname = 'u82384';    // NOM DE TA BASE
+$db = new PDO('mysql:host=localhost;dbname=u82384', $user, $pass,
+  [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); // Заменить test на имя БД, совпадает с логином uXXXXX
 
 try {
-  $db = new PDO(
-    "mysql:host=localhost;dbname=$dbname;charset=utf8",
-    $user,
-    $pass,
-    [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+ $stmt = $db->prepare("INSERT INTO application SET name = ?");
+  $stmt->execute([$_POST['fio']]);
   );
- /* echo "Base connectee :" .$dbname;*/
-  exit();
+ /* echo "Base connectee :" .$dbname;
+  exit();*/
 } catch (PDOException $e) {
   die("Erreur connexion BD : " . $e->getMessage());
 }
