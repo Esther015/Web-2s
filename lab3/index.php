@@ -4,7 +4,7 @@ error_reporting(E_ALL);
 
 header('Content-Type: text/html; charset=UTF-8');
 
-/* ===== SI GET → AFFICHER FORMULAIRE ===== */
+// SI GET → AFFICHER FORMULAIRE
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   if (!empty($_GET['save'])) {
     echo "<h3>Спасибо, данные успешно сохранены!</h3>";
@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   exit();
 }
 
-/* ===== VALIDATION ===== */
+//VALIDATION
 
 $errors = FALSE;
 
@@ -64,7 +64,7 @@ if ($errors) {
   exit();
 }
 
-/* ===== CONNEXION BASE ===== */
+// CONNEXION BASE
 
 $user = 'u82384';      // TON LOGIN
 $pass = 'd5#RdgdgH';    // TON PASSWORD
@@ -81,7 +81,7 @@ try {
   die("Erreur connexion BD : " . $e->getMessage());
 }
 
-/* ===== INSERTION DANS application ===== */
+// INSERTION DANS application
 
 try {
 
@@ -103,7 +103,7 @@ try {
 
   $application_id = $db->lastInsertId();
 
-  /* ===== INSERTION LANGAGES ===== */
+  //INSERTION LANGAGES 
 
   $stmt = $db->prepare("
     INSERT INTO application_language
@@ -119,9 +119,9 @@ try {
   die("Erreur insertion : " . $e->getMessage());
 }
 
-/* ===== SUCCES ===== */
+// SUCCES 
 
-// header('Location: ?save=1');
+header('Location: ?save=1');
 
 echo "INSERT OK";
 exit();
