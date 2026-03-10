@@ -88,7 +88,7 @@ try {
   $stmt = $db->prepare("
     INSERT INTO application
     (name, phone, email, birthdate, gender, biography, contract)
-    VALUES (?, ?, ?, ?, ?, ?, ?)
+    VALUES (:fio, :phone, :email, :birthday, :gender, :biography)
   ");
 
   $stmt->execute([
