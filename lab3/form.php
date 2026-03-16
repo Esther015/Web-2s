@@ -44,7 +44,7 @@
 <div class="container">
 <h2>Анкета</h2>
 
-<form method="POST">
+<form method="POST" action="index.php">
 
   <label>ФИО:</label>
   <input type="text" name="name" required>
