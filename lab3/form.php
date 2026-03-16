@@ -47,7 +47,7 @@
 <form method="POST">
 
   <label>ФИО:</label>
-  <input type="text" name="fio" required>
+  <input type="text" name="name" required>
 
   <label>Телефон:</label>
   <input type="tel" name="phone" required>
