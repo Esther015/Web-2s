@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 $errors = FALSE;
 
-if (empty($_POST['fio']) ||
+if (empty($_POST['name']) ||
     !preg_match("/^[a-zA-Zа-яА-ЯёЁ\s]{1,150}$/u", $_POST['fio'])) {
   echo "Некорректное ФИО.<br>";
   $errors = TRUE;
@@ -88,11 +88,11 @@ try {
   $stmt = $db->prepare("
     INSERT INTO application
     (name, phone, email, birthdate, gender, biography, contract)
-    VALUES (:fio, :phone, :email, :birthday, :gender, :biography)
+    VALUES (:name, :phone, :email, :birthday, :gender, :biography)
   ");
 
   $stmt->execute([
-    $_POST['fio'],
+    $_POST['name'],
     $_POST['phone'],
     $_POST['email'],
     $_POST['birthdate'],
