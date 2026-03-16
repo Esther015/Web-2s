@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 $errors = FALSE;
 
 if (empty($_POST['name']) ||
-    !preg_match("/^[a-zA-Zа-яА-ЯёЁ\s]{1,150}$/u", $_POST['fio'])) {
+    !preg_match("/^[a-zA-Zа-яА-ЯёЁ\s]{1,150}$/u", $_POST['name'])) {
   echo "Некорректное ФИО.<br>";
   $errors = TRUE;
 }
@@ -70,11 +70,11 @@ $user = 'u82384';      // TON LOGIN
 $pass = 'd5#RdgdgH';    // TON PASSWORD
 $db = new PDO('mysql:host=localhost;dbname=u82384', $user, $pass,
   [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]); // Заменить test на имя БД, совпадает с логином uXXXXX
-
+/*
 try {
  $stmt = $db->prepare("INSERT INTO application SET name = ?");
   $stmt->execute([$_POST['fio']]);
-  );
+  );*/
  /* echo "Base connectee :" .$dbname;
   exit();*/
 } catch (PDOException $e) {
@@ -88,7 +88,7 @@ try {
   $stmt = $db->prepare("
     INSERT INTO application
     (name, phone, email, birthdate, gender, biography, contract)
-    VALUES (:name, :phone, :email, :birthday, :gender, :biography)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   ");
 
   $stmt->execute([
