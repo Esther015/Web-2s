@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 echo "<pre>";
 print_r($_POST);
 echo "</pre>";
+exit();
 
 /* CONNEXION À LA BASE */
 
