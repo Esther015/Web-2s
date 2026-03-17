@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 echo "<pre>";
 print_r($_POST);
 echo "</pre>";
-exit();
+/*exit();
 
 /* CONNEXION À LA BASE */
 
@@ -30,7 +30,7 @@ try {
     $pass,
     [
       PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-      PDO::ATTR_PERSISTENT => true
+     /* PDO::ATTR_PERSISTENT => true */
     ]
   );
 } catch (PDOException $e) {
@@ -47,7 +47,7 @@ try {
     VALUES (?, ?, ?, ?, ?, ?, ?)
   ");
 
-  $stmt->execute([
+  $stmt->execute ([
     $_POST['name'],
     $_POST['phone'],
     $_POST['email'],
