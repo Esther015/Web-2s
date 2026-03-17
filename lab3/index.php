@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 /* DEBUG : VOIR LES DONNÉES DU FORMULAIRE */
 echo "<pre>";
-print_r($_POST);
+// print_r($_POST);
 echo "</pre>";
 /*exit();
 
