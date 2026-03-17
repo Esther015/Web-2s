@@ -56,7 +56,7 @@ try {
     $_POST['biography'],
     1
   ]);
-}
+/*}*/
   $application_id = $db->lastInsertId();
 
 /* INSERTION DES LANGAGES */
