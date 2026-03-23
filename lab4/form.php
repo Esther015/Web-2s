@@ -51,12 +51,28 @@
 
 <?php
 if (!empty($messages)) {
+  print('<div style="
+    background:#d4edda;
+    padding:15px;
+    border-radius:6px;
+    margin-bottom:15px;
+    color:#155724;
+  ">');
+  
+  foreach ($messages as $message) {
+    print($message);
+  }
+  
+  print('</div>');
+}
+
+/*if (!empty($messages)) {
   print('<div id="messages">');
   foreach ($messages as $message) {
     print($message);
   }
   print('</div>');
-}
+}*/
 ?>
 
 <form action="" method="POST">
@@ -138,6 +154,7 @@ if (!empty($_COOKIE['languages'])) {
 
 <button type="submit">Сохранить</button>
 
+    
 </form>
 
 </div>
