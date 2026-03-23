@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $values['contract'] = $_COOKIE['contract_value'] ?? '';
 
   include('form.php');
-  exit();
+  /*exit(); */
 }
 
 /* ================= POST ================= */
@@ -141,7 +141,7 @@ setcookie('contract_value', '1', time()+30*24*60*60);
 if ($errors) {
   header('Location: index.php');
   exit();
-}
+} else {
 
 /* SUPPRIMER ERREURS */
 setcookie('name_error', '', 100000);
@@ -153,6 +153,7 @@ setcookie('languages_error', '', 100000);
 setcookie('biography_error', '', 100000);
 setcookie('contract_error', '', 100000);
 
+}
 /* ================= BDD ================= */
 
 $user = 'u82384';
