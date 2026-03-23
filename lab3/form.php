@@ -84,22 +84,6 @@
 
   <button type="submit">Сохранить</button>
 
-  if (!empty($messages)) {
-  print('<div style="
-    background:#d4edda;
-    padding:15px;
-    border-radius:6px;
-    margin-bottom:15px;
-    color:#155724;
-  ">');
-  
-  foreach ($messages as $message) {
-    print($message);
-  }
-  
-  print('</div>');
-}
-  
 </form>
 </div>
 
