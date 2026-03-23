@@ -4,30 +4,42 @@
 <meta charset="UTF-8">
 <title>Анкета</title>
 
-<style>
-body {
-  font-family: Arial;
-  background: #f2f2f2;
-}
-.container {
-  width: 500px;
-  margin: 40px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-}
-input, select, textarea {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 6px;
-}
-.error {
-  border: 2px solid red;
-}
-.error-message {
-  color: red;
-}
-</style>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+    }
+    .container {
+      width: 500px;
+      margin: 40px auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, select, textarea {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+    input[type="radio"],
+    input[type="checkbox"] {
+      width: auto;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 10px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+
 
 </head>
 <body>
