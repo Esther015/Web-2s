@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $values['contract'] = $_COOKIE['contract_value'] ?? '';
 
   include('form.php');
-  /*exit(); */
+  exit();
 }
 
 /* ================= POST ================= */
