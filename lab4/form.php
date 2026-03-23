@@ -1,10 +1,7 @@
-<!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Анкета</title>
 
-  <style>
+<style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f2f2f2;
@@ -40,66 +37,66 @@
     }
   </style>
 
-
+  
 </head>
+
 <body>
 
 <div class="container">
+
 <h2>Анкета</h2>
 
-<form method="POST" action="index.php">
+<?php
+if (!empty($messages)) {
+  print('<div id="messages">');
+  foreach ($messages as $message) {
+    print($message);
+  }
+  print('</div>');
+}
+?>
+
+<form action="" method="POST">
 
 <!-- NAME -->
 <label>ФИО:</label>
-<input type="text" name="name"
- value="<?= $_COOKIE['name'] ?? '' ?>"
- class="<?= isset($_COOKIE['error_name']) ? 'error' : '' ?>">
-<?php if (!empty($_COOKIE['error_name'])) {
-  echo "<div class='error-message'>{$_COOKIE['error_name']}</div>";
-  setcookie('error_name','',time()-3600);
-} ?>
+<input name="name"
+  <?php if ($errors['name']) print 'class="error"'; ?>
+  value="<?php print $values['name']; ?>" />
 
 <!-- PHONE -->
 <label>Телефон:</label>
-<input type="text" name="phone"
- value="<?= $_COOKIE['phone'] ?? '' ?>"
- class="<?= isset($_COOKIE['error_phone']) ? 'error' : '' ?>">
-<?php if (!empty($_COOKIE['error_phone'])) {
-  echo "<div class='error-message'>{$_COOKIE['error_phone']}</div>";
-  setcookie('error_phone','',time()-3600);
-} ?>
+<input name="phone"
+  <?php if ($errors['phone']) print 'class="error"'; ?>
+  value="<?php print $values['phone']; ?>" />
 
 <!-- EMAIL -->
 <label>Email:</label>
-<input type="text" name="email"
- value="<?= $_COOKIE['email'] ?? '' ?>"
- class="<?= isset($_COOKIE['error_email']) ? 'error' : '' ?>">
-<?php if (!empty($_COOKIE['error_email'])) {
-  echo "<div class='error-message'>{$_COOKIE['error_email']}</div>";
-  setcookie('error_email','',time()-3600);
-} ?>
+<input name="email"
+  <?php if ($errors['email']) print 'class="error"'; ?>
+  value="<?php print $values['email']; ?>" />
 
 <!-- DATE -->
 <label>Дата рождения:</label>
 <input type="date" name="birthdate"
- value="<?= $_COOKIE['birthdate'] ?? '' ?>"
- class="<?= isset($_COOKIE['error_birthdate']) ? 'error' : '' ?>">
+  <?php if ($errors['birthdate']) print 'class="error"'; ?>
+  value="<?php print $values['birthdate']; ?>" />
 
 <!-- GENDER -->
 <label>Пол:</label><br>
 <input type="radio" name="gender" value="male"
- <?= (($_COOKIE['gender'] ?? '')=='male')?'checked':'' ?>> Мужской
-<input type="radio" name="gender" value="female"
- <?= (($_COOKIE['gender'] ?? '')=='female')?'checked':'' ?>> Женский
+  <?php if ($values['gender']=='male') print 'checked'; ?>> Мужской
 
-<?php if (!empty($_COOKIE['error_gender'])) {
-  echo "<div class='error-message'>{$_COOKIE['error_gender']}</div>";
-  setcookie('error_gender','',time()-3600);
-} ?>
+<input type="radio" name="gender" value="female"
+  <?php if ($values['gender']=='female') print 'checked'; ?>> Женский
+
+<?php if ($errors['gender']) print '<div class="error-message">Ошибка выбора пола</div>'; ?>
 
 <br><br>
 
 <!-- LANGUAGES -->
+<label>Любимый язык:</label>
+
 <?php
 $selected = [];
 if (!empty($_COOKIE['languages'])) {
@@ -107,48 +104,39 @@ if (!empty($_COOKIE['languages'])) {
 }
 ?>
 
-<label>Любимый язык:</label>
 <select name="languages[]" multiple size="3"
- class="<?= isset($_COOKIE['error_languages']) ? 'error' : '' ?>">
-  <option value="1" <?= in_array("1",$selected)?"selected":"" ?>>Pascal</option>
-  <option value="2" <?= in_array("2",$selected)?"selected":"" ?>>C</option>
-  <option value="3" <?= in_array("3",$selected)?"selected":"" ?>>C++</option>
-  <option value="4" <?= in_array("4",$selected)?"selected":"" ?>>JavaScript</option>
-  <option value="5" <?= in_array("5",$selected)?"selected":"" ?>>PHP</option>
-  <option value="6" <?= in_array("6",$selected)?"selected":"" ?>>Java</option>
-  <option value="7" <?= in_array("7",$selected)?"selected":"" ?>>Python</option>
+  <?php if ($errors['languages']) print 'class="error"'; ?>>
+
+<option value="1" <?php if (in_array("1",$selected)) print 'selected'; ?>>Pascal</option>
+<option value="2" <?php if (in_array("2",$selected)) print 'selected'; ?>>C</option>
+<option value="3" <?php if (in_array("3",$selected)) print 'selected'; ?>>C++</option>
+<option value="4" <?php if (in_array("4",$selected)) print 'selected'; ?>>JavaScript</option>
+<option value="5" <?php if (in_array("5",$selected)) print 'selected'; ?>>PHP</option>
+<option value="6" <?php if (in_array("6",$selected)) print 'selected'; ?>>Java</option>
+<option value="7" <?php if (in_array("7",$selected)) print 'selected'; ?>>Python</option>
+
 </select>
 
-<?php if (!empty($_COOKIE['error_languages'])) {
-  echo "<div class='error-message'>{$_COOKIE['error_languages']}</div>";
-  setcookie('error_languages','',time()-3600);
-} ?>
+<?php if ($errors['languages']) print '<div class="error-message">Выберите язык</div>'; ?>
 
 <!-- BIO -->
 <label>Биография:</label>
 <textarea name="biography"
- class="<?= isset($_COOKIE['error_biography']) ? 'error' : '' ?>"><?= $_COOKIE['biography'] ?? '' ?></textarea>
-
-<?php if (!empty($_COOKIE['error_biography'])) {
-  echo "<div class='error-message'>{$_COOKIE['error_biography']}</div>";
-  setcookie('error_biography','',time()-3600);
-} ?>
+  <?php if ($errors['biography']) print 'class="error"'; ?>><?php print $values['biography']; ?></textarea>
 
 <!-- CONTRACT -->
 <input type="checkbox" name="contract" value="1"
- <?= isset($_COOKIE['contract']) ? 'checked' : '' ?>>
+  <?php if ($values['contract']) print 'checked'; ?>>
 С контрактом ознакомлен
 
-<?php if (!empty($_COOKIE['error_contract'])) {
-  echo "<div class='error-message'>{$_COOKIE['error_contract']}</div>";
-  setcookie('error_contract','',time()-3600);
-} ?>
+<?php if ($errors['contract']) print '<div class="error-message">Подтвердите</div>'; ?>
 
 <br><br>
 
 <button type="submit">Сохранить</button>
 
 </form>
+
 </div>
 
 </body>
