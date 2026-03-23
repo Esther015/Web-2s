@@ -35,6 +35,9 @@
     button:hover {
       background-color: #45a049;
     }
+    .error {
+  border: 2px solid red;
+    }
   </style>
 
   
