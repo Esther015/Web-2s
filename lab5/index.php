@@ -36,13 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   // Складываем признак ошибок в массив.
   $errors = array();
   $errors['name'] = !empty($_COOKIE['fio_error']);
-  $errors['phone'] = !empty($_COOKIE['fio_error']);
-  $errors['email'] = !empty($_COOKIE['fio_error']);
-  $errors['birthdate'] = !empty($_COOKIE['fio_error']);
-  $errors['gender'] = !empty($_COOKIE['fio_error']);
-  $errors['languages'] = !empty($_COOKIE['fio_error']);
-  $errors['biography'] = !empty($_COOKIE['fio_error']);
-  $errors['biography'] = !empty($_COOKIE['fio_error']);
+  $errors['phone'] = !empty($_COOKIE['phone_error']);
+  $errors['email'] = !empty($_COOKIE['email_error']);
+  $errors['birthdate'] = !empty($_COOKIE['birthdate_error']);
+  $errors['gender'] = !empty($_COOKIE['gender_error']);
+  $errors['languages'] = !empty($_COOKIE['languages_error']);
+  $errors['biography'] = !empty($_COOKIE['biography_error']);
+  $errors['contract'] = !empty($_COOKIE['contract_error']);
 
 
  /* MESSAGES */
