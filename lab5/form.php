@@ -132,16 +132,18 @@ if (!empty($_COOKIE['languages'])) {
 
       <!--biography-->
       <label>Биография:</label>
-<textarea name="biography"
-  <?php if ($errors['biography']) print 'class="error"'; ?>><?php print $values['biography']; ?></textarea>
+      <textarea name="biography" rows="5" 
+        <?php if (!empty($errors['biography'])) {print 'class="error"';} ?> 
+        placeholder="Расскажите о себе (минимум 10 символов)"><?php print $values['biography']; ?>
+      </textarea>
 
       <!--contract-->
-      <input type="checkbox" name="contract" value="1"
-  <?php if ($values['contract']) print 'checked'; ?>>
-С контрактом ознакомлен
-
-
-      <input type="submit" value="ok" />
+      <label></label>
+        <input type="checkbox" name="contract" value="1"
+        Я согласен с условиями контракта
+    </label>
+        <?php if ($values['contract']) print 'checked'; {print '<div style="color:red;">Необходимо принять условия контракта</div>';}?>>
+      <input type="submit" value="Отправить" />
     </form>
   </body>
 </html>
