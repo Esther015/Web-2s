@@ -49,6 +49,7 @@
   </head>
   <body>
     <div class="container">
+      <h2>Анкета</h2>
 <?php
 if (!empty($messages)) {
   print('<div id="messages" style="background:#d4edda; padding:15px; border-radius:6px; margin-bottom:15px; color:#155724;">');
