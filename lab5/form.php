@@ -66,9 +66,9 @@ if (!empty($messages)) {
 
       <!--name-->
       <label>ФИО:</label>
-      <input name="fio" 
-        <?php if ($errors['fio']) {print 'class="error"';} ?> 
-        value="<?php print $values['fio']; ?>" 
+      <input name="name" 
+        <?php if ($errors['name']) {print 'class="error"';} ?> 
+        value="<?php print $values['name']; ?>" 
         placeholder="Введите ваше ФИО"
       />
 
@@ -91,8 +91,8 @@ if (!empty($messages)) {
       <!--date-->
       <label>Дата рождения:</label>
       <input type="date" name="birthdate" 
-        <?php if ($errors['date']) {print 'class="error"';} ?> 
-        value="<?php print $values['date']; ?>" 
+        <?php if ($errors['birthdate']) {print 'class="error"';} ?> 
+        value="<?php print $values['birthdate']; ?>" 
       />
 
       <!--gender-->
