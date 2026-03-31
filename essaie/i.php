@@ -6,9 +6,9 @@
 
 // Configuration de la base de données (à mettre directement ici comme dans l'exemple du prof)
 $host = 'localhost';
-$dbname = 'votre_base';
-$username = 'votre_utilisateur';
-$password = 'votre_mot_de_passe';
+$dbname = 'u82384';
+$username = 'u82384';
+$password = 'd5#RdgdgH';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $values = array();
 
     // Initialiser tous les champs
-    $fields = ['fio', 'phone', 'email', 'date', 'gender', 'languages', 'biography', 'contract'];
+    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages', 'biography', 'contract'];
     foreach ($fields as $field) {
         $errors[$field] = !empty($_COOKIE[$field . '_error']);
         $values[$field] = empty($_COOKIE[$field . '_value']) ? '' : strip_tags($_COOKIE[$field . '_value']);
@@ -68,10 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     // Afficher les messages d'erreur pour chaque champ
     $errorMessages = [
-        'fio' => 'Заполните имя.',
+        'name' => 'Заполните имя.',
         'phone' => 'Заполните телефон (10 цифр минимум).',
         'email' => 'Заполните корректный email.',
-        'date' => 'Заполните дату.',
+        'birthdate' => 'Заполните дату.',
         'gender' => 'Выберите пол.',
         'languages' => 'Выберите язык.',
         'biography' => 'Заполните биографию (минимум 10 символов).',
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
             $isLoggedIn = true;
             // Charger les données de l'utilisateur depuis la BDD
-            $stmt = $pdo->prepare("SELECT fio, phone, email, date, gender, languages, biography, contract FROM users WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, languages, biography, contract FROM users WHERE id = ?");
             $stmt->execute([$_SESSION['uid']]);
             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
             
@@ -115,11 +115,11 @@ else {
     
     // Validation de tous les champs
     // fio
-    if (empty($_POST['fio'])) {
-        setcookie('fio_error', '1', time() + 24 * 60 * 60);
+    if (empty($_POST['name'])) {
+        setcookie('name_error', '1', time() + 24 * 60 * 60);
         $errors = true;
     } else {
-        setcookie('fio_value', $_POST['fio'], time() + 30 * 24 * 60 * 60);
+        setcookie('name_value', $_POST['fio'], time() + 30 * 24 * 60 * 60);
     }
     
     // phone
@@ -139,7 +139,7 @@ else {
     }
     
     // date
-    if (empty($_POST['date'])) {
+    if (empty($_POST['birthdate'])) {
         setcookie('date_error', '1', time() + 24 * 60 * 60);
         $errors = true;
     } else {
