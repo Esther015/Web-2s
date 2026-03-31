@@ -140,10 +140,10 @@ else {
     
     // date
     if (empty($_POST['birthdate'])) {
-        setcookie('date_error', '1', time() + 24 * 60 * 60);
+        setcookie('birthdate_error', '1', time() + 24 * 60 * 60);
         $errors = true;
     } else {
-        setcookie('date_value', $_POST['date'], time() + 30 * 24 * 60 * 60);
+        setcookie('bithdate_value', $_POST['birthdate'], time() + 30 * 24 * 60 * 60);
     }
     
     // gender
@@ -185,7 +185,7 @@ else {
     }
     
     // Supprimer tous les cookies d'erreur
-    $fields = ['fio', 'phone', 'email', 'date', 'gender', 'languages', 'biography', 'contract'];
+    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages', 'biography', 'contract'];
     foreach ($fields as $field) {
         setcookie($field . '_error', '', 100000);
     }
@@ -207,9 +207,9 @@ else {
     
     if ($isLoggedIn && $userId) {
         // Mettre à jour les données de l'utilisateur connecté
-        $stmt = $pdo->prepare("UPDATE users SET fio = ?, phone = ?, email = ?, date = ?, gender = ?, languages = ?, biography = ?, contract = ? WHERE id = ?");
+        $stmt = $pdo->prepare("UPDATE users SET name = ?, phone = ?, email = ?, birthdate = ?, gender = ?, languages = ?, biography = ?, contract = ? WHERE id = ?");
         $stmt->execute([
-            $_POST['fio'], $_POST['phone'], $_POST['email'], $_POST['date'],
+            $_POST['name'], $_POST['phone'], $_POST['email'], $_POST['birthdate'],
             $_POST['gender'], $languages, $_POST['biography'], $_POST['contract'],
             $userId
         ]);
@@ -220,10 +220,10 @@ else {
         $passwordHash = password_hash($plainPassword, PASSWORD_DEFAULT);
         
         // Sauvegarder dans la base de données
-        $stmt = $pdo->prepare("INSERT INTO users (login, password_hash, fio, phone, email, date, gender, languages, biography, contract) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO users (login, password_hash, name, phone, email, birthdate, gender, languages, biography, contract) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
-            $login, $passwordHash, $_POST['fio'], $_POST['phone'], $_POST['email'],
-            $_POST['date'], $_POST['gender'], $languages, $_POST['biography'], $_POST['contract']
+            $login, $passwordHash, $_POST['name'], $_POST['phone'], $_POST['email'],
+            $_POST['birthdate'], $_POST['gender'], $languages, $_POST['biography'], $_POST['contract']
         ]);
         
         // Sauvegarder login et mot de passe dans les cookies pour l'affichage
