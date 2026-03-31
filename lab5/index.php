@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   // Складываем признак ошибок в массив.
   $errors = array();
-  $errors['name'] = !empty($_COOKIE['fio_error']);
+  $errors['name'] = !empty($_COOKIE['name_error']);
   $errors['phone'] = !empty($_COOKIE['phone_error']);
   $errors['email'] = !empty($_COOKIE['email_error']);
   $errors['birthdate'] = !empty($_COOKIE['birthdate_error']);
