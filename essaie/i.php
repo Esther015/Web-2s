@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 
-    include('form.php');
+    include('f.php');
 }
 else {
     // Méthode POST - validation et sauvegarde
