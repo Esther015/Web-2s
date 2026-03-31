@@ -100,14 +100,29 @@ if (!empty($messages)) {
       <?php if (!empty($errors['gender'])) {print '<div style="color:red;">Выберите пол</div>';} ?>
 
       <!--languages-->
-      <label>Языки программирования:</label>
-      <div class="checkbox-group">
-        <label><input type="checkbox" name="languages[]" value="PHP" <?php if (strpos($values['languages'], 'PHP') !== false) echo 'checked'; ?>> PHP</label>
-        <label><input type="checkbox" name="languages[]" value="Python" <?php if (strpos($values['languages'], 'Python') !== false) echo 'checked'; ?>> Python</label>
-        <label><input type="checkbox" name="languages[]" value="Java" <?php if (strpos($values['languages'], 'Java') !== false) echo 'checked'; ?>> Java</label>
-        <label><input type="checkbox" name="languages[]" value="JavaScript" <?php if (strpos($values['languages'], 'JavaScript') !== false) echo 'checked'; ?>> JavaScript</label>
-      </div>
-      <?php if (!empty($errors['languages'])) {print '<div style="color:red;">Выберите хотя бы один язык</div>';} ?>
+     <label>Любимый язык:</label>
+
+<?php
+$selected = [];
+if (!empty($_COOKIE['languages'])) {
+  $selected = json_decode($_COOKIE['languages'], true);
+}
+?>
+
+<select name="languages[]" multiple size="3"
+  <?php if ($errors['languages']) print 'class="error"'; ?>>
+
+<option value="1" <?php if (in_array("1",$selected)) print 'selected'; ?>>Pascal</option>
+<option value="2" <?php if (in_array("2",$selected)) print 'selected'; ?>>C</option>
+<option value="3" <?php if (in_array("3",$selected)) print 'selected'; ?>>C++</option>
+<option value="4" <?php if (in_array("4",$selected)) print 'selected'; ?>>JavaScript</option>
+<option value="5" <?php if (in_array("5",$selected)) print 'selected'; ?>>PHP</option>
+<option value="6" <?php if (in_array("6",$selected)) print 'selected'; ?>>Java</option>
+<option value="7" <?php if (in_array("7",$selected)) print 'selected'; ?>>Python</option>
+
+</select>
+
+<?php if ($errors['languages']) print '<div class="error-message">Выберите хотя бы один язык</div>'; ?>>
 
       <!--biography-->
       <label>Биография:</label>
