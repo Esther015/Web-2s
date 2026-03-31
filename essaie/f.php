@@ -122,7 +122,7 @@ if (!empty($_COOKIE['languages'])) {
 
 </select>
 
-<?php if ($errors['languages']) print '<div class="error-message">Выберите хотя бы один язык</div>'; ?>>
+<?php if ($errors['languages']) print '<div class="error-message">Выберите хотя бы один язык</div>'; ?>
 
       <!--biography-->
       <label>Биография:</label>
