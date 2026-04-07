@@ -220,7 +220,7 @@ else {
         $passwordHash = password_hash($plainPassword, PASSWORD_DEFAULT);
         
         // Sauvegarder dans la base de données
-        $stmt = $pdo->prepare("INSERT INTO users (login, password_hash, name, phone, email, birthdate, gender, languages, biography, contract) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO users (login, password_hash, application_id) VALUES (?, ?, ?)");
         $stmt->execute([
             $login, $passwordHash, $_POST['name'], $_POST['phone'], $_POST['email'],
             $_POST['birthdate'], $_POST['gender'], $languages, $_POST['biography'], $_POST['contract']
