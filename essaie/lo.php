@@ -81,11 +81,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             border-radius: 3px;
             margin-top: 10px;
         }
+    .info {
+            background-color: #e3f2fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h2>Вход в систему</h2>
+        <div class="info">
+             После отправки формы вам будут сгенерированы логин и пароль.<br>
+            Сохраните их для последующего изменения данных.
+        </div>
         <?php if (isset($_GET['error'])): ?>
             <div class="error">Неверный логин или пароль</div>
         <?php endif; ?>
@@ -114,7 +125,7 @@ else {
         header('Location: ./');
         exit();
     } else {
-        header('Location: login.php?error=1');
+        header('Location: lo.php?error=1');
         exit();
     }
 }
