@@ -52,6 +52,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $values[$field] = empty($_COOKIE[$field . '_value']) ? '' : strip_tags($_COOKIE[$field . '_value']);
     }
 
+    // Pour le champ languages (multiple)
+    if (!empty($_COOKIE['languages_value'])) {
+        $values['languages'] = explode(',', strip_tags($_COOKIE['languages_value']));
+    } else {
+        $values['languages'] = [];
+    }
+
     // Vérifier les cookies de sauvegarde
     if (!empty($_COOKIE['save'])) {
         setcookie('save', '', 100000);
@@ -86,26 +93,46 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
     // Vérifier si l'utilisateur est connecté
-    $isLoggedIn = false;
-    if (!empty($_COOKIE[session_name()])) {
-        session_start();
-        if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
-            $isLoggedIn = true;
+
+//    $isLoggedIn = false;
+  //  if (!empty($_COOKIE[session_name()])) {
+    //    session_start();
+      //  if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
+        ///    $isLoggedIn = true;
             // Charger les données de l'utilisateur depuis la BDD
-            $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, languages, biography, contract FROM users WHERE id = ?");
-            $stmt->execute([$_SESSION['uid']]);
-            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+           // $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, languages, biography, contract FROM users WHERE id = ?");
+            //$stmt->execute([$_SESSION['uid']]);
+            //$userData = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if ($userData) {
-                foreach ($fields as $field) {
-                    if (!empty($userData[$field])) {
-                        $values[$field] = strip_tags($userData[$field]);
-                    }
+            //if ($userData) {
+              //  foreach ($fields as $field) {
+                    
+                //    if (!empty($userData[$field])) {
+                  //      $values[$field] = strip_tags($userData[$field]);
+                    //}
+                //}
+            //}
+            //$messages[] = '<div style="color:#0c5460; padding:10px; background:#d1ecf1; margin-bottom:10px;">Вход с логином ' . strip_tags($_SESSION['login']) . '</div>';
+        //}
+   // }
+if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
+        // Charger les données de l'utilisateur depuis la BDD
+        $isLoggedIn = true;
+        $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, languages, biography, contract FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['uid']]);
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($userData) {
+            foreach ($fields as $field) {
+                if ($field == 'languages') {
+                    $values[$field] = !empty($userData[$field]) ? explode(',', strip_tags($userData[$field])) : [];
+                } elseif (!empty($userData[$field])) {
+                    $values[$field] = strip_tags($userData[$field]);
                 }
             }
-            $messages[] = '<div style="color:#0c5460; padding:10px; background:#d1ecf1; margin-bottom:10px;">Вход с логином ' . strip_tags($_SESSION['login']) . '</div>';
         }
-    }
+        $messages[] = '<div style="color:#0c5460; padding:10px; background:#d1ecf1; margin-bottom:10px;">Вход с логином ' . strip_tags($_SESSION['login']) . ' | <a href="login.php?logout=1">Выйти</a></div>';
+}
 
     include('f.php');
 }
@@ -180,7 +207,7 @@ else {
     }
     
     if ($errors) {
-        header('Location: index.php');
+        header('Location: i.php');
         exit();
     }
     
