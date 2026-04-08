@@ -50,16 +50,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages', 'biography', 'contract'];
     foreach ($fields as $field) {
         $errors[$field] = !empty($_COOKIE[$field . '_error']);
-        $values[$field] = empty($_COOKIE[$field . '_value']) ? '' : strip_tags($_COOKIE[$field . '_value']);
+        if ($field == 'languages') {
+            $values[$field] = empty($_COOKIE[$field . '_value']) ? [] : explode(',', strip_tags($_COOKIE[$field . '_value']));
+        } else{
+            $values[$field] = empty($_COOKIE[$field . '_value']) ? '' : strip_tags($_COOKIE[$field . '_value']);
+        }
     }
-
-    // Pour le champ languages (multiple)
-    if (!empty($_COOKIE['languages_value'])) {
-        $values['languages'] = explode(',', strip_tags($_COOKIE['languages_value']));
-    } else {
-        $values['languages'] = [];
-    }
-
     // Vérifier les cookies de sauvegarde
     if (!empty($_COOKIE['save'])) {
         setcookie('save', '', 100000);
