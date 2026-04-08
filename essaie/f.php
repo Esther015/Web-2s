@@ -102,29 +102,17 @@ if (!empty($messages)) {
 
       <!--languages-->
      <label>Любимый язык:</label>
-
-<?php
-$selected = [];
-if (!empty($_COOKIE['languages'])) {
-  $selected = json_decode($_COOKIE['languages'], true);
-}
-?>
-
-<select name="languages[]" multiple size="3"
-  <?php if ($errors['languages']) print 'class="error"'; ?>>
-
-<option value="1" <?php if (in_array("1",$selected)) print 'selected'; ?>>Pascal</option>
-<option value="2" <?php if (in_array("2",$selected)) print 'selected'; ?>>C</option>
-<option value="3" <?php if (in_array("3",$selected)) print 'selected'; ?>>C++</option>
-<option value="4" <?php if (in_array("4",$selected)) print 'selected'; ?>>JavaScript</option>
-<option value="5" <?php if (in_array("5",$selected)) print 'selected'; ?>>PHP</option>
-<option value="6" <?php if (in_array("6",$selected)) print 'selected'; ?>>Java</option>
-<option value="7" <?php if (in_array("7",$selected)) print 'selected'; ?>>Python</option>
-
-</select>
-
-<?php if ($errors['languages']) print '<div class="error-message">Выберите хотя бы один язык</div>'; ?>
-
+        <select name="languages[]" multiple size="3"
+          <?php if ($errors['languages']) print 'class="error"'; ?>>
+          <option value="1" <?php if (in_array("1", $values['languages'])) print 'selected'; ?>>Pascal</option>
+          <option value="2" <?php if (in_array("2", $values['languages'])) print 'selected'; ?>>C</option>
+          <option value="3" <?php if (in_array("3", $values['languages'])) print 'selected'; ?>>C++</option>
+          <option value="4" <?php if (in_array("4", $values['languages'])) print 'selected'; ?>>JavaScript</option>
+          <option value="5" <?php if (in_array("5", $values['languages'])) print 'selected'; ?>>PHP</option>
+          <option value="6" <?php if (in_array("6", $values['languages'])) print 'selected'; ?>>Java</option>
+          <option value="7" <?php if (in_array("7", $values['languages'])) print 'selected'; ?>>Python</option>
+        </select>
+        <?php if ($errors['languages']) print '<div class="error-message">Выберите хотя бы один язык</div>'; ?>
       <!--biography-->
       <label>Биография:</label>
       <textarea name="biography" rows="5" 
