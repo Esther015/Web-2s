@@ -3,7 +3,6 @@
  * Réaliser la possibilité de se connecter avec un mot de passe et un identifiant
  * en utilisant une session pour modifier les données envoyées dans la tâche précédente.
  */
-
 // Configuration de la base de données (à mettre directement ici comme dans l'exemple du prof)
 $host = 'localhost';
 $dbname = 'u82384';
@@ -39,6 +38,8 @@ function generateUniqueLogin($pdo) {
 
 // Envoie l'encodage correct au navigateur
 header('Content-Type: text/html; charset=UTF-8');
+
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $messages = array();
@@ -88,31 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $messages[] = '<div class="error" style="color:red; padding:5px;">' . $errorMessages[$field] . '</div>';
         }
     }
-
-    // Vérifier si l'utilisateur est connecté
-
-//    $isLoggedIn = false;
-  //  if (!empty($_COOKIE[session_name()])) {
-    //    session_start();
-      //  if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
-        ///    $isLoggedIn = true;
-            // Charger les données de l'utilisateur depuis la BDD
-           // $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, languages, biography, contract FROM users WHERE id = ?");
-            //$stmt->execute([$_SESSION['uid']]);
-            //$userData = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            //if ($userData) {
-              //  foreach ($fields as $field) {
-                    
-                //    if (!empty($userData[$field])) {
-                  //      $values[$field] = strip_tags($userData[$field]);
-                    //}
-                //}
-            //}
-            //$messages[] = '<div style="color:#0c5460; padding:10px; background:#d1ecf1; margin-bottom:10px;">Вход с логином ' . strip_tags($_SESSION['login']) . '</div>';
-        //}
-   // }
-
     //verifier si l'utilisateur est connecte 
 if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
         // Charger les données de l'utilisateur depuis la BDD
@@ -124,21 +100,26 @@ if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
 
         if ($userData) {
             // Charger les données depuis application
-            $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, languages, biography, contract FROM application WHERE id = ?");
+            $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, biography, contract FROM application WHERE id = ?");
             $stmt->execute([$userData['application_id']]);
             $appData = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($appData) {
-                foreach ($fields as $field) {
-                    if ($field == 'languages') {
-                        $values[$field] = !empty($appData[$field]) ? explode(',', strip_tags($appData[$field])) : [];
-                    } elseif (!empty($appData[$field])) {
-                        $values[$field] = strip_tags($appData[$field]);
-                    }
+                $values['name'] =strip_tags($appData['name']);
+                $values['phone'] =strip_tags($appData['phone']);
+                $values['email'] =strip_tags($appData['email']);
+                $values['birthdate'] =strip_tags($appData['birthdate']);
+                $values['gender'] =strip_tags($appData['gender']);
+                $values['biography'] =strip_tags($appData['biography']);
+                $values['contract'] =strip_tags($appData['contract']);
                 }
-            }
+
+            $stmt = $pdo->prepare("SELECT programming_languages_id FROM application_language WHERE application_id = ?");
+            $stmt->execute([$userData['application_id']]);
+            $LangData = $stmt->fetchAll(PDO::FETCH_COLUMN);
+            $values['languages']= $langData;
+            
         }
-    
         $messages[] = '<div style="color:#0c5460; padding:10px; background:#d1ecf1; margin-bottom:10px;">Вход с логином ' . strip_tags($_SESSION['login']) . ' | <a href="login.php?logout=1">Выйти</a></div>';
 }
 
@@ -232,36 +213,34 @@ else {
         $isLoggedIn = true;
         $userId = $_SESSION['uid'];
     }
-    
     // Préparer les données
-    $languages = isset($_POST['languages']) ? implode(',', $_POST['languages']) : '';
-
-    if ($isLoggedIn && $userId) {
+    $selectedLanguages = isset($_POST['languages']) ? $_POST['languages']) : [];
+    try{
+        if ($isLoggedIn && $userId) {
         // Utilisateur connecté - récupérer d'abord application_id
         $stmt = $pdo->prepare("SELECT application_id FROM users WHERE id = ?");
         $stmt->execute([$userId]);
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($userData) {
+            $applicationId=$userData['application_id'];
             // Mettre à jour les données dans application
-            $stmt = $pdo->prepare("UPDATE application SET name = ?, phone = ?, email = ?, birthdate = ?, gender = ?, languages = ?, biography = ?, contract = ? WHERE id = ?");
+            $stmt = $pdo->prepare("UPDATE application SET name = ?, phone = ?, email = ?, birthdate = ?, gender = ?, biography = ?, contract = ? WHERE id = ?");
             $stmt->execute([
                 $_POST['name'], $_POST['phone'], $_POST['email'], $_POST['birthdate'],
-                $_POST['gender'], $languages, $_POST['biography'], $_POST['contract'],
-                $userData['application_id']
+                $_POST['gender'], $_POST['biography'], $_POST['contract'],
+                $applicationId
             ]);
+             $stmt = $pdo->prepare("DELETE FROM application_language WHERE application_id = ?");
+            $stmt->execute([$applicationId]);
+            foreach($sekectedLanguages as $langId){
+                $stmt=$pdo->prepare("INSERT INTO application_language (application_id, programming_language_id) values (?, ?)");
+                $stmt->execute([$applicationId, $langId]);
+            }   
         }
-   
     } else {
-        // Nouvel utilisateur - générer login et mot de passe
-        // Générer login et mot de passe
-            $login = generateUniqueLogin($pdo);
-            $plainPassword = generateRandomPassword(8);
-            $passwordHash = password_hash($plainPassword, PASSWORD_DEFAULT);
-        try {
-        // Commencer une transaction
             $pdo->beginTransaction();
-        
+            
             $stmt = $pdo->prepare("INSERT INTO application (name, phone, email, birthdate, gender, languages, biography, contract) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $_POST['name'], $_POST['phone'], $_POST['email'], $_POST['birthdate'],
@@ -269,27 +248,37 @@ else {
             ]);
         // Récupérer l'ID de la nouvelle application
             $applicationId = $pdo->lastInsertId();
-    
-        //Insérer dans la table users avec l'application_id
+            
+            foreach($sekectedLanguages as $langId){
+                $stmt=$pdo->prepare("INSERT INTO application_language (application_id, programming_language_id) values (?, ?)");
+                $stmt->execute([$applicationId, $langId]);
+            }   
+                    // Générer login et mot de passe
+            $login = generateUniqueLogin($pdo);
+            $plainPassword = generateRandomPassword(8);
+            $passwordHash = password_hash($plainPassword, PASSWORD_DEFAULT);
+
+            //Insérer dans la table users avec l'application_id
             $stmt = $pdo->prepare("INSERT INTO users (login, password_hash, application_id) VALUES (?, ?, ?)");
             $stmt->execute([$login, $passwordHash, $applicationId]);
-        
+
         // Valider la transaction
             $pdo->commit();
         
         // Sauvegarder login et mot de passe dans les cookies pour l'affichage
             setcookie('login', $login, time() + 30 * 24 * 60 * 60);
             setcookie('pass', $plainPassword, time() + 30 * 24 * 60 * 60);
-        
-        } catch (Exception $e) {
-        // En cas d'erreur, annuler la transaction
-            $pdo->rollBack();
-            die("Erreur lors de l'enregistrement : " . $e->getMessage());
-        }  
     }
     
     setcookie('save', '1');
     header('Location: ./');
     exit();
 }
+        catch (Exception $e) {
+            if(isset($pdo) &&$pdo->inTransaction()){
+        // En cas d'erreur, annuler la transaction
+            $pdo->rollBack();
+            }
+            die("Erreur lors de l'enregistrement : " . $e->getMessage());
+        }  
 ?>
