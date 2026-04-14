@@ -6,9 +6,9 @@
 
 // Configuration de la base de données
 $host = 'localhost';
-$dbname = 'u82384';
-$username = 'u82384';
-$password = 'd5#RdgdgH';
+$dbname = 'uXXXXX';
+$username = 'uXXXXX';
+$password = 'XXXXXXXX';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $isLoggedIn = false;
 
     // Initialiser tous les champs
-    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'biography', 'contract'];
+    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages', 'biography', 'contract'];
     foreach ($fields as $field) {
         $errors[$field] = !empty($_COOKIE[$field . '_error']);
         if ($field == 'languages') {
@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($userData) {
-            // Charger les données depuis application
+            // Charger les données depuis application (SANS languages)
             $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, biography, contract FROM application WHERE id = ?");
             $stmt->execute([$userData['application_id']]);
             $appData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -223,7 +223,7 @@ else {
             if ($userData) {
                 $applicationId = $userData['application_id'];
                 
-                // Mettre à jour application
+                // Mettre à jour application (SANS languages)
                 $stmt = $pdo->prepare("UPDATE application SET name = ?, phone = ?, email = ?, birthdate = ?, gender = ?, biography = ?, contract = ? WHERE id = ?");
                 $stmt->execute([
                     $_POST['name'], $_POST['phone'], $_POST['email'], $_POST['birthdate'],
@@ -244,7 +244,7 @@ else {
             // Nouvel utilisateur
             $pdo->beginTransaction();
             
-            // 1. Insérer dans application
+            // 1. Insérer dans application (SANS languages)
             $stmt = $pdo->prepare("INSERT INTO application (name, phone, email, birthdate, gender, biography, contract) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $_POST['name'], $_POST['phone'], $_POST['email'], $_POST['birthdate'],
