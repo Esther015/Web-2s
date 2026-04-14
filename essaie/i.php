@@ -94,7 +94,7 @@ if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
         // Charger les données de l'utilisateur depuis la BDD
         $isLoggedIn = true;
     
-        $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, languages, biography, contract FROM users WHERE id = ?");
+        $stmt = $pdo->prepare("SELECT application_id FROM users WHERE id = ?");
         $stmt->execute([$_SESSION['uid']]);
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
