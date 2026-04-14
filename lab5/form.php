@@ -128,7 +128,7 @@ if (!empty($messages)) {
 
       <!--contract-->
       <label>
-        <input type="checkbox" name="contract" value="yes" <?php if ($values['contract'] == 'yes') echo 'checked'; ?>>
+        <input type="checkbox" name="contract" value="1" <?php if ($values['contract'] == '1') echo 'checked'; ?>>
         Я согласен с условиями контракта
       </label>
       <?php if (!empty($errors['contract'])) {print '<div style="color:red;">Необходимо принять условия контракта</div>';} ?>
