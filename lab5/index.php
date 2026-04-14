@@ -6,9 +6,9 @@
 
 // Configuration de la base de données
 $host = 'localhost';
-$dbname = 'uXXXXX';
-$username = 'uXXXXX';
-$password = 'XXXXXXXX';
+$dbname = 'u82384';
+$username = 'u82384';
+$password = 'd53RdgdgH';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
