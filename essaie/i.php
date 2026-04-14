@@ -215,6 +215,7 @@ else {
     }
     // Préparer les données
     $selectedLanguages = isset($_POST['languages']) ? $_POST['languages']) : [];
+    
     try{
         if ($isLoggedIn && $userId) {
         // Utilisateur connecté - récupérer d'abord application_id
