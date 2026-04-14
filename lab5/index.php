@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $values['birthdate'] = strip_tags($appData['birthdate']);
                 $values['gender'] = strip_tags($appData['gender']);
                 $values['biography'] = strip_tags($appData['biography']);
-                $values['contract'] = strip_tags($appData['contract']);
+                $values['contract'] = (int)$appData['contract'];
             }
             
             // Charger les langages depuis application_language
@@ -190,13 +190,15 @@ else {
         setcookie('contract_error', '1', time() + 24 * 60 * 60);
         $errors = true;
     } else {
-        setcookie('contract_value', $_POST['contract'], time() + 30 * 24 * 60 * 60);
+        setcookie('contract_value', $contract, time() + 30 * 24 * 60 * 60);
     }
     
     if ($errors) {
         header('Location: index.php');
         exit();
     }
+
+    $contract =isset($_POST['contract']) ? 1 : 0;
     
     // Supprimer tous les cookies d'erreur
     $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages', 'biography', 'contract'];
