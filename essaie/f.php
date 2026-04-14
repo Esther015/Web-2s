@@ -102,12 +102,7 @@ if (!empty($messages)) {
 
       <!--languages-->
      <label>Любимый язык:</label>
-      <?php
-        $selected = [];
-        if (!empty($_COOKIE['languages'])) {
-            $selected = json_decode($_COOKIE['languages'], true);
-        }
-      ?>
+
         <select name="languages[]" multiple size="3"
           <?php if ($errors['languages']) print 'class="error"'; ?>>
           <option value="1" <?php if (in_array("1", $values['languages'])) print 'selected'; ?>>Pascal</option>
