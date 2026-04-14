@@ -227,7 +227,7 @@ else {
                 $stmt = $pdo->prepare("UPDATE application SET name = ?, phone = ?, email = ?, birthdate = ?, gender = ?, biography = ?, contract = ? WHERE id = ?");
                 $stmt->execute([
                     $_POST['name'], $_POST['phone'], $_POST['email'], $_POST['birthdate'],
-                    $_POST['gender'], $_POST['biography'], $_POST['contract'],
+                    $_POST['gender'], $_POST['biography'], $contract,
                     $applicationId
                 ]);
                 
@@ -248,7 +248,7 @@ else {
             $stmt = $pdo->prepare("INSERT INTO application (name, phone, email, birthdate, gender, biography, contract) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $_POST['name'], $_POST['phone'], $_POST['email'], $_POST['birthdate'],
-                $_POST['gender'], $_POST['biography'], $_POST['contract']
+                $_POST['gender'], $_POST['biography'], $contract
             ]);
             $applicationId = $pdo->lastInsertId();
             
