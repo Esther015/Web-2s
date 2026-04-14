@@ -214,7 +214,7 @@ else {
         $userId = $_SESSION['uid'];
     }
     // Préparer les données
-    $selectedLanguages = isset($_POST['languages']) ? $_POST['languages']) : [];
+    $selectedLanguages = isset($_POST['languages']) ? $_POST['languages'] : [];
     
     try{
         if ($isLoggedIn && $userId) {
