@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
     //verifier si l'utilisateur est connecte 
-if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
+    if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
         // Charger les données de l'utilisateur depuis la BDD
         $isLoggedIn = true;
     
@@ -121,7 +121,7 @@ if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
             
         }
         $messages[] = '<div style="color:#0c5460; padding:10px; background:#d1ecf1; margin-bottom:10px;">Вход с логином ' . strip_tags($_SESSION['login']) . ' | <a href="login.php?logout=1">Выйти</a></div>';
-}
+    }
 
     include('f.php');
 }
