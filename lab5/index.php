@@ -29,7 +29,7 @@ function generateRandomPassword($length = 8) {
 
 function generateUniqueLogin($pdo) {
     do {
-        $login = 'user_' . substr(md5(uniqid(mt_rand(), true)), 0, 8);
+        $login = '@' . substr(md5(uniqid(mt_rand(), true)), 0, 8);
         $stmt = $pdo->prepare("SELECT id FROM users WHERE login = ?");
         $stmt->execute([$login]);
         $exists = $stmt->fetch();
