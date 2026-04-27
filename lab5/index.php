@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $isLoggedIn = false;
 
     // Initialiser tous les champs
-    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'biography', 'contract'];
+    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages', 'biography', 'contract'];
     foreach ($fields as $field) {
         $errors[$field] = !empty($_COOKIE[$field . '_error']);
         if ($field == 'languages') {
@@ -198,10 +198,10 @@ else {
         exit();
     }
 
-    $contract =isset($_POST['contract']) ? 1 : 0;
+    // $contract =isset($_POST['contract']) ? 1 : 0;
     
     // Supprimer tous les cookies d'erreur
-    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'biography', 'contract'];
+    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages','biography', 'contract'];
     foreach ($fields as $field) {
         setcookie($field . '_error', '', 100000);
     }
