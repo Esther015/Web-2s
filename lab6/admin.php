@@ -80,10 +80,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
         $stmt->execute([$deleteId]);
         
         $pdo->commit();
-        $deleteMessage = '<p style="color:green;">✅ Запись #' . $deleteId . ' успешно удалена.</p>';
+        $deleteMessage = '<p style="color:green;"> Запись #' . $deleteId . ' успешно удалена.</p>';
     } catch (Exception $e) {
         $pdo->rollBack();
-        $deleteMessage = '<p style="color:red;">❌ Ошибка при удалении: ' . $e->getMessage() . '</p>';
+        $deleteMessage = '<p style="color:red;"> Ошибка при удалении: ' . $e->getMessage() . '</p>';
     }
 }
 
@@ -255,14 +255,14 @@ header('Content-Type: text/html; charset=UTF-8');
 </head>
 <body>
     <div class="container">
-        <h1>🛡️ Панель администратора</h1>
+        <h1> Панель администратора</h1>
         
         <p>Вы успешно авторизовались и видите защищенные паролем данные.</p>
         
         <?php if (isset($deleteMessage)) echo $deleteMessage; ?>
         
         <!-- ========== SECTION STATISTIQUES ========== -->
-        <h2>📊 Статистика по языкам программирования</h2>
+        <h2> Статистика по языкам программирования</h2>
         <div class="stats-container">
             <?php foreach ($languageStats as $stat): ?>
                 <div class="stat-card">
@@ -281,7 +281,7 @@ header('Content-Type: text/html; charset=UTF-8');
         </div>
         
         <!-- ========== SECTION TABLEAU DES DONNÉES ========== -->
-        <h2>📋 Все введенные пользователями данные (<?php echo count($applications); ?> записей)</h2>
+        <h2> Все введенные пользователями данные (<?php echo count($applications); ?> записей)</h2>
         
         <?php if (empty($applications)): ?>
             <p class="info-text">Нет данных для отображения.</p>
@@ -330,11 +330,11 @@ header('Content-Type: text/html; charset=UTF-8');
                             echo htmlspecialchars(mb_strlen($bio) > 50 ? mb_substr($bio, 0, 50) . '...' : $bio);
                         ?>
                     </td>
-                    <td><?php echo $app['contract'] === 'yes' ? '✅ Да' : '❌ Нет'; ?></td>
+                    <td><?php echo $app['contract'] === 'yes' ? ' Да' : ' Нет'; ?></td>
                     <td>
                         <form method="post" onsubmit="return confirm('Вы уверены, что хотите удалить запись #<?php echo $app['id']; ?>?');">
                             <input type="hidden" name="delete_id" value="<?php echo $app['id']; ?>">
-                            <button type="submit" class="btn-delete">🗑️ Удалить</button>
+                            <button type="submit" class="btn-delete"> Удалить</button>
                         </form>
                     </td>
                 </tr>
