@@ -119,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             }
             
             // Charger les langages depuis application_language
-            $stmt = $pdo->prepare("SELECT programming_language_id FROM application_language WHERE application_id = ?");
+            $stmt = $pdo->prepare("SELECT language_id FROM application_language WHERE application_id = ?");
             $stmt->execute([$userData['application_id']]);
             $langData = $stmt->fetchAll(PDO::FETCH_COLUMN);
             $values['languages'] = $langData;
@@ -242,7 +242,7 @@ else {
                 $stmt->execute([$applicationId]);
                 
                 foreach ($selectedLanguages as $langId) {
-                    $stmt = $pdo->prepare("INSERT INTO application_language (application_id, programming_language_id) VALUES (?, ?)");
+                    $stmt = $pdo->prepare("INSERT INTO application_language (application_id, language_id) VALUES (?, ?)");
                     $stmt->execute([$applicationId, $langId]);
                 }
             }
@@ -265,7 +265,7 @@ else {
             
             // 2. Insérer les langages dans application_language
             foreach ($selectedLanguages as $langId) {
-                $stmt = $pdo->prepare("INSERT INTO application_language (application_id, programming_language_id) VALUES (?, ?)");
+                $stmt = $pdo->prepare("INSERT INTO application_language (application_id, language_id) VALUES (?, ?)");
                 $stmt->execute([$applicationId, $langId]);
             }
             
