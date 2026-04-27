@@ -103,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($userData) {
-            // Charger les données depuis application (SANS languages)
+            // Charger les données depuis application
             $stmt = $pdo->prepare("SELECT name, phone, email, birthdate, gender, biography, contract FROM application WHERE id = ?");
             $stmt->execute([$userData['application_id']]);
             $appData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $values['birthdate'] = strip_tags($appData['birthdate']);
                 $values['gender'] = strip_tags($appData['gender']);
                 $values['biography'] = strip_tags($appData['biography']);
-                $values['contract'] = (int)$appData['contract'];
+                $values['contract'] = strip_tags($appData['contract']);
             }
             
             // Charger les langages depuis application_language
@@ -175,8 +175,8 @@ else {
         setcookie('languages_error', '1', time() + 24 * 60 * 60);
         $errors = true;
     } else {
-        $languages = implode(',', $_POST['languages']);
-        setcookie('languages_value', $languages, time() + 30 * 24 * 60 * 60);
+        $languagesCookie = implode(',', $_POST['languages']);
+        setcookie('languages_value', $languagesCookie, time() + 30 * 24 * 60 * 60);
     }
     
     if (empty($_POST['biography']) || strlen($_POST['biography']) < 10) {
@@ -190,18 +190,16 @@ else {
         setcookie('contract_error', '1', time() + 24 * 60 * 60);
         $errors = true;
     } else {
-        setcookie('contract_value', $contract, time() + 30 * 24 * 60 * 60);
+        setcookie('contract_value', $_POST['contract'], time() + 30 * 24 * 60 * 60);
     }
     
     if ($errors) {
         header('Location: index.php');
         exit();
     }
-
-    // $contract =isset($_POST['contract']) ? 1 : 0;
     
     // Supprimer tous les cookies d'erreur
-    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages','biography', 'contract'];
+    $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages', 'biography', 'contract'];
     foreach ($fields as $field) {
         setcookie($field . '_error', '', 100000);
     }
@@ -214,6 +212,7 @@ else {
     
     // Préparer les données
     $selectedLanguages = isset($_POST['languages']) ? $_POST['languages'] : [];
+    $contractValue = isset($_POST['contract']) ? $_POST['contract'] : 'no';
     
     try {
         if ($isLoggedIn && $userId) {
@@ -225,11 +224,16 @@ else {
             if ($userData) {
                 $applicationId = $userData['application_id'];
                 
-                // Mettre à jour application (SANS languages)
+                // Mettre à jour application
                 $stmt = $pdo->prepare("UPDATE application SET name = ?, phone = ?, email = ?, birthdate = ?, gender = ?, biography = ?, contract = ? WHERE id = ?");
                 $stmt->execute([
-                    $_POST['name'], $_POST['phone'], $_POST['email'], $_POST['birthdate'],
-                    $_POST['gender'], $_POST['biography'], $contract,
+                    $_POST['name'], 
+                    $_POST['phone'], 
+                    $_POST['email'], 
+                    $_POST['birthdate'],
+                    $_POST['gender'], 
+                    $_POST['biography'], 
+                    $contractValue,
                     $applicationId
                 ]);
                 
@@ -246,11 +250,16 @@ else {
             // Nouvel utilisateur
             $pdo->beginTransaction();
             
-            // 1. Insérer dans application (SANS languages)
+            // 1. Insérer dans application
             $stmt = $pdo->prepare("INSERT INTO application (name, phone, email, birthdate, gender, biography, contract) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
-                $_POST['name'], $_POST['phone'], $_POST['email'], $_POST['birthdate'],
-                $_POST['gender'], $_POST['biography'], $contract
+                $_POST['name'], 
+                $_POST['phone'], 
+                $_POST['email'], 
+                $_POST['birthdate'],
+                $_POST['gender'], 
+                $_POST['biography'], 
+                $contractValue
             ]);
             $applicationId = $pdo->lastInsertId();
             
