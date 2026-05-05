@@ -1,9 +1,4 @@
 <?php
-/**
- * config.php - Configuration et connexion à la base de données
- * Principe DRY : un seul fichier pour toutes les connexions
- */
-
 $host = 'localhost';
 $dbname = 'u82384';
 $username = 'u82384';
