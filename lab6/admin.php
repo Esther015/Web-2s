@@ -5,9 +5,7 @@
  * HTTP-авторизации для просмотра и удаления результатов.
  **/
 
-// ============================================
 // 1. CONFIGURATION DE LA BASE DE DONNÉES
-// ============================================
 $host = 'localhost';
 $dbname = 'u82384';
 $username = 'u82384';
@@ -20,9 +18,7 @@ try {
     die("Erreur de connexion : " . $e->getMessage());
 }
 
-// ============================================
 // 2. AUTHENTIFICATION HTTP
-// ============================================
 // Vérifier si l'admin est dans la base de données
 $isAuthenticated = false;
 
@@ -51,9 +47,7 @@ if (!$isAuthenticated) {
     $isAuthenticated = true;
 }
 
-// ============================================
 // 3. TRAITEMENT DES ACTIONS (SUPPRESSION)
-// ============================================
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
     $deleteId = (int)$_POST['delete_id'];
     
@@ -87,9 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
     }
 }
 
-// ============================================
 // 4. RÉCUPÉRATION DES DONNÉES
-// ============================================
 // Toutes les applications avec leurs langages
 $stmt = $pdo->query("
     SELECT a.* 
@@ -111,9 +103,7 @@ foreach ($applications as &$app) {
 }
 unset($app); // Détruire la référence
 
-// ============================================
 // 5. STATISTIQUES
-// ============================================
 $stmt = $pdo->query("
     SELECT l.name, COUNT(al.application_id) as count
     FROM languages l
@@ -123,9 +113,8 @@ $stmt = $pdo->query("
 ");
 $languageStats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// ============================================
 // 6. AFFICHAGE
-// ============================================
+
 header('Content-Type: text/html; charset=UTF-8');
 ?>
 <!DOCTYPE html>
@@ -261,7 +250,7 @@ header('Content-Type: text/html; charset=UTF-8');
         
         <?php if (isset($deleteMessage)) echo $deleteMessage; ?>
         
-        <!-- ========== SECTION STATISTIQUES ========== -->
+        <!--SECTION STATISTIQUES -->
         <h2> Статистика по языкам программирования</h2>
         <div class="stats-container">
             <?php foreach ($languageStats as $stat): ?>
@@ -280,7 +269,7 @@ header('Content-Type: text/html; charset=UTF-8');
             <?php endforeach; ?>
         </div>
         
-        <!-- ========== SECTION TABLEAU DES DONNÉES ========== -->
+        <!-- SECTION TABLEAU DES DONNÉES-->
         <h2> Все введенные пользователями данные (<?php echo count($applications); ?> записей)</h2>
         
         <?php if (empty($applications)): ?>
