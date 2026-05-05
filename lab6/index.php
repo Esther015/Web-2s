@@ -193,4 +193,73 @@ else {
         if ($isLoggedIn && $userId) {
             $stmt = $pdo->prepare("SELECT application_id FROM users WHERE id = ?");
             $stmt->execute([$userId]);
-            $userData = $stmt->
+            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            if ($userData) {
+                $applicationId = $userData['application_id'];
+                
+                $stmt = $pdo->prepare("UPDATE application SET name = ?, phone = ?, email = ?, birthdate = ?, gender = ?, biography = ?, contract = ? WHERE id = ?");
+                $stmt->execute([
+                    $_POST['name'], 
+                    $_POST['phone'], 
+                    $_POST['email'], 
+                    $_POST['birthdate'],
+                    $_POST['gender'], 
+                    $_POST['biography'], 
+                    $contractValue,
+                    $applicationId
+                ]);
+                
+                $stmt = $pdo->prepare("DELETE FROM application_language WHERE application_id = ?");
+                $stmt->execute([$applicationId]);
+                
+                foreach ($selectedLanguages as $langId) {
+                    $stmt = $pdo->prepare("INSERT INTO application_language (application_id, language_id) VALUES (?, ?)");
+                    $stmt->execute([$applicationId, $langId]);
+                }
+            }
+        } else {
+            $pdo->beginTransaction();
+            
+            $stmt = $pdo->prepare("INSERT INTO application (name, phone, email, birthdate, gender, biography, contract) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $_POST['name'], 
+                $_POST['phone'], 
+                $_POST['email'], 
+                $_POST['birthdate'],
+                $_POST['gender'], 
+                $_POST['biography'], 
+                $contractValue
+            ]);
+            $applicationId = $pdo->lastInsertId();
+            
+            foreach ($selectedLanguages as $langId) {
+                $stmt = $pdo->prepare("INSERT INTO application_language (application_id, language_id) VALUES (?, ?)");
+                $stmt->execute([$applicationId, $langId]);
+            }
+            
+            $login = generateUniqueLogin($pdo);
+            $plainPassword = generateRandomPassword(8);
+            $passwordHash = password_hash($plainPassword, PASSWORD_DEFAULT);
+            
+            $stmt = $pdo->prepare("INSERT INTO users (login, password_hash, application_id) VALUES (?, ?, ?)");
+            $stmt->execute([$login, $passwordHash, $applicationId]);
+            
+            $pdo->commit();
+            
+            setcookie('login', $login, time() + 30 * 24 * 60 * 60);
+            setcookie('pass', $plainPassword, time() + 30 * 24 * 60 * 60);
+        }
+        
+        setcookie('save', '1', time() + 30 * 24 * 60 * 60);
+        header('Location: ./');
+        exit();
+        
+    } catch (Exception $e) {
+        if (isset($pdo) && $pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        die("Erreur lors de l'enregistrement : " . $e->getMessage());
+    }
+}
+?>
