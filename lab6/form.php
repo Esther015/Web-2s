@@ -56,6 +56,17 @@
   <body>
     <div class="container">
       <h2>Анкета</h2>
+      
+      <div style="text-align:right; margin-bottom:15px;">
+        <a href="login.php" style="color:#1a237e; text-decoration:none; font-size:14px;">
+           Уже есть аккаунт? Войти
+        </a>
+      </div>
+      <!-- FIN DE L'AJOUT -->
+      
+<?php
+if (!empty($messages)) {
+  // ... le reste reste identique
 <?php
 if (!empty($messages)) {
   print('<div id="messages" style="background:#d4edda; padding:15px; border-radius:6px; margin-bottom:15px; color:#155724;">');
