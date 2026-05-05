@@ -187,7 +187,7 @@ else {
     }
     
     $selectedLanguages = isset($_POST['languages']) ? $_POST['languages'] : [];
-    $contractValue = isset($_POST['contract']) ? 'yes' : 'no';
+    $contractValue = isset($_POST['contract']) ? $_POST['contract'] : 'no';
     
     try {
         if ($isLoggedIn && $userId) {
