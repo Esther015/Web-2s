@@ -95,7 +95,7 @@ foreach ($applications as &$app) {
     $stmt = $pdo->prepare("
         SELECT l.name 
         FROM application_language al 
-        JOIN languages l ON al.language_id = l.id 
+        JOIN programming_language l ON al.language_id = l.id 
         WHERE al.application_id = ?
     ");
     $stmt->execute([$app['id']]);
@@ -106,7 +106,7 @@ unset($app); // Détruire la référence
 // 5. STATISTIQUES
 $stmt = $pdo->query("
     SELECT l.name, COUNT(al.application_id) as count
-    FROM languages l
+    FROM programming_language l
     LEFT JOIN application_language al ON l.id = al.language_id
     GROUP BY l.id, l.name
     ORDER BY count DESC
