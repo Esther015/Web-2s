@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 $values['birthdate'] = strip_tags($appData['birthdate']);
                 $values['gender'] = strip_tags($appData['gender']);
                 $values['biography'] = strip_tags($appData['biography']);
-                $values['contract'] = strip_tags($appData['contract']);
+                $values['contract'] = $appData['contract'];
             }
             
             $stmt = $pdo->prepare("SELECT language_id FROM application_language WHERE application_id = ?");
