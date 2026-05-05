@@ -239,7 +239,7 @@ header('Content-Type: text/html; charset=UTF-8');
         <?php endforeach; ?>
     </td>
     <td><?php echo htmlspecialchars(substr($a['biography'], 0, 40)) . (strlen($a['biography']) > 40 ? '...' : ''); ?></td>
-    <td><?php echo $a['contract'] === 'yes' ? 'OUI' : 'NON'; ?></td>
+    <td><?php echo $a['contract'] === 'yes' ? 'Да' : 'Нет'; ?></td>
     <td>
         <form method="post" onsubmit="return confirm('Удалить запись #<?php echo $a['id']; ?>?');">
             <input type="hidden" name="delete_id" value="<?php echo $a['id']; ?>">
