@@ -49,10 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
         $stmt->execute([$deleteId]);
         
         $pdo->commit();
-        $message = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:15px;">✅ Запись #' . $deleteId . ' успешно удалена.</div>';
+        $message = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:15px;"> Запись #' . $deleteId . ' успешно удалена.</div>';
     } catch (Exception $e) {
         $pdo->rollBack();
-        $message = '<div style="color:red; padding:10px; background:#f8d7da; margin-bottom:15px;">❌ Ошибка при удалении.</div>';
+        $message = '<div style="color:red; padding:10px; background:#f8d7da; margin-bottom:15px;">Ошибка при удалении.</div>';
     }
 }
 
@@ -89,10 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_id'])) {
         }
         
         $pdo->commit();
-        $message = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:15px;">✅ Запись #' . $editId . ' успешно обновлена.</div>';
+        $message = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:15px;">Запись #' . $editId . ' успешно обновлена.</div>';
     } catch (Exception $e) {
         $pdo->rollBack();
-        $message = '<div style="color:red; padding:10px; background:#f8d7da; margin-bottom:15px;">❌ Ошибка при обновлении.</div>';
+        $message = '<div style="color:red; padding:10px; background:#f8d7da; margin-bottom:15px;">Ошибка при обновлении.</div>';
     }
 }
 
@@ -333,7 +333,7 @@ header('Content-Type: text/html; charset=UTF-8');
 <body>
 <div class="container">
 
-<h1>🛡️ Панель администратора</h1>
+<h1>Панель администратора</h1>
 <p>Вы успешно авторизовались и видите защищенные паролем данные.</p>
 
 <?php if (isset($message)) echo $message; ?>
@@ -341,7 +341,7 @@ header('Content-Type: text/html; charset=UTF-8');
 <!-- ====== FORMULAIRE D'ÉDITION ====== -->
 <?php if ($editApp): ?>
 <div class="edit-form">
-    <h2>✏️ Редактировать запись #<?php echo $editApp['id']; ?></h2>
+    <h2>Редактировать запись #<?php echo $editApp['id']; ?></h2>
     <form method="post">
         <input type="hidden" name="edit_id" value="<?php echo $editApp['id']; ?>">
         
@@ -400,14 +400,14 @@ header('Content-Type: text/html; charset=UTF-8');
             </label>
         </div>
         
-        <button type="submit" class="btn-save">💾 Сохранить</button>
-        <a href="admin.php" class="btn-cancel">❌ Отмена</a>
+        <button type="submit" class="btn-save">Сохранить</button>
+        <a href="admin.php" class="btn-cancel">Отмена</a>
     </form>
 </div>
 <?php endif; ?>
 
 <!-- ====== STATISTIQUES ====== -->
-<h2>📊 Статистика по языкам</h2>
+<h2> Статистика по языкам</h2>
 <div class="stats">
     <?php foreach ($stats as $s): ?>
         <div class="stat-card">
@@ -418,7 +418,7 @@ header('Content-Type: text/html; charset=UTF-8');
 </div>
 
 <!-- ====== TABLEAU DES DONNÉES ====== -->
-<h2>📋 Все данные (<?php echo count($applications); ?> записей)</h2>
+<h2>Все данные (<?php echo count($applications); ?> записей)</h2>
 
 <?php if (empty($applications)): ?>
     <p>Нет данных.</p>
@@ -450,12 +450,12 @@ header('Content-Type: text/html; charset=UTF-8');
         <?php endif; ?>
     </td>
     <td><?php echo htmlspecialchars(mb_substr($a['biography'], 0, 40)) . (mb_strlen($a['biography']) > 40 ? '...' : ''); ?></td>
-    <td><?php echo $a['contract'] === 'yes' ? '✅' : '❌'; ?></td>
+    <td><?php echo $a['contract'] === 'yes' ? 'Да' : 'Нет'; ?></td>
     <td style="white-space: nowrap;">
-        <a href="admin.php?edit=<?php echo $a['id']; ?>" class="btn-edit">✏️</a>
+        <a href="admin.php?edit=<?php echo $a['id']; ?>" class="btn-edit">Edit</a>
         <form method="post" style="display:inline;" onsubmit="return confirm('Удалить запись #<?php echo $a['id']; ?>?');">
             <input type="hidden" name="delete_id" value="<?php echo $a['id']; ?>">
-            <button type="submit" class="btn-del">🗑️</button>
+            <button type="submit" class="btn-del">Supprimer</button>
         </form>
     </td>
 </tr>
