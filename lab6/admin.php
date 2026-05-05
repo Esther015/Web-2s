@@ -1,11 +1,10 @@
 <?php
 
 /**
- * Задача 6. Реализовать вход администратора с использованием
- * HTTP-авторизации для просмотра и удаления результатов.
- **/
+ * Tache 6. Realiser l'entree de l'administrateur avec
+ * autorisation HTTP pour visualiser et supprimer les resultats.
+ */
 
-// Connexion à la base de données
 require_once 'config.php';
 
 // ============================================
@@ -16,8 +15,8 @@ if (empty($_SERVER['PHP_AUTH_USER']) ||
     $_SERVER['PHP_AUTH_USER'] != 'admin' ||
     md5($_SERVER['PHP_AUTH_PW']) != md5('123')) {
     header('HTTP/1.1 401 Unauthorized');
-    header('WWW-Authenticate: Basic realm="My site"');
-    print('<h1>401 Требуется авторизация</h1>');
+    header('WWW-Authenticate: Basic realm="Admin Panel"');
+    print('<h1>401 Autorisation requise</h1>');
     exit();
 }
 
@@ -30,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
     try {
         $pdo->beginTransaction();
         
-        // Supprimer l'utilisateur lié
         $stmt = $pdo->prepare("SELECT id FROM users WHERE application_id = ?");
         $stmt->execute([$deleteId]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -40,19 +38,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
             $stmt->execute([$user['id']]);
         }
         
-        // Supprimer les langages
         $stmt = $pdo->prepare("DELETE FROM application_language WHERE application_id = ?");
         $stmt->execute([$deleteId]);
         
-        // Supprimer l'application
         $stmt = $pdo->prepare("DELETE FROM application WHERE id = ?");
         $stmt->execute([$deleteId]);
         
         $pdo->commit();
-        $message = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:15px;"> Запись #' . $deleteId . ' успешно удалена.</div>';
+        $message = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:15px;">Enregistrement #' . $deleteId . ' supprime avec succes.</div>';
     } catch (Exception $e) {
         $pdo->rollBack();
-        $message = '<div style="color:red; padding:10px; background:#f8d7da; margin-bottom:15px;">Ошибка при удалении.</div>';
+        $message = '<div style="color:red; padding:10px; background:#f8d7da; margin-bottom:15px;">Erreur lors de la suppression.</div>';
     }
 }
 
@@ -73,11 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_id'])) {
     try {
         $pdo->beginTransaction();
         
-        // Mettre à jour l'application
         $stmt = $pdo->prepare("UPDATE application SET name=?, phone=?, email=?, birthdate=?, gender=?, biography=?, contract=? WHERE id=?");
         $stmt->execute([$name, $phone, $email, $birthdate, $gender, $biography, $contract, $editId]);
         
-        // Mettre à jour les langages
         $stmt = $pdo->prepare("DELETE FROM application_language WHERE application_id = ?");
         $stmt->execute([$editId]);
         
@@ -89,25 +83,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['edit_id'])) {
         }
         
         $pdo->commit();
-        $message = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:15px;">Запись #' . $editId . ' успешно обновлена.</div>';
+        $message = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:15px;">Enregistrement #' . $editId . ' mis a jour avec succes.</div>';
     } catch (Exception $e) {
         $pdo->rollBack();
-        $message = '<div style="color:red; padding:10px; background:#f8d7da; margin-bottom:15px;">Ошибка при обновлении.</div>';
+        $message = '<div style="color:red; padding:10px; background:#f8d7da; margin-bottom:15px;">Erreur lors de la mise a jour.</div>';
     }
 }
 
 // ============================================
-// RÉCUPÉRATION DES DONNÉES
+// RECUPERATION DES DONNEES
 // ============================================
 $stmt = $pdo->query("SELECT * FROM application ORDER BY id DESC");
 $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Ajouter les langages à chaque application
 foreach ($applications as &$app) {
     $stmt = $pdo->prepare("
-        SELECT lp.name 
+        SELECT pl.name 
         FROM application_language al 
-        JOIN language_programming lp ON al.language_id = lp.id 
+        JOIN programming_language pl ON al.language_id = pl.id 
         WHERE al.application_id = ?
     ");
     $stmt->execute([$app['id']]);
@@ -115,24 +108,23 @@ foreach ($applications as &$app) {
 }
 unset($app);
 
-// Récupérer tous les langages pour le formulaire d'édition
-$stmt = $pdo->query("SELECT * FROM language_programming ORDER BY name");
+$stmt = $pdo->query("SELECT * FROM programming_language ORDER BY name");
 $allLanguages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ============================================
 // STATISTIQUES
 // ============================================
 $stmt = $pdo->query("
-    SELECT lp.name, COUNT(al.application_id) as count
-    FROM language_programming lp
-    LEFT JOIN application_language al ON lp.id = al.language_id
-    GROUP BY lp.id, lp.name
+    SELECT pl.name, COUNT(al.application_id) as count
+    FROM programming_language pl
+    LEFT JOIN application_language al ON pl.id = al.language_id
+    GROUP BY pl.id, pl.name
     ORDER BY count DESC
 ");
 $stats = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ============================================
-// APPLICATION À ÉDITER
+// APPLICATION A MODIFIER
 // ============================================
 $editApp = null;
 if (isset($_GET['edit']) && !empty($_GET['edit'])) {
@@ -157,7 +149,7 @@ header('Content-Type: text/html; charset=UTF-8');
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Панель администратора</title>
+    <title>Panel Administrateur</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -166,7 +158,7 @@ header('Content-Type: text/html; charset=UTF-8');
             color: #333;
         }
         .container {
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
         }
         h1 {
@@ -179,7 +171,6 @@ header('Content-Type: text/html; charset=UTF-8');
             margin-top: 30px;
         }
         
-        /* Formulaire d'édition */
         .edit-form {
             background: white;
             padding: 25px;
@@ -245,7 +236,6 @@ header('Content-Type: text/html; charset=UTF-8');
         }
         .btn-cancel:hover { background: #5a6268; }
         
-        /* Statistiques */
         .stats {
             display: flex;
             flex-wrap: wrap;
@@ -271,7 +261,6 @@ header('Content-Type: text/html; charset=UTF-8');
             margin-top: 5px;
         }
         
-        /* Tableau */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -311,6 +300,7 @@ header('Content-Type: text/html; charset=UTF-8');
             cursor: pointer;
             font-size: 12px;
             text-decoration: none;
+            display: inline-block;
             margin-right: 5px;
         }
         .btn-edit:hover { background: #ffb300; }
@@ -333,25 +323,24 @@ header('Content-Type: text/html; charset=UTF-8');
 <body>
 <div class="container">
 
-<h1>Панель администратора</h1>
-<p>Вы успешно авторизовались и видите защищенные паролем данные.</p>
+<h1>Panel Administrateur</h1>
+<p>Vous etes authentifie avec succes.</p>
 
 <?php if (isset($message)) echo $message; ?>
 
-<!-- ====== FORMULAIRE D'ÉDITION ====== -->
 <?php if ($editApp): ?>
 <div class="edit-form">
-    <h2>Редактировать запись #<?php echo $editApp['id']; ?></h2>
+    <h2>Modifier enregistrement #<?php echo $editApp['id']; ?></h2>
     <form method="post">
         <input type="hidden" name="edit_id" value="<?php echo $editApp['id']; ?>">
         
         <div class="form-row">
             <div class="form-group">
-                <label>ФИО:</label>
+                <label>Nom complet:</label>
                 <input type="text" name="name" value="<?php echo htmlspecialchars($editApp['name']); ?>" required>
             </div>
             <div class="form-group">
-                <label>Телефон:</label>
+                <label>Telephone:</label>
                 <input type="text" name="phone" value="<?php echo htmlspecialchars($editApp['phone']); ?>" required>
             </div>
         </div>
@@ -362,21 +351,21 @@ header('Content-Type: text/html; charset=UTF-8');
                 <input type="email" name="email" value="<?php echo htmlspecialchars($editApp['email']); ?>" required>
             </div>
             <div class="form-group">
-                <label>Дата рождения:</label>
+                <label>Date de naissance:</label>
                 <input type="date" name="birthdate" value="<?php echo htmlspecialchars($editApp['birthdate']); ?>" required>
             </div>
         </div>
         
         <div class="form-group">
-            <label>Пол:</label>
+            <label>Genre:</label>
             <select name="gender">
-                <option value="male" <?php echo $editApp['gender'] === 'male' ? 'selected' : ''; ?>>Мужской</option>
-                <option value="female" <?php echo $editApp['gender'] === 'female' ? 'selected' : ''; ?>>Женский</option>
+                <option value="male" <?php echo $editApp['gender'] === 'male' ? 'selected' : ''; ?>>Masculin</option>
+                <option value="female" <?php echo $editApp['gender'] === 'female' ? 'selected' : ''; ?>>Feminin</option>
             </select>
         </div>
         
         <div class="form-group">
-            <label>Любимые языки:</label>
+            <label>Langages preferes:</label>
             <select name="languages[]" multiple size="5" style="height: auto;">
                 <?php foreach ($allLanguages as $lang): ?>
                     <option value="<?php echo $lang['id']; ?>"
@@ -385,29 +374,28 @@ header('Content-Type: text/html; charset=UTF-8');
                     </option>
                 <?php endforeach; ?>
             </select>
-            <small style="color:#666;">Ctrl+clic pour sélection multiple</small>
+            <small style="color:#666;">Ctrl+clic pour selection multiple</small>
         </div>
         
         <div class="form-group">
-            <label>Биография:</label>
+            <label>Biographie:</label>
             <textarea name="biography" required><?php echo htmlspecialchars($editApp['biography']); ?></textarea>
         </div>
         
         <div class="form-group">
             <label>
                 <input type="checkbox" name="contract" value="yes" <?php echo $editApp['contract'] === 'yes' ? 'checked' : ''; ?>>
-                Согласен с контрактом
+                J'accepte le contrat
             </label>
         </div>
         
-        <button type="submit" class="btn-save">Сохранить</button>
-        <a href="admin.php" class="btn-cancel">Отмена</a>
+        <button type="submit" class="btn-save">Enregistrer</button>
+        <a href="admin.php" class="btn-cancel">Annuler</a>
     </form>
 </div>
 <?php endif; ?>
 
-<!-- ====== STATISTIQUES ====== -->
-<h2> Статистика по языкам</h2>
+<h2>Statistiques par langage</h2>
 <div class="stats">
     <?php foreach ($stats as $s): ?>
         <div class="stat-card">
@@ -417,18 +405,17 @@ header('Content-Type: text/html; charset=UTF-8');
     <?php endforeach; ?>
 </div>
 
-<!-- ====== TABLEAU DES DONNÉES ====== -->
-<h2>Все данные (<?php echo count($applications); ?> записей)</h2>
+<h2>Toutes les donnees (<?php echo count($applications); ?> enregistrements)</h2>
 
 <?php if (empty($applications)): ?>
-    <p>Нет данных.</p>
+    <p>Aucune donnee.</p>
 <?php else: ?>
 <table>
 <thead>
 <tr>
-    <th>ID</th><th>ФИО</th><th>Телефон</th><th>Email</th>
-    <th>Дата рождения</th><th>Пол</th><th>Языки</th>
-    <th>Биография</th><th>Контракт</th><th>Действия</th>
+    <th>ID</th><th>Nom</th><th>Telephone</th><th>Email</th>
+    <th>Date naissance</th><th>Genre</th><th>Langages</th>
+    <th>Biographie</th><th>Contrat</th><th>Actions</th>
 </tr>
 </thead>
 <tbody>
@@ -439,21 +426,21 @@ header('Content-Type: text/html; charset=UTF-8');
     <td><?php echo htmlspecialchars($a['phone']); ?></td>
     <td><?php echo htmlspecialchars($a['email']); ?></td>
     <td><?php echo htmlspecialchars($a['birthdate']); ?></td>
-    <td><?php echo $a['gender'] === 'male' ? 'Муж' : 'Жен'; ?></td>
+    <td><?php echo $a['gender'] === 'male' ? 'M' : 'F'; ?></td>
     <td>
         <?php if (!empty($a['languages'])): ?>
             <?php foreach ($a['languages'] as $l): ?>
                 <span class="badge"><?php echo htmlspecialchars($l); ?></span>
             <?php endforeach; ?>
         <?php else: ?>
-            <span style="color:#999;">—</span>
+            <span style="color:#999;">-</span>
         <?php endif; ?>
     </td>
     <td><?php echo htmlspecialchars(mb_substr($a['biography'], 0, 40)) . (mb_strlen($a['biography']) > 40 ? '...' : ''); ?></td>
-    <td><?php echo $a['contract'] === 'yes' ? 'Да' : 'Нет'; ?></td>
+    <td><?php echo $a['contract'] === 'yes' ? 'Oui' : 'Non'; ?></td>
     <td style="white-space: nowrap;">
-        <a href="admin.php?edit=<?php echo $a['id']; ?>" class="btn-edit">Edit</a>
-        <form method="post" style="display:inline;" onsubmit="return confirm('Удалить запись #<?php echo $a['id']; ?>?');">
+        <a href="admin.php?edit=<?php echo $a['id']; ?>" class="btn-edit">Modifier</a>
+        <form method="post" style="display:inline;" onsubmit="return confirm('Supprimer enregistrement #<?php echo $a['id']; ?>?');">
             <input type="hidden" name="delete_id" value="<?php echo $a['id']; ?>">
             <button type="submit" class="btn-del">Supprimer</button>
         </form>
