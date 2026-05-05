@@ -1,13 +1,13 @@
 <?php
 /**
- * Файл login.php pour l'authentification des utilisateurs.
+ * Файл login.php для аутентификации пользователей.
  */
 
 require_once 'config.php';
 
 header('Content-Type: text/html; charset=UTF-8');
 
-// Vérifier si déconnexion demandée
+// Проверка, запрошен ли выход
 if (isset($_GET['logout'])) {
     session_start();
     $_SESSION = array();
@@ -86,11 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     <div class="container">
         <h2>Вход в систему</h2>
         <div class="info">
-            🔑 После отправки формы вам будут сгенерированы логин и пароль.<br>
+            После отправки формы вам будут сгенерированы логин и пароль.
             Сохраните их для последующего изменения данных.
         </div>
         <?php if (isset($_GET['error'])): ?>
-            <div class="error">❌ Неверный логин или пароль</div>
+            <div class="error">Неверный логин или пароль</div>
         <?php endif; ?>
         <form action="" method="post">
             <input type="text" name="login" placeholder="Логин" required autofocus />
