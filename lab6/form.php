@@ -59,7 +59,7 @@
       
       <div style="text-align:right; margin-bottom:15px;">
         <a href="login.php" style="color:#1a237e; text-decoration:none; font-size:14px;">
-           Уже есть аккаунт? Войти
+          Уже есть аккаунт? Войти
         </a>
       </div>
 <?php
