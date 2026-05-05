@@ -62,11 +62,6 @@
            Уже есть аккаунт? Войти
         </a>
       </div>
-      <!-- FIN DE L'AJOUT -->
-      
-<?php
-if (!empty($messages)) {
-  // ... le reste reste identique
 <?php
 if (!empty($messages)) {
   print('<div id="messages" style="background:#d4edda; padding:15px; border-radius:6px; margin-bottom:15px; color:#155724;">');
