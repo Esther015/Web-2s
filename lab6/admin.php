@@ -55,6 +55,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
 $stmt = $pdo->query("SELECT * FROM application ORDER BY id DESC");
 $applications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+// Ajouter les langages à chaque application (sans référence)
+$applicationsWithLanguages = [];
+foreach ($applications as $app) {
+    $stmt = $pdo->prepare("
+        SELECT pl.name 
+        FROM application_language al 
+        JOIN programming_language pl ON al.language_id = pl.id 
+        WHERE al.application_id = ?
+    ");
+    $stmt->execute([$app['id']]);
+    $app['languages'] = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $applicationsWithLanguages[] = $app;
+}
+$applications = $applicationsWithLanguages;
+
 // Ajouter les langages
 foreach ($applications as &$app) {
     $stmt = $pdo->prepare("
