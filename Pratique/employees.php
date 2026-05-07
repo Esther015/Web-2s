@@ -11,7 +11,6 @@ if(isset($_POST['add'])) {
 
     $sql = "INSERT INTO employees
             (full_name, position, phone)
-
             VALUES(?, ?, ?)";
 
     $stmt = $pdo->prepare($sql);
@@ -41,12 +40,10 @@ if(isset($_POST['update'])) {
     $phone = $_POST['phone'];
 
     $sql = "UPDATE employees
-
             SET
             full_name=?,
             position=?,
             phone=?
-
             WHERE id=?";
 
     $stmt = $pdo->prepare($sql);
@@ -59,18 +56,17 @@ if(isset($_POST['update'])) {
     ]);
 }
 
-$result = $pdo->query(
-"SELECT * FROM employees");
+$result = $pdo->query("SELECT * FROM employees");
 
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ru">
 
 <head>
 
 <meta charset="UTF-8">
-<title>Employés</title>
+<title>Сотрудники</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -80,34 +76,34 @@ $result = $pdo->query(
 
 <div class="container">
 
-<h1>Employés</h1>
+<h1>Сотрудники</h1>
 
 <a href="index.php" class="back">
-← Retour
+← Назад
 </a>
 
-<h2>Ajouter employé</h2>
+<h2>Добавить сотрудника</h2>
 
 <form method="POST">
 
 <input type="text"
 name="name"
-placeholder="Nom"
+placeholder="Имя"
 required>
 
 <input type="text"
 name="position"
-placeholder="Poste"
+placeholder="Должность"
 required>
 
 <input type="text"
 name="phone"
-placeholder="Téléphone"
+placeholder="Телефон"
 required>
 
 <button type="submit"
 name="add">
-Ajouter
+Добавить
 </button>
 
 </form>
@@ -116,10 +112,10 @@ Ajouter
 
 <tr>
 <th>ID</th>
-<th>Nom</th>
-<th>Poste</th>
-<th>Téléphone</th>
-<th>Actions</th>
+<th>Имя</th>
+<th>Должность</th>
+<th>Телефон</th>
+<th>Действия</th>
 </tr>
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
@@ -166,12 +162,12 @@ value="<?= $row['phone'] ?>">
 
 <button type="submit"
 name="update">
-Modifier
+Изменить
 </button>
 
 <a class="delete"
 href="?delete=<?= $row['id'] ?>">
-Supprimer
+Удалить
 </a>
 
 </td>
