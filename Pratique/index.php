@@ -1,11 +1,11 @@
 <?php include 'config.php'; ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ru">
 
 <head>
     <meta charset="UTF-8">
-    <title>Pharmacie</title>
+    <title>Аптека</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -14,24 +14,24 @@
 
 <div class="container">
 
-    <h1>Système de gestion de pharmacie</h1>
+    <h1>Система управления аптекой</h1>
 
     <div class="menu">
 
         <a href="medicines.php" class="card">
-            Médicaments
+            Лекарства
         </a>
 
         <a href="employees.php" class="card">
-            Employés
+            Сотрудники
         </a>
 
         <a href="clients.php" class="card">
-            Clients
+            Клиенты
         </a>
 
         <a href="sales.php" class="card">
-            Ventes
+            Продажи
         </a>
 
     </div>
