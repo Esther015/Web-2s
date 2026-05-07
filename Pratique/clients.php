@@ -2,25 +2,33 @@
 
 include 'config.php';
 
+# AJOUT
 if(isset($_POST['add'])) {
 
     $name = $_POST['name'];
     $phone = $_POST['phone'];
 
-    mysqli_query($conn,
-    "INSERT INTO customers(full_name, phone)
+    $sql = "INSERT INTO customers(full_name, phone)
+            VALUES(?, ?)";
 
-    VALUES('$name','$phone')");
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$name, $phone]);
 }
 
+# SUPPRESSION
 if(isset($_GET['delete'])) {
 
     $id = $_GET['delete'];
 
-    mysqli_query($conn,
-    "DELETE FROM customers WHERE id=$id");
+    $sql = "DELETE FROM customers WHERE id=?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$id]);
 }
 
+# MODIFICATION
 if(isset($_POST['update'])) {
 
     $id = $_POST['id'];
@@ -28,15 +36,16 @@ if(isset($_POST['update'])) {
     $name = $_POST['name'];
     $phone = $_POST['phone'];
 
-    mysqli_query($conn,
-    "UPDATE customers SET
+    $sql = "UPDATE customers
+            SET full_name=?, phone=?
+            WHERE id=?";
 
-    full_name='$name',
-    phone='$phone'
+    $stmt = $pdo->prepare($sql);
 
-    WHERE id=$id");
+    $stmt->execute([$name, $phone, $id]);
 }
 
+# AFFICHAGE
 $result = $pdo->query(
 "SELECT * FROM customers");
 
@@ -46,9 +55,12 @@ $result = $pdo->query(
 <html lang="fr">
 
 <head>
+
 <meta charset="UTF-8">
 <title>Clients</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -61,15 +73,19 @@ $result = $pdo->query(
 ← Retour
 </a>
 
+<h2>Ajouter un client</h2>
+
 <form method="POST">
 
 <input type="text"
 name="name"
-placeholder="Nom">
+placeholder="Nom"
+required>
 
 <input type="text"
 name="phone"
-placeholder="Téléphone">
+placeholder="Téléphone"
+required>
 
 <button type="submit"
 name="add">
@@ -87,7 +103,7 @@ Ajouter
 <th>Actions</th>
 </tr>
 
-<?php while($row = mysqli_fetch_assoc($result)) { ?>
+<?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <tr>
 
@@ -104,15 +120,19 @@ value="<?= $row['id'] ?>">
 </td>
 
 <td>
+
 <input type="text"
 name="name"
 value="<?= $row['full_name'] ?>">
+
 </td>
 
 <td>
+
 <input type="text"
 name="phone"
 value="<?= $row['phone'] ?>">
+
 </td>
 
 <td>
