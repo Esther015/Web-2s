@@ -37,7 +37,7 @@ if(isset($_POST['update'])) {
     WHERE id=$id");
 }
 
-$result = mysqli_query($conn,
+$result = $pdo->query(
 "SELECT * FROM customers");
 
 ?>
