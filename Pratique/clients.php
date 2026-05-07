@@ -46,18 +46,17 @@ if(isset($_POST['update'])) {
 }
 
 # AFFICHAGE
-$result = $pdo->query(
-"SELECT * FROM customers");
+$result = $pdo->query("SELECT * FROM customers");
 
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ru">
 
 <head>
 
 <meta charset="UTF-8">
-<title>Clients</title>
+<title>Клиенты</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -67,29 +66,29 @@ $result = $pdo->query(
 
 <div class="container">
 
-<h1>Clients</h1>
+<h1>Клиенты</h1>
 
 <a href="index.php" class="back">
-← Retour
+← Назад
 </a>
 
-<h2>Ajouter un client</h2>
+<h2>Добавить клиента</h2>
 
 <form method="POST">
 
 <input type="text"
 name="name"
-placeholder="Nom"
+placeholder="Имя"
 required>
 
 <input type="text"
 name="phone"
-placeholder="Téléphone"
+placeholder="Телефон"
 required>
 
 <button type="submit"
 name="add">
-Ajouter
+Добавить
 </button>
 
 </form>
@@ -98,9 +97,9 @@ Ajouter
 
 <tr>
 <th>ID</th>
-<th>Nom</th>
-<th>Téléphone</th>
-<th>Actions</th>
+<th>Имя</th>
+<th>Телефон</th>
+<th>Действия</th>
 </tr>
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
@@ -139,12 +138,12 @@ value="<?= $row['phone'] ?>">
 
 <button type="submit"
 name="update">
-Modifier
+Изменить
 </button>
 
 <a class="delete"
 href="?delete=<?= $row['id'] ?>">
-Supprimer
+Удалить
 </a>
 
 </td>
