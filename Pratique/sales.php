@@ -12,13 +12,11 @@ if(isset($_POST['add'])) {
     $date = $_POST['date'];
 
     $sql = "INSERT INTO sales
-
             (medicine_id,
             customer_id,
             employee_id,
             quantity,
             sale_date)
-
             VALUES (?, ?, ?, ?, ?)";
 
     $stmt = $pdo->prepare($sql);
@@ -44,48 +42,34 @@ if(isset($_GET['delete'])) {
     $stmt->execute([$id]);
 }
 
-$medicines = $pdo->query(
-"SELECT * FROM medicines");
+$medicines = $pdo->query("SELECT * FROM medicines");
 
-$clients = $pdo->query(
-"SELECT * FROM customers");
+$clients = $pdo->query("SELECT * FROM customers");
 
-$employees = $pdo->query(
-"SELECT * FROM employees");
+$employees = $pdo->query("SELECT * FROM employees");
 
-$result = $pdo->query(
-
-"SELECT sales.id,
-
+$result = $pdo->query("
+SELECT sales.id,
 medicines.name AS medicine,
-
 customers.full_name AS customer,
-
 employees.full_name AS employee,
-
 sales.quantity,
 sales.sale_date
-
 FROM sales
-
-JOIN medicines
-ON sales.medicine_id = medicines.id
-
-JOIN customers
-ON sales.customer_id = customers.id
-
-JOIN employees
-ON sales.employee_id = employees.id");
+JOIN medicines ON sales.medicine_id = medicines.id
+JOIN customers ON sales.customer_id = customers.id
+JOIN employees ON sales.employee_id = employees.id
+");
 
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ru">
 
 <head>
 
 <meta charset="UTF-8">
-<title>Ventes</title>
+<title>Продажи</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -95,13 +79,13 @@ ON sales.employee_id = employees.id");
 
 <div class="container">
 
-<h1>Ventes</h1>
+<h1>Продажи</h1>
 
 <a href="index.php" class="back">
-← Retour
+← Назад
 </a>
 
-<h2>Ajouter vente</h2>
+<h2>Добавить продажу</h2>
 
 <form method="POST">
 
@@ -143,7 +127,7 @@ ON sales.employee_id = employees.id");
 
 <input type="number"
 name="quantity"
-placeholder="Quantité"
+placeholder="Количество"
 required>
 
 <input type="date"
@@ -152,7 +136,7 @@ required>
 
 <button type="submit"
 name="add">
-Ajouter
+Добавить
 </button>
 
 </form>
@@ -161,12 +145,12 @@ Ajouter
 
 <tr>
 <th>ID</th>
-<th>Médicament</th>
-<th>Client</th>
-<th>Employé</th>
-<th>Quantité</th>
-<th>Date</th>
-<th>Action</th>
+<th>Лекарство</th>
+<th>Клиент</th>
+<th>Сотрудник</th>
+<th>Количество</th>
+<th>Дата</th>
+<th>Действие</th>
 </tr>
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
@@ -189,7 +173,7 @@ Ajouter
 
 <a class="delete"
 href="?delete=<?= $row['id'] ?>">
-Supprimer
+Удалить
 </a>
 
 </td>
