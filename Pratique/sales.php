@@ -2,6 +2,7 @@
 
 include 'config.php';
 
+# AJOUT
 if(isset($_POST['add'])) {
 
     $medicine = $_POST['medicine'];
@@ -10,39 +11,56 @@ if(isset($_POST['add'])) {
     $quantity = $_POST['quantity'];
     $date = $_POST['date'];
 
-    mysqli_query($conn,
-    "INSERT INTO sales
+    $sql = "INSERT INTO sales
 
-    (medicine_id, customer_id, employee_id, quantity, sale_date)
+            (medicine_id,
+            customer_id,
+            employee_id,
+            quantity,
+            sale_date)
 
-    VALUES
+            VALUES (?, ?, ?, ?, ?)";
 
-    ('$medicine','$customer','$employee','$quantity','$date')");
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        $medicine,
+        $customer,
+        $employee,
+        $quantity,
+        $date
+    ]);
 }
 
+# SUPPRESSION
 if(isset($_GET['delete'])) {
 
     $id = $_GET['delete'];
 
-    mysqli_query($conn,
-    "DELETE FROM sales WHERE id=$id");
+    $sql = "DELETE FROM sales WHERE id=?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$id]);
 }
 
-$medicines = mysqli_query($conn,
+$medicines = $pdo->query(
 "SELECT * FROM medicines");
 
-$customers = mysqli_query($conn,
+$customers = $pdo->query(
 "SELECT * FROM customers");
 
-$employees = mysqli_query($conn,
+$employees = $pdo->query(
 "SELECT * FROM employees");
 
-$result = mysqli_query($conn,
+$result = $pdo->query(
 
 "SELECT sales.id,
 
 medicines.name AS medicine,
+
 customers.full_name AS customer,
+
 employees.full_name AS employee,
 
 sales.quantity,
@@ -65,9 +83,12 @@ ON sales.employee_id = employees.id");
 <html lang="fr">
 
 <head>
+
 <meta charset="UTF-8">
 <title>Ventes</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -80,11 +101,13 @@ ON sales.employee_id = employees.id");
 ← Retour
 </a>
 
+<h2>Ajouter vente</h2>
+
 <form method="POST">
 
 <select name="medicine">
 
-<?php while($m = mysqli_fetch_assoc($medicines)) { ?>
+<?php while($m = $medicines->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <option value="<?= $m['id'] ?>">
 <?= $m['name'] ?>
@@ -96,7 +119,7 @@ ON sales.employee_id = employees.id");
 
 <select name="customer">
 
-<?php while($c = mysqli_fetch_assoc($customers)) { ?>
+<?php while($c = $customers->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <option value="<?= $c['id'] ?>">
 <?= $c['full_name'] ?>
@@ -108,7 +131,7 @@ ON sales.employee_id = employees.id");
 
 <select name="employee">
 
-<?php while($e = mysqli_fetch_assoc($employees)) { ?>
+<?php while($e = $employees->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <option value="<?= $e['id'] ?>">
 <?= $e['full_name'] ?>
@@ -120,10 +143,12 @@ ON sales.employee_id = employees.id");
 
 <input type="number"
 name="quantity"
-placeholder="Quantité">
+placeholder="Quantité"
+required>
 
 <input type="date"
-name="date">
+name="date"
+required>
 
 <button type="submit"
 name="add">
@@ -144,7 +169,7 @@ Ajouter
 <th>Action</th>
 </tr>
 
-<?php while($row = mysqli_fetch_assoc($result)) { ?>
+<?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <tr>
 
