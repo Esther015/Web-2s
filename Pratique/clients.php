@@ -8,7 +8,7 @@ if(isset($_POST['add'])) {
     $name = $_POST['name'];
     $phone = $_POST['phone'];
 
-    $sql = "INSERT INTO clients(full_name, phone)
+    $sql = "INSERT INTO customers(full_name, phone)
             VALUES(?, ?)";
 
     $stmt = $pdo->prepare($sql);
@@ -21,7 +21,7 @@ if(isset($_GET['delete'])) {
 
     $id = $_GET['delete'];
 
-    $sql = "DELETE FROM clients WHERE id=?";
+    $sql = "DELETE FROM customers WHERE id=?";
 
     $stmt = $pdo->prepare($sql);
 
@@ -36,7 +36,7 @@ if(isset($_POST['update'])) {
     $name = $_POST['name'];
     $phone = $_POST['phone'];
 
-    $sql = "UPDATE clients
+    $sql = "UPDATE customers
             SET full_name=?, phone=?
             WHERE id=?";
 
@@ -47,7 +47,7 @@ if(isset($_POST['update'])) {
 
 # AFFICHAGE
 $result = $pdo->query(
-"SELECT * FROM clients");
+"SELECT * FROM customers");
 
 ?>
 
