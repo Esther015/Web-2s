@@ -12,10 +12,8 @@ if(isset($_POST['add'])) {
     $expiration = $_POST['expiration'];
 
     $sql = "INSERT INTO medicines
-
             (name, manufacturer, price,
             quantity, expiration_date)
-
             VALUES(?, ?, ?, ?, ?)";
 
     $stmt = $pdo->prepare($sql);
@@ -53,14 +51,12 @@ if(isset($_POST['update'])) {
     $expiration = $_POST['expiration'];
 
     $sql = "UPDATE medicines
-
             SET
             name=?,
             manufacturer=?,
             price=?,
             quantity=?,
             expiration_date=?
-
             WHERE id=?";
 
     $stmt = $pdo->prepare($sql);
@@ -91,19 +87,18 @@ if(isset($_GET['search'])) {
 }
 else {
 
-    $result = $pdo->query(
-    "SELECT * FROM medicines");
+    $result = $pdo->query("SELECT * FROM medicines");
 }
 
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ru">
 
 <head>
 
 <meta charset="UTF-8">
-<title>Médicaments</title>
+<title>Лекарства</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -113,52 +108,52 @@ else {
 
 <div class="container">
 
-<h1>Médicaments</h1>
+<h1>Лекарства</h1>
 
 <a href="index.php" class="back">
-← Retour
+← Назад
 </a>
 
 <form method="GET">
 
 <input type="text"
 name="search"
-placeholder="Recherche médicament">
+placeholder="Поиск лекарства">
 
 <button type="submit">
-Rechercher
+Поиск
 </button>
 
 </form>
 
-<h2>Ajouter médicament</h2>
+<h2>Добавить лекарство</h2>
 
 <form method="POST">
 
 <input type="text"
 name="name"
-placeholder="Nom"
+placeholder="Название"
 required>
 
 <input type="text"
 name="manufacturer"
-placeholder="Fabricant">
+placeholder="Производитель">
 
 <input type="number"
 step="0.01"
 name="price"
-placeholder="Prix">
+placeholder="Цена">
 
 <input type="number"
 name="quantity"
-placeholder="Quantité">
+placeholder="Количество">
 
 <input type="date"
 name="expiration">
 
 <button type="submit"
 name="add">
-Ajouter
+Добавить
 </button>
 
 </form>
@@ -167,12 +162,12 @@ Ajouter
 
 <tr>
 <th>ID</th>
-<th>Nom</th>
-<th>Fabricant</th>
-<th>Prix</th>
-<th>Quantité</th>
-<th>Expiration</th>
-<th>Actions</th>
+<th>Название</th>
+<th>Производитель</th>
+<th>Цена</th>
+<th>Количество</th>
+<th>Срок годности</th>
+<th>Действия</th>
 </tr>
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
@@ -236,12 +231,12 @@ value="<?= $row['expiration_date'] ?>">
 
 <button type="submit"
 name="update">
-Modifier
+Изменить
 </button>
 
 <a class="delete"
 href="?delete=<?= $row['id'] ?>">
-Supprimer
+Удалить
 </a>
 
 </td>
