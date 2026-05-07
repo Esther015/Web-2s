@@ -18,11 +18,11 @@
 
     <div class="menu">
 
-        <a href="medicaments.php" class="card">
+        <a href="medicines.php" class="card">
             Médicaments
         </a>
 
-        <a href="employes.php" class="card">
+        <a href="employees.php" class="card">
             Employés
         </a>
 
@@ -30,7 +30,7 @@
             Clients
         </a>
 
-        <a href="ventes.php" class="card">
+        <a href="sales.php" class="card">
             Ventes
         </a>
 
