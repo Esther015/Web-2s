@@ -47,7 +47,7 @@ if(isset($_GET['delete'])) {
 $medicines = $pdo->query(
 "SELECT * FROM medicines");
 
-$customers = $pdo->query(
+$clients = $pdo->query(
 "SELECT * FROM customers");
 
 $employees = $pdo->query(
