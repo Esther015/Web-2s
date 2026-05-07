@@ -11,10 +11,22 @@ if(isset($_POST['add'])) {
     $quantity = $_POST['quantity'];
     $expiration = $_POST['expiration'];
 
-    mysqli_query($conn,
-    "INSERT INTO medicines(name, manufacturer, price, quantity, expiration_date)
+    $sql = "INSERT INTO medicines
 
-    VALUES('$name','$manufacturer','$price','$quantity','$expiration')");
+            (name, manufacturer, price,
+            quantity, expiration_date)
+
+            VALUES(?, ?, ?, ?, ?)";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        $name,
+        $manufacturer,
+        $price,
+        $quantity,
+        $expiration
+    ]);
 }
 
 # SUPPRESSION
@@ -22,8 +34,11 @@ if(isset($_GET['delete'])) {
 
     $id = $_GET['delete'];
 
-    mysqli_query($conn,
-    "DELETE FROM medicines WHERE id=$id");
+    $sql = "DELETE FROM medicines WHERE id=?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$id]);
 }
 
 # MODIFICATION
@@ -37,30 +52,46 @@ if(isset($_POST['update'])) {
     $quantity = $_POST['quantity'];
     $expiration = $_POST['expiration'];
 
-    mysqli_query($conn,
-    "UPDATE medicines SET
+    $sql = "UPDATE medicines
 
-    name='$name',
-    manufacturer='$manufacturer',
-    price='$price',
-    quantity='$quantity',
-    expiration_date='$expiration'
+            SET
+            name=?,
+            manufacturer=?,
+            price=?,
+            quantity=?,
+            expiration_date=?
 
-    WHERE id=$id");
+            WHERE id=?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        $name,
+        $manufacturer,
+        $price,
+        $quantity,
+        $expiration,
+        $id
+    ]);
 }
 
 # RECHERCHE
-$search = "";
-
 if(isset($_GET['search'])) {
-    $search = $_GET['search'];
 
-    $result = mysqli_query($conn,
-    "SELECT * FROM medicines
-    WHERE name LIKE '%$search%'");
+    $search = "%" . $_GET['search'] . "%";
+
+    $sql = "SELECT * FROM medicines
+            WHERE name LIKE ?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$search]);
+
+    $result = $stmt;
 }
 else {
-    $result = mysqli_query($conn,
+
+    $result = $pdo->query(
     "SELECT * FROM medicines");
 }
 
@@ -70,10 +101,12 @@ else {
 <html lang="fr">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Médicaments</title>
 
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Médicaments</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -88,13 +121,13 @@ else {
 
 <form method="GET">
 
-    <input type="text"
-    name="search"
-    placeholder="Recherche médicament">
+<input type="text"
+name="search"
+placeholder="Recherche médicament">
 
-    <button type="submit">
-        Rechercher
-    </button>
+<button type="submit">
+Rechercher
+</button>
 
 </form>
 
@@ -102,90 +135,101 @@ else {
 
 <form method="POST">
 
-    <input type="text"
-    name="name"
-    placeholder="Nom"
-    required>
+<input type="text"
+name="name"
+placeholder="Nom"
+required>
 
-    <input type="text"
-    name="manufacturer"
-    placeholder="Fabricant">
+<input type="text"
+name="manufacturer"
+placeholder="Fabricant">
 
-    <input type="number"
-    step="0.01"
-    name="price"
-    placeholder="Prix">
+<input type="number"
+step="0.01"
+name="price"
+placeholder="Prix">
 
-    <input type="number"
-    name="quantity"
-    placeholder="Quantité">
+<input type="number"
+name="quantity"
+placeholder="Quantité">
 
-    <input type="date"
-    name="expiration">
+<input type="date"
+name="expiration">
 
-    <button type="submit" name="add">
-        Ajouter
-    </button>
+<button type="submit"
+name="add">
+Ajouter
+</button>
 
 </form>
-
-<h2>Liste des médicaments</h2>
 
 <table>
 
 <tr>
-    <th>ID</th>
-    <th>Nom</th>
-    <th>Fabricant</th>
-    <th>Prix</th>
-    <th>Quantité</th>
-    <th>Expiration</th>
-    <th>Actions</th>
+<th>ID</th>
+<th>Nom</th>
+<th>Fabricant</th>
+<th>Prix</th>
+<th>Quantité</th>
+<th>Expiration</th>
+<th>Actions</th>
 </tr>
 
-<?php while($row = mysqli_fetch_assoc($result)) { ?>
+<?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <tr>
 
 <form method="POST">
 
 <td>
+
 <?= $row['id'] ?>
 
 <input type="hidden"
 name="id"
 value="<?= $row['id'] ?>">
+
 </td>
 
 <td>
+
 <input type="text"
 name="name"
 value="<?= $row['name'] ?>">
+
 </td>
 
 <td>
+
 <input type="text"
 name="manufacturer"
 value="<?= $row['manufacturer'] ?>">
+
 </td>
 
 <td>
+
 <input type="number"
 step="0.01"
 name="price"
 value="<?= $row['price'] ?>">
+
 </td>
 
 <td>
+
 <input type="number"
 name="quantity"
 value="<?= $row['quantity'] ?>">
+
 </td>
 
 <td>
+
 <input type="date"
 name="expiration"
 value="<?= $row['expiration_date'] ?>">
+
 </td>
 
 <td>
