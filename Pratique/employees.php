@@ -2,26 +2,36 @@
 
 include 'config.php';
 
+# AJOUT
 if(isset($_POST['add'])) {
 
     $name = $_POST['name'];
     $position = $_POST['position'];
     $phone = $_POST['phone'];
 
-    mysqli_query($conn,
-    "INSERT INTO employees(full_name, position, phone)
+    $sql = "INSERT INTO employees
+            (full_name, position, phone)
 
-    VALUES('$name','$position','$phone')");
+            VALUES(?, ?, ?)";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$name, $position, $phone]);
 }
 
+# SUPPRESSION
 if(isset($_GET['delete'])) {
 
     $id = $_GET['delete'];
 
-    mysqli_query($conn,
-    "DELETE FROM employees WHERE id=$id");
+    $sql = "DELETE FROM employees WHERE id=?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$id]);
 }
 
+# MODIFICATION
 if(isset($_POST['update'])) {
 
     $id = $_POST['id'];
@@ -30,17 +40,26 @@ if(isset($_POST['update'])) {
     $position = $_POST['position'];
     $phone = $_POST['phone'];
 
-    mysqli_query($conn,
-    "UPDATE employees SET
+    $sql = "UPDATE employees
 
-    full_name='$name',
-    position='$position',
-    phone='$phone'
+            SET
+            full_name=?,
+            position=?,
+            phone=?
 
-    WHERE id=$id");
+            WHERE id=?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        $name,
+        $position,
+        $phone,
+        $id
+    ]);
 }
 
-$result = mysqli_query($conn,
+$result = $pdo->query(
 "SELECT * FROM employees");
 
 ?>
@@ -49,9 +68,12 @@ $result = mysqli_query($conn,
 <html lang="fr">
 
 <head>
+
 <meta charset="UTF-8">
 <title>Employés</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -64,19 +86,24 @@ $result = mysqli_query($conn,
 ← Retour
 </a>
 
+<h2>Ajouter employé</h2>
+
 <form method="POST">
 
 <input type="text"
 name="name"
-placeholder="Nom">
+placeholder="Nom"
+required>
 
 <input type="text"
 name="position"
-placeholder="Poste">
+placeholder="Poste"
+required>
 
 <input type="text"
 name="phone"
-placeholder="Téléphone">
+placeholder="Téléphone"
+required>
 
 <button type="submit"
 name="add">
@@ -95,7 +122,7 @@ Ajouter
 <th>Actions</th>
 </tr>
 
-<?php while($row = mysqli_fetch_assoc($result)) { ?>
+<?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <tr>
 
@@ -112,21 +139,27 @@ value="<?= $row['id'] ?>">
 </td>
 
 <td>
+
 <input type="text"
 name="name"
 value="<?= $row['full_name'] ?>">
+
 </td>
 
 <td>
+
 <input type="text"
 name="position"
 value="<?= $row['position'] ?>">
+
 </td>
 
 <td>
+
 <input type="text"
 name="phone"
 value="<?= $row['phone'] ?>">
+
 </td>
 
 <td>
