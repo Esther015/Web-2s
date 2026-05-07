@@ -36,7 +36,7 @@ if(isset($_POST['update'])) {
     $name = $_POST['name'];
     $phone = $_POST['phone'];
 
-    $sql = "UPDATE customers
+    $sql = "UPDATE clients
             SET full_name=?, phone=?
             WHERE id=?";
 
