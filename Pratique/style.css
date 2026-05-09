@@ -224,6 +224,7 @@ button:hover{
 }
 
 /* TABLEAUX */
+/*
 table{
     width:100%;
     background:white;
@@ -245,7 +246,49 @@ th{
 tr:hover{
     background:#f9f9f9;
 }
+*/
+/* TABLEAUX */
+table{
+    width:100%;
+    background:white;
+    border-collapse:separate;
+    border-spacing:0;
+    box-shadow:0 0 10px #1d981d;
+    border-radius:10px;
+    overflow:hidden;
+}
 
+th, td{
+    border:1px solid #ddd;
+    padding:10px;
+}
+
+th{
+    background:#1d981d;
+    color:white;
+}
+
+/* Arrondir les coins supérieurs du tableau */
+th:first-child {
+    border-top-left-radius: 10px;
+}
+
+th:last-child {
+    border-top-right-radius: 10px;
+}
+
+/* Arrondir les coins inférieurs du tableau */
+tr:last-child td:first-child {
+    border-bottom-left-radius: 10px;
+}
+
+tr:last-child td:last-child {
+    border-bottom-right-radius: 10px;
+}
+
+tr:hover{
+    background:#f9f9f9;
+}
 /* LIENS */
 .delete{
      padding:10px 15px;
