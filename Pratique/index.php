@@ -64,7 +64,7 @@
             </div>
             </a>
             
-            <a href="clients.php" class="card-link"> >
+            <a href="clients.php" class="card-link" >
                 <div class="card">
                 <h2> Клиенты</h2>
                 <p>
@@ -74,7 +74,7 @@
             </div>
             </a>
             
-            <a href="sales.php" class="card-link">>
+            <a href="sales.php" class="card-link">
                 <div class="card">
                 <h2>Продажи</h2>
                 <p>
