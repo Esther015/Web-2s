@@ -261,3 +261,141 @@ table td:last-child .delete {
     display: inline-block;
     margin: 2px;
 }
+
+
+/* Tablettes (max-width: 992px) */
+@media screen and (max-width: 992px) {
+    .sidebar {
+        width: 200px;
+    }
+    
+    .container {
+        width: 90%;
+    }
+    
+    .content-header h1 {
+        font-size: 28px;
+    }
+    
+    .menu {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+    }
+}
+
+/* Mobiles (max-width: 768px) */
+@media screen and (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .sidebar h2 {
+        width: 100%;
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+    
+    .menu-link {
+        padding: 10px 15px;
+        margin: 5px;
+        display: inline-block;
+    }
+    
+    .content {
+        padding: 15px;
+    }
+    
+    .content-header {
+        margin-top: -20px;
+        margin-bottom: 20px;
+    }
+    
+    .content-header h1 {
+        font-size: 24px;
+    }
+    
+    .menu {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .card {
+        padding: 20px;
+    }
+    
+    .container {
+        width: 95%;
+        padding: 10px;
+    }
+    
+    /* Tableau responsive - défilement horizontal */
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+    
+    th, td {
+        padding: 8px;
+        font-size: 14px;
+    }
+    
+    /* Formulaire responsive */
+    form {
+        padding: 15px;
+    }
+    
+    input, select, button {
+        width: 100%;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+    
+    button {
+        width: auto;
+    }
+    
+    .delete, .back {
+        display: inline-block;
+        margin-top: 5px;
+    }
+}
+
+/* Petits mobiles (max-width: 480px) */
+@media screen and (max-width: 480px) {
+    .content-header h1 {
+        font-size: 20px;
+    }
+    
+    .card h2 {
+        font-size: 18px;
+    }
+    
+    .card p {
+        font-size: 14px;
+    }
+    
+    th, td {
+        padding: 6px;
+        font-size: 12px;
+    }
+    
+    button, .delete, .back {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    table td:last-child button,
+    table td:last-child .delete {
+        display: block;
+        margin: 5px 0;
+    }
+}
