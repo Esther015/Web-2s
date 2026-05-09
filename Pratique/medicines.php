@@ -131,7 +131,7 @@ else {
 
 <body>
 
-<div class="container">
+<div class="container\">
 
 <h1>Лекарства</h1>
     
@@ -140,11 +140,6 @@ else {
    aria-label="Назад">
    Назад
 </a>
-    <!--
-<a href="index.php" class="back">
-← Назад
-</a>
--->
 <form method="GET">
 
 <input type="text"
