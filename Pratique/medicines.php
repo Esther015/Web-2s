@@ -11,6 +11,13 @@ if(isset($_POST['add'])) {
     $quantity = $_POST['quantity'];
     $expiration = $_POST['expiration'];
 
+    # EMPÊCHER QUANTITÉ NÉGATIVE
+    if($quantity < 0){
+
+        die("Количество не может быть отрицательным");
+
+    }
+
     $sql = "INSERT INTO medicines
             (name, manufacturer, price,
             quantity, expiration_date)
@@ -25,6 +32,9 @@ if(isset($_POST['add'])) {
         $quantity,
         $expiration
     ]);
+
+    header("Location: medicines.php");
+    exit;
 }
 
 # SUPPRESSION
@@ -32,11 +42,15 @@ if(isset($_GET['delete'])) {
 
     $id = $_GET['delete'];
 
-    $sql = "DELETE FROM medicines WHERE id=?";
+    $sql = "DELETE FROM medicines
+            WHERE id=?";
 
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute([$id]);
+
+    header("Location: medicines.php");
+    exit;
 }
 
 # MODIFICATION
@@ -49,6 +63,13 @@ if(isset($_POST['update'])) {
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
     $expiration = $_POST['expiration'];
+
+    # EMPÊCHER QUANTITÉ NÉGATIVE
+    if($quantity < 0){
+
+        die("Количество не может быть отрицательным");
+
+    }
 
     $sql = "UPDATE medicines
             SET
@@ -69,6 +90,9 @@ if(isset($_POST['update'])) {
         $expiration,
         $id
     ]);
+
+    header("Location: medicines.php");
+    exit;
 }
 
 # RECHERCHE
@@ -98,6 +122,7 @@ else {
 <head>
 
 <meta charset="UTF-8">
+
 <title>Лекарства</title>
 
 <link rel="stylesheet" href="style.css">
@@ -109,13 +134,17 @@ else {
 <div class="container">
 
 <h1>Лекарства</h1>
-
+    
 <a href="index.php" 
    class="back"
-   aria-label="Назад"> Назад
+   aria-label="Назад">
+   Retour
 </a>
-
-
+    <!--
+<a href="index.php" class="back">
+← Назад
+</a>
+-->
 <form method="GET">
 
 <input type="text"
@@ -144,11 +173,15 @@ placeholder="Производитель">
 <input type="number"
 step="0.01"
 name="price"
-placeholder="Цена">
+placeholder="Цена"
+min="0"
+required>
 
 <input type="number"
 name="quantity"
-placeholder="Количество">
+placeholder="Количество"
+min="0"
+required>
 
 <input type="date"
 name="expiration">
@@ -163,6 +196,7 @@ name="add">
 <table>
 
 <tr>
+
 <th>ID</th>
 <th>Название</th>
 <th>Производитель</th>
@@ -170,6 +204,7 @@ name="add">
 <th>Количество</th>
 <th>Срок годности</th>
 <th>Действия</th>
+
 </tr>
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
@@ -209,7 +244,8 @@ value="<?= $row['manufacturer'] ?>">
 <input type="number"
 step="0.01"
 name="price"
-value="<?= $row['price'] ?>">
+value="<?= $row['price'] ?>"
+min="0">
 
 </td>
 
@@ -217,8 +253,8 @@ value="<?= $row['price'] ?>">
 
 <input type="number"
 name="quantity"
-    min ="0" required ?>
-<!-- value="*?= $row['quantity'] ?>"*-->
+value="<?= $row['quantity'] ?>"
+min="0">
 
 </td>
 
