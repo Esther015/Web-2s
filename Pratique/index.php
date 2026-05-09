@@ -49,9 +49,7 @@
                 <h2>Лекарства</h2>
 
                 <p>
-                    Gestion des médicaments,
-                    du stock et des dates
-                    d’expiration.
+                   Управление лекарственными средствами, запасами и сроками годности.
                 </p>
             </div>
 
