@@ -94,11 +94,13 @@ body{
     padding: 30px;
     display: flex;
     flex-direction: column;
+    justify-content: center;
 }
 
 .content-header {
     width: 100%;
     margin-bottom: 40px;
+    margin-top: -50px;
 }
 
 .content-header h1 {
@@ -114,10 +116,7 @@ body{
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     width: 100%;
-    max-width:1200px
-    margin:auto;
-    flex: 1;
-    aign-content: center;;
+    max-width:1200px;    
 }
 /* FORMULAIRES */
 form{
