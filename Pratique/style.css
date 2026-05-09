@@ -1,147 +1,78 @@
-body {
-
-    margin: 0;
-    padding: 0;
-
-    background: #f4f6f9;
-
-    font-family: Arial, sans-serif;
+body{
+    font-family: Arial;
+    background:#f4f6f9;
+    margin:0;
 }
 
-.container {
-
-    width: 90%;
-    margin: auto;
-
-    padding: 20px;
+.container{
+    width:90%;
+    margin:auto;
+    padding:20px;
 }
 
-h1 {
-
-    color: #2c3e50;
-    margin-bottom: 20px;
+h1{
+    text-align:center;
+    color:#2c3e50;
 }
 
-h2 {
-
-    color: #34495e;
-    margin-top: 30px;
+.menu{
+    display:flex;
+    gap:20px;
+    justify-content:center;
+    margin-top:40px;
 }
 
-.menu {
-
-    display: flex;
-    gap: 20px;
-
-    margin-top: 50px;
+.card{
+    background:white;
+    padding:30px;
+    text-decoration:none;
+    color:#333;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    transition:0.3s;
 }
 
-.card {
-
-    background: white;
-
-    padding: 30px;
-
-    width: 220px;
-
-    border-radius: 10px;
-
-    text-align: center;
-
-    text-decoration: none;
-
-    color: #2c3e50;
-
-    font-size: 22px;
-
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-
-    transition: 0.3s;
+.card:hover{
+    transform:scale(1.05);
 }
 
-.card:hover {
-
-    transform: scale(1.05);
+form{
+    margin:20px 0;
 }
 
-form {
-
-    margin-bottom: 20px;
+input, select{
+    padding:10px;
+    margin:5px;
 }
 
-input,
-select,
-button {
-
-    padding: 10px;
-
-    margin: 5px;
-
-    border-radius: 5px;
-
-    border: 1px solid #ccc;
+button{
+    padding:10px 15px;
+    background:#3498db;
+    color:white;
+    border:none;
+    cursor:pointer;
 }
 
-button {
-
-    background: #3498db;
-
-    color: white;
-
-    border: none;
-
-    cursor: pointer;
+table{
+    width:100%;
+    background:white;
+    border-collapse:collapse;
 }
 
-button:hover {
-
-    background: #2980b9;
+th, td{
+    border:1px solid #ddd;
+    padding:10px;
 }
 
-table {
-
-    width: 100%;
-
-    background: white;
-
-    border-collapse: collapse;
+th{
+    background:#3498db;
+    color:white;
 }
 
-table th,
-table td {
-
-    border: 1px solid #ddd;
-
-    padding: 10px;
+.delete{
+    color:red;
 }
 
-table th {
-
-    background: #3498db;
-
-    color: white;
-}
-
-.delete {
-
-    background: red;
-
-    color: white;
-
-    padding: 8px 12px;
-
-    border-radius: 5px;
-
-    text-decoration: none;
-}
-
-.back {
-
-    display: inline-block;
-
-    margin-bottom: 20px;
-
-    text-decoration: none;
-
-    color: #3498db;
+.back{
+    text-decoration:none;
 }
