@@ -94,8 +94,6 @@ body{
     padding: 30px;
     display: flex;
     flex-direction: column;
-    justify-content:center;
-    align-items:center
 }
 
 .content-header {
@@ -117,6 +115,9 @@ body{
     gap: 20px;
     width: 100%;
     max-width:1200px
+    margin:auto;
+    flex: 1;
+    aign-content: center;;
 }
 /* FORMULAIRES */
 form{
