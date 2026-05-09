@@ -43,7 +43,6 @@ body{
     margin:auto;
     padding:20px;
 }
-/* Pour que les liens des cartes se comportent comme des cartes */
 .card-link {
     text-decoration: none;
     display: block;
@@ -53,8 +52,6 @@ body{
 .card-link:hover {
     transform: translateY(-5px);
 }
-
-/* Supprimer le hover individuel des cartes pour le mettre sur le lien */
 .card {
     background: white;
     padding: 30px;
@@ -88,7 +85,7 @@ body{
     margin-bottom: 0;
 }
 
-/* CONTENU - Version corrigée */
+/* CONTENU */
 .content {
     flex: 1;
     padding: 30px;
@@ -110,7 +107,7 @@ body{
     font-size: 32px;
 }
 
-/* GRILLE DES CARTES - Version corrigée */
+/* GRILLE DES CARTES */
 .menu {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -168,24 +165,6 @@ th{
     color:white;
 }
 
-/* Arrondir les coins supérieurs du tableau *
-th:first-child {
-    border-top-left-radius: 10px;
-}
-
-th:last-child {
-    border-top-right-radius: 10px;
-}
-
-/* Arrondir les coins inférieurs du tableau *
-tr:last-child td:first-child {
-    border-bottom-left-radius: 10px;
-}
-
-tr:last-child td:last-child {
-    border-bottom-right-radius: 10px;
-}
-*/
 tr:hover{
     background:#f9f9f9;
 }
@@ -220,7 +199,7 @@ tr:hover{
     background:#176a17;
 }
 
-/* Centrage des boutons dans la colonne Actions */
+
 table td:last-child {
     text-align: center;
     vertical-align: middle;
@@ -240,11 +219,7 @@ table td:last-child .delete {
     margin: 2px;
 }
 
-
-/* ==================== */
-/* RESPONSIVE - COMPLET AVEC TABLE-WRAPPER */
-/* ==================== */
-
+/* RESPONSIVE  */
 /* Conteneur défilant pour tableau */
 .table-wrapper {
     overflow-x: auto;
@@ -331,12 +306,12 @@ table td:last-child .delete {
     /* TABLEAU DEFILABLE HORIZONTALEMENT */
     .table-wrapper {
         overflow-x: auto;
-        -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
+        -webkit-overflow-scrolling: touch; 
         margin: 10px 0;
     }
     
     .table-wrapper table {
-        min-width: 650px; /* Largeur minimale pour lire toutes les colonnes */
+        min-width: 650px; 
         width: 100%;
     }
     
@@ -421,7 +396,6 @@ table td:last-child .delete {
         font-size: 14px;
     }
     
-    /* Boutons empilés dans la dernière colonne sur très petit écran */
     table td:last-child button,
     table td:last-child .delete {
         display: block;
