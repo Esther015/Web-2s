@@ -117,7 +117,11 @@ h1{
 }
 */
 
-
+.container{
+    width:90%;
+    margin:auto;
+    padding:20px;
+}
 /* Pour que les liens des cartes se comportent comme des cartes */
 .card-link {
     text-decoration: none;
