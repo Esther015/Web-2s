@@ -42,6 +42,8 @@ body{
 .content{
     flex:1;
     padding:30px;
+    display: flex;
+    flex-direction: column;
 }
 
 .container{
@@ -49,6 +51,18 @@ body{
     margin:auto;
     padding:20px;
 }
+.content-header {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.content-header h1 {
+    color: #2c3e50;
+    margin: 0;
+    text-align: center;
+    font-size: 32px;
+}
+/*
 .content h1 {
     color:#2c3e50;
     display: flex;
@@ -68,6 +82,7 @@ h1{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
     gap:20px;
+    width: 100%;
 }
 
 .card{
@@ -87,15 +102,17 @@ h1{
 
 .card h2{
     margin-bottom:15px;
+    margin-top:0;
 }
 
 .card p{
     color:#666;
     line-height:1.5;
+    margin-bottom:0;
 }
 .card p:hover{
     color:white;
-    line-height:1.5;
+    /*line-height:1.5;*/
 }
 /* FORMULAIRES */
 form{
