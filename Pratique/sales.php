@@ -263,7 +263,7 @@ href="?delete=<?= $row['id'] ?>">
 <?php } ?>
 
 </table>
-
+</div>
 </div>
 
 </body>
