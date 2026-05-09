@@ -132,6 +132,7 @@ form{
     box-shadow:0 0 10px rgba(0,0,0,0.05);
     width:85%;
     box-sizing:border-box;
+    text-align:center;
 }
 
 input, select{
@@ -139,8 +140,9 @@ input, select{
     margin:5px;
     border:1px solid #ccc;
     border-radius:5px;
-    width:calc(100% - 10px);
+    width:auto;
     box-sizing:border-box;
+    display:inline-block;
 }
 
 button{
@@ -151,6 +153,7 @@ button{
     border-radius:5px;
     cursor:pointer;
     box-sizing:border-box;
+    display:inline-block;
 }
 
 button:hover{
@@ -330,6 +333,22 @@ table td:last-child .delete {
         margin: 20px 0;
     }
     
+    /* Garder les champs sur une ligne sur mobile si possible */
+    form {
+        text-align: center;
+    }
+    
+    input, select {
+        width: auto;
+        display: inline-block;
+        margin: 5px;
+    }
+    
+    button {
+        width: auto;
+        display: inline-block;
+    }
+    
     /* Tableau défilable */
     .table-wrapper {
         overflow-x: auto;
@@ -363,21 +382,6 @@ table td:last-child .delete {
     table td:last-child .delete {
         display: inline-block;
         margin: 2px;
-    }
-    
-    /* Formulaire principal sur mobile */
-    form {
-        padding: 15px;
-    }
-    
-    input, select, button {
-        width: 100%;
-        margin: 5px 0;
-        box-sizing: border-box;
-    }
-    
-    button {
-        width: auto;
     }
     
     .delete, .back {
@@ -415,7 +419,7 @@ table td:last-child .delete {
     
     input, select {
         font-size: 12px;
-        padding: 5px;
+        padding: 8px;
     }
     
     button, .delete, .back {
