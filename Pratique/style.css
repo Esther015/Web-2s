@@ -241,6 +241,16 @@ table td:last-child .delete {
 }
 
 
+/* ==================== */
+/* RESPONSIVE - COMPLET AVEC TABLE-WRAPPER */
+/* ==================== */
+
+/* Conteneur défilant pour tableau */
+.table-wrapper {
+    overflow-x: auto;
+    width: 100%;
+}
+
 /* Tablettes (max-width: 992px) */
 @media screen and (max-width: 992px) {
     .sidebar {
@@ -262,6 +272,190 @@ table td:last-child .delete {
 }
 
 /* Mobiles (max-width: 768px) */
+@media screen and (max-width: 768px) {
+    /* Layout en colonne */
+    .layout {
+        flex-direction: column;
+    }
+    
+    /* Sidebar horizontale */
+    .sidebar {
+        width: 100%;
+        padding: 15px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .sidebar h2 {
+        width: 100%;
+        margin-bottom: 15px;
+        font-size: 20px;
+    }
+    
+    .menu-link {
+        padding: 10px 15px;
+        margin: 5px;
+        display: inline-block;
+    }
+    
+    /* Contenu */
+    .content {
+        padding: 15px;
+    }
+    
+    .content-header {
+        margin-top: -20px;
+        margin-bottom: 20px;
+    }
+    
+    .content-header h1 {
+        font-size: 24px;
+    }
+    
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    /* Cartes en colonne */
+    .menu {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .card {
+        padding: 20px;
+    }
+    
+    /* TABLEAU DEFILABLE HORIZONTALEMENT */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; /* Défilement fluide sur iOS */
+        margin: 10px 0;
+    }
+    
+    .table-wrapper table {
+        min-width: 650px; /* Largeur minimale pour lire toutes les colonnes */
+        width: 100%;
+    }
+    
+    /* Formulaire dans le tableau */
+    table td form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+        margin: 0;
+        padding: 5px;
+        background: none;
+        box-shadow: none;
+    }
+    
+    /* Boutons dans le tableau */
+    table td:last-child {
+        white-space: nowrap;
+    }
+    
+    table td:last-child button,
+    table td:last-child .delete {
+        display: inline-block;
+        margin: 2px;
+    }
+    
+    /* Formulaire principal */
+    form {
+        padding: 15px;
+    }
+    
+    input, select, button {
+        width: 100%;
+        margin: 5px 0;
+        box-sizing: border-box;
+    }
+    
+    button {
+        width: auto;
+    }
+    
+    .delete, .back {
+        display: inline-block;
+        margin-top: 5px;
+    }
+}
+
+/* Petits mobiles (max-width: 480px) */
+@media screen and (max-width: 480px) {
+    .content-header h1 {
+        font-size: 20px;
+    }
+    
+    .card h2 {
+        font-size: 18px;
+    }
+    
+    .card p {
+        font-size: 14px;
+    }
+    
+    .container {
+        padding: 5px;
+    }
+    
+    /* Tableau encore plus petit */
+    .table-wrapper table {
+        min-width: 550px;
+    }
+    
+    th, td {
+        padding: 6px;
+        font-size: 12px;
+    }
+    
+    th input, td input {
+        font-size: 12px;
+        padding: 5px;
+    }
+    
+    button, .delete, .back {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    /* Boutons empilés dans la dernière colonne sur très petit écran */
+    table td:last-child button,
+    table td:last-child .delete {
+        display: block;
+        margin: 5px 0;
+    }
+}
+
+
+
+
+
+
+
+/* Tablettes (max-width: 992px) 
+@media screen and (max-width: 992px) {
+    .sidebar {
+        width: 200px;
+    }
+    
+    .container {
+        width: 90%;
+    }
+    
+    .content-header h1 {
+        font-size: 28px;
+    }
+    
+    .menu {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 15px;
+    }
+}
+
+/* Mobiles (max-width: 768px) *
 @media screen and (max-width: 768px) {
     .layout {
         flex-direction: column;
@@ -314,7 +508,7 @@ table td:last-child .delete {
         padding: 10px;
     }
     
-    /* Tableau responsive - défilement horizontal */
+    /* Tableau responsive - défilement horizontal *
     table {
         display: block;
         overflow-x: auto;
@@ -326,7 +520,7 @@ table td:last-child .delete {
         font-size: 14px;
     }
     
-    /* Formulaire responsive */
+    /* Formulaire responsive *
     form {
         padding: 15px;
     }
@@ -347,7 +541,7 @@ table td:last-child .delete {
     }
 }
 
-/* Petits mobiles (max-width: 480px) */
+ Petits mobiles (max-width: 480px) 
 @media screen and (max-width: 480px) {
     .content-header h1 {
         font-size: 20px;
@@ -376,4 +570,4 @@ table td:last-child .delete {
         display: block;
         margin: 5px 0;
     }
-}
+}*/
