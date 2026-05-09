@@ -1,41 +1,51 @@
 body{
-    background:#1e1e1e;
-    color:white;
-    font-family:Arial;
+    font-family:Verdana;
+    background:#eafaf1;
 }
 
 .container{
-    width:90%;
+    width:95%;
     margin:auto;
+}
+
+h1{
+    color:#27ae60;
 }
 
 table{
     width:100%;
     border-collapse:collapse;
-}
-
-th, td{
-    border:1px solid #555;
-    padding:10px;
+    background:white;
 }
 
 th{
-    background:#333;
+    background:#27ae60;
+    color:white;
 }
 
-input, button, select{
+th, td{
+    padding:12px;
+    border:1px solid #ccc;
+}
+
+input, select{
     padding:10px;
-    margin:5px;
-    background:#333;
+    border:1px solid #27ae60;
+}
+
+button{
+    background:#27ae60;
     color:white;
+    padding:10px;
     border:none;
 }
 
 .card{
-    display:inline-block;
-    background:#333;
+    background:white;
+    border-left:5px solid #27ae60;
     padding:20px;
+    display:inline-block;
     margin:10px;
-    color:white;
     text-decoration:none;
+    color:black;
 }
