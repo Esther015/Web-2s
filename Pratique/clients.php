@@ -68,8 +68,10 @@ $result = $pdo->query("SELECT * FROM customers");
 
 <h1>Клиенты</h1>
 
-<a href="index.php" class="back">
-← Назад
+<a href="index.php" 
+   class="back"
+   aria-label="Назад">
+   Назад
 </a>
 
 <h2>Добавить клиента</h2>
