@@ -2,22 +2,18 @@
 
 include 'config.php';
 
-# AJOUT
+# AJOUT VENTE
 if(isset($_POST['add'])) {
 
     $medicine = $_POST['medicine'];
     $customer = $_POST['customer'];
     $employee = $_POST['employee'];
     $quantity = $_POST['quantity'];
-    $date = $_POST['date'];
 
+    # AJOUT DANS SALES
     $sql = "INSERT INTO sales
-            (medicine_id,
-            customer_id,
-            employee_id,
-            quantity,
-            sale_date)
-            VALUES (?, ?, ?, ?, ?)";
+            (medicine_id, customer_id, employee_id, quantity, sale_date)
+            VALUES (?, ?, ?, ?, NOW())";
 
     $stmt = $pdo->prepare($sql);
 
@@ -25,9 +21,17 @@ if(isset($_POST['add'])) {
         $medicine,
         $customer,
         $employee,
-        $quantity,
-        $date
+        $quantity
     ]);
+
+    # DIMINUER STOCK
+    $sql2 = "UPDATE medicines
+             SET quantity = quantity - ?
+             WHERE id=?";
+
+    $stmt2 = $pdo->prepare($sql2);
+
+    $stmt2->execute([$quantity, $medicine]);
 }
 
 # SUPPRESSION
@@ -42,37 +46,41 @@ if(isset($_GET['delete'])) {
     $stmt->execute([$id]);
 }
 
+# AFFICHAGE AVEC JOIN
+$sql = "SELECT sales.id,
+        medicines.name AS medicine,
+        customers.full_name AS customer,
+        employees.full_name AS employee,
+        sales.quantity,
+        sales.sale_date
+
+        FROM sales
+
+        JOIN medicines
+        ON sales.medicine_id = medicines.id
+
+        JOIN customers
+        ON sales.customer_id = customers.id
+
+        JOIN employees
+        ON sales.employee_id = employees.id
+
+        ORDER BY sales.id DESC";
+
+$result = $pdo->query($sql);
+
 $medicines = $pdo->query("SELECT * FROM medicines");
-
-$clients = $pdo->query("SELECT * FROM customers");
-
+$customers = $pdo->query("SELECT * FROM customers");
 $employees = $pdo->query("SELECT * FROM employees");
-
-$result = $pdo->query("
-SELECT sales.id,
-medicines.name AS medicine,
-customers.full_name AS customer,
-employees.full_name AS employee,
-sales.quantity,
-sales.sale_date
-FROM sales
-JOIN medicines ON sales.medicine_id = medicines.id
-JOIN customers ON sales.customer_id = customers.id
-JOIN employees ON sales.employee_id = employees.id
-");
 
 ?>
 
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
-
 <meta charset="UTF-8">
 <title>Продажи</title>
-
 <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -130,10 +138,6 @@ name="quantity"
 placeholder="Количество"
 required>
 
-<input type="date"
-name="date"
-required>
-
 <button type="submit"
 name="add">
 Добавить
@@ -170,12 +174,10 @@ name="add">
 <td><?= $row['sale_date'] ?></td>
 
 <td>
-
 <a class="delete"
 href="?delete=<?= $row['id'] ?>">
 Удалить
 </a>
-
 </td>
 
 </tr>
