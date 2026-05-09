@@ -155,12 +155,7 @@ table{
     border-spacing:0;
     box-shadow:0 0 10px #1d981d;
     border-radius:10px;
-    overflow:hidden;
-}
-
-.table-wrapper table {
-    border-radius: 10px;
-    overflow: hidden;
+    overflow:hidden;  
 }
 
 th, td{
@@ -173,7 +168,7 @@ th{
     color:white;
 }
 
-/* Arrondir les coins supérieurs du tableau */
+/* Arrondir les coins supérieurs du tableau *
 th:first-child {
     border-top-left-radius: 10px;
 }
@@ -182,7 +177,7 @@ th:last-child {
     border-top-right-radius: 10px;
 }
 
-/* Arrondir les coins inférieurs du tableau */
+/* Arrondir les coins inférieurs du tableau *
 tr:last-child td:first-child {
     border-bottom-left-radius: 10px;
 }
@@ -190,7 +185,7 @@ tr:last-child td:first-child {
 tr:last-child td:last-child {
     border-bottom-right-radius: 10px;
 }
-
+*/
 tr:hover{
     background:#f9f9f9;
 }
