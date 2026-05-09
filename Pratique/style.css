@@ -123,6 +123,8 @@ form{
     padding:20px;
     border-radius:10px;
     box-shadow:0 0 10px rgba(0,0,0,0.05);
+    width:85%;
+    box-sizing: border-box;
 }
 
 input, select{
@@ -130,6 +132,8 @@ input, select{
     margin:5px;
     border:1px solid #ccc;
     border-radius:5px;
+    max-width: calc(100% - 10px);
+    box-sizing: border-box;
 }
 
 button{
@@ -139,6 +143,7 @@ button{
     border:none;
     border-radius:5px;
     cursor:pointer;
+    box-sizing: border-box;  
 }
 
 button:hover{
