@@ -85,7 +85,10 @@ h1{
     color:#666;
     line-height:1.5;
 }
-
+.card p:hover{
+    color:white;
+    line-height:1.5;
+}
 /* FORMULAIRES */
 form{
     margin:20px 0;
