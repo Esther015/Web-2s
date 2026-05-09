@@ -214,7 +214,7 @@ name="add">
 </button>
 
 </form>
-
+<div class="table-wrapper">
 <table>
 
 <tr>
