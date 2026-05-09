@@ -13,7 +13,7 @@ body{
 /* SIDEBAR */
 .sidebar{
     width:250px;
-    background:#2c3e50;
+    background:#3ed25b;
     padding:20px;
     display:flex;
     flex-direction:column;
@@ -102,7 +102,7 @@ input, select{
 
 button{
     padding:10px 15px;
-    background:#3498db;
+    background:#3ed25b;
     color:white;
     border:none;
     border-radius:5px;
@@ -142,7 +142,9 @@ tr:hover{
 }
 
 .back{
+    border:1px solid #ddd;
     text-decoration:none;
     color:#3498db;
+    background:#3ed25b;
     font-weight:bold;
 }
