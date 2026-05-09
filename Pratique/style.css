@@ -110,7 +110,7 @@ button{
 }
 
 button:hover{
-    background:#2d8a3f;
+    background:#1d981d;
 }
 
 /* TABLEAUX */
@@ -118,7 +118,7 @@ table{
     width:100%;
     background:white;
     border-collapse:collapse;
-    box-shadow:0 0 10px rgba(0,0,0,0.05);
+    box-shadow:0 0 10px #1d981d;
 }
 
 th, td{
@@ -141,15 +141,6 @@ tr:hover{
     text-decoration:none;
 }
 
-
-/*.back{
-    border:1px solid #ddd;
-    text-decoration:none;
-    color:#3498db;
-    background:#3ed25b;
-    font-weight:bold;
-}
-*/
 .back {
     display: inline-block;        
     padding: 10px 20px;          
@@ -163,5 +154,5 @@ tr:hover{
     font-family: inherit;       
 }
 .back:hover{
-    background:#2d8a3f;
+    background:#1d981d;
 }
