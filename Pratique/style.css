@@ -146,13 +146,14 @@ button:hover{
 }
 /* TABLEAUX */
 table{
-    width:100%;
+    width:85%;
     background:white;
     border-collapse:separate;
     border-spacing:0;
     box-shadow:0 0 10px #1d981d;
     border-radius:10px;
     overflow:hidden;  
+    margin:0 auto;
 }
 
 th, td{
