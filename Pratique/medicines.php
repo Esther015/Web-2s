@@ -110,9 +110,11 @@ else {
 
 <h1>Лекарства</h1>
 
-<a href="index.php" class="back">
-← Назад
+<a href="index.php" 
+   class="back"
+   aria-label="Назад"> Назад
 </a>
+
 
 <form method="GET">
 
