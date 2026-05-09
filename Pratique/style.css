@@ -145,33 +145,8 @@ button{
 }
 
 button:hover{
-    background:#1d981d;
+    background:#176a17;
 }
-
-/* TABLEAUX */
-/*
-table{
-    width:100%;
-    background:white;
-    border-collapse:collapse;
-    box-shadow:0 0 10px #1d981d;
-    border-radius:10px;
-}
-
-th, td{
-    border:1px solid #ddd;
-    padding:10px;
-}
-
-th{
-    background:#1d981d;
-    color:white;
-}
-
-tr:hover{
-    background:#f9f9f9;
-}
-*/
 /* TABLEAUX */
 table{
     width:100%;
@@ -239,7 +214,7 @@ tr:hover{
     font-family: inherit;       
 }
 .back:hover{
-    background:#1d981d;
+    background:#176a17;
 }
 
 /* Centrage des boutons dans la colonne Actions */
