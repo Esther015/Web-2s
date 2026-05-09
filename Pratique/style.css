@@ -49,13 +49,20 @@ body{
     margin:auto;
     padding:20px;
 }
-
+.content h1 {
+    color:#2c3e50;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+/*
 h1{
     color:#2c3e50;
     margin-bottom:30px;
     text-align:center;
 }
-
+*/
 /* CARTES */
 .menu{
     display:grid;
