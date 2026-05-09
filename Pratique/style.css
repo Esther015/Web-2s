@@ -38,85 +38,6 @@ body{
     background:#2d8a3f;
 }
 
-/* CONTENU 
-.content{
-    flex:1;
-    padding:30px;
-    display: flex;
-    flex-direction: column;
-}
-
-.container{
-    width:90%;
-    margin:auto;
-    padding:20px;
-}
-.content-header {
-    width: 100%;
-    margin-bottom: 40px;
-}
-
-.content-header h1 {
-    color: #2c3e50;
-    margin: 0;
-    text-align: center;
-    font-size: 32px;
-}
-/*
-.content h1 {
-    color:#2c3e50;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-/*
-h1{
-    color:#2c3e50;
-    margin-bottom:30px;
-    text-align:center;
-}
-*/
-/* CARTES 
-.menu{
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
-    gap:20px;
-    width: 100%;
-}
-
-.card{
-    background:white;
-    padding:30px;
-    color:#333;
-    text-decoration:none;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
-    transition:0.3s;
-}
-
-.card:hover{
-    transform:translateY(-5px);
-    background:#1d981d;
-    color:white;
-}
-
-.card h2{
-    margin-bottom:15px;
-    margin-top:0;
-}
-
-.card p{
-    color:#666;
-    line-height:1.5;
-    margin-bottom:0;
-}
-.card p:hover{
-    color:white;
-    /*line-height:1.5;
-}
-*/
-
 .container{
     width:85%;
     margin:auto;
@@ -173,6 +94,8 @@ h1{
     padding: 30px;
     display: flex;
     flex-direction: column;
+    justify-content:center;
+    align-items:center
 }
 
 .content-header {
@@ -193,6 +116,7 @@ h1{
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
     width: 100%;
+    max-width:1200px
 }
 /* FORMULAIRES */
 form{
