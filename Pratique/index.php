@@ -40,8 +40,9 @@
 
     <!-- CONTENU DROITE -->
     <div class="content">
-
-        <h1>Система управления аптекой</h1>
+        <div class="content-header">
+            <h1>Система управления аптекой</h1>
+        </div>
 
         <div class="menu">
         <a href="medicines.php" class="card-link">
