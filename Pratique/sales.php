@@ -135,6 +135,7 @@ $employees = $pdo->query("SELECT * FROM employees");
 
 <input type="number"
 name="quantity"
+min="1"
 placeholder="Количество"
 required>
 
