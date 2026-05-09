@@ -1,78 +1,41 @@
 body{
-    font-family: Arial;
-    background:#f4f6f9;
-    margin:0;
+    background:#1e1e1e;
+    color:white;
+    font-family:Arial;
 }
 
 .container{
     width:90%;
     margin:auto;
-    padding:20px;
-}
-
-h1{
-    text-align:center;
-    color:#2c3e50;
-}
-
-.menu{
-    display:flex;
-    gap:20px;
-    justify-content:center;
-    margin-top:40px;
-}
-
-.card{
-    background:white;
-    padding:30px;
-    text-decoration:none;
-    color:#333;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.1);
-    transition:0.3s;
-}
-
-.card:hover{
-    transform:scale(1.05);
-}
-
-form{
-    margin:20px 0;
-}
-
-input, select{
-    padding:10px;
-    margin:5px;
-}
-
-button{
-    padding:10px 15px;
-    background:#3498db;
-    color:white;
-    border:none;
-    cursor:pointer;
 }
 
 table{
     width:100%;
-    background:white;
     border-collapse:collapse;
 }
 
 th, td{
-    border:1px solid #ddd;
+    border:1px solid #555;
     padding:10px;
 }
 
 th{
-    background:#3498db;
+    background:#333;
+}
+
+input, button, select{
+    padding:10px;
+    margin:5px;
+    background:#333;
     color:white;
+    border:none;
 }
 
-.delete{
-    color:red;
-}
-
-.back{
+.card{
+    display:inline-block;
+    background:#333;
+    padding:20px;
+    margin:10px;
+    color:white;
     text-decoration:none;
 }
