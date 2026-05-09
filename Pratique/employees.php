@@ -78,8 +78,10 @@ $result = $pdo->query("SELECT * FROM employees");
 
 <h1>Сотрудники</h1>
 
-<a href="index.php" class="back">
-← Назад
+<a href="index.php" 
+   class="back"
+   aria-label="Назад">
+   Назад
 </a>
 
 <h2>Добавить сотрудника</h2>
