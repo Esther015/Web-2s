@@ -1,55 +1,42 @@
 <?php include 'config.php'; ?>
 
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Аптека</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
 <body>
 
-<div class="hero">
+<div class="container">
 
-    <div class="overlay"></div>
+    <h1>Система управления аптекой</h1>
 
-    <div class="hero-content">
+    <div class="menu">
 
-        <h1>Система управления аптекой</h1>
+        <a href="medicines.php" class="card">
+            Лекарства
+        </a>
 
-        <p>
-            Управление лекарствами, клиентами,
-            сотрудниками и продажами
-        </p>
+        <a href="employees.php" class="card">
+            Сотрудники
+        </a>
+
+        <a href="clients.php" class="card">
+            Клиенты
+        </a>
+
+        <a href="sales.php" class="card">
+            Продажи
+        </a>
 
     </div>
 
 </div>
 
-<div class="container">
-
-    <div class="stats">
-
-        <div class="stat-box">
-            <h2>💊</h2>
-            <p>Лекарства</p>
-        </div>
-
-        <div class="stat-box">
-            <h2>👨‍⚕️</h2>
-            <p>Сотрудники</p>
-        </div>
-
-        <div class="stat-box">
-            <h2>🧑</h2>
-            <p>Клиенты</p>
-        </div>
-
-        <div class="stat-box">
-            <h2>🛒</h2>
-            <p>Продажи</p>
-        </div>
-
-    </div>
-
-
-    <div class="menu">
-
-        <a href="medicines.php" class="card">
-
-            <div class="icon">💊</div>
-
-            <h2>Лекарства</h2>
+</body>
+</html>
