@@ -137,7 +137,13 @@ tr:hover{
 
 /* LIENS */
 .delete{
-    color:red;
+     padding:10px 15px;
+    background:red;
+    color:white;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    color: white;
     text-decoration:none;
 }
 
