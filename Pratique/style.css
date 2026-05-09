@@ -273,3 +273,23 @@ tr:hover{
 .back:hover{
     background:#1d981d;
 }
+
+/* Centrage des boutons dans la colonne Actions */
+table td:last-child {
+    text-align: center;
+    vertical-align: middle;
+}
+
+table td:last-child form {
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    display: inline-block;
+}
+
+table td:last-child button,
+table td:last-child .delete {
+    display: inline-block;
+    margin: 2px;
+}
