@@ -138,7 +138,7 @@ else {
 <a href="index.php" 
    class="back"
    aria-label="Назад">
-   Retour
+   Назад
 </a>
     <!--
 <a href="index.php" class="back">
