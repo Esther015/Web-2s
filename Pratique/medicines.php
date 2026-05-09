@@ -215,7 +215,8 @@ value="<?= $row['price'] ?>">
 
 <input type="number"
 name="quantity"
-value="<?= $row['quantity'] ?>">
+    min ="0" required ?>
+<!-- value="*?= $row['quantity'] ?>"*-->
 
 </td>
 
