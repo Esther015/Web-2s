@@ -6,20 +6,76 @@ include 'config.php';
 if(isset($_POST['add'])) {
 
     $medicine = $_POST['medicine'];
-    $customer = $_POST['customer'];
     $employee = $_POST['employee'];
+
+    $customer_name = $_POST['customer_name'];
+    $customer_phone = $_POST['customer_phone'];
+
     $quantity = $_POST['quantity'];
 
-    # AJOUT DANS SALES
+    # EMPÊCHER QUANTITÉ NÉGATIVE
+    if($quantity <= 0){
+        die("Количество должно быть больше нуля");
+    }
+
+    # VÉRIFIER STOCK
+    $sqlCheck = "SELECT quantity
+                 FROM medicines
+                 WHERE id=?";
+
+    $stmtCheck = $pdo->prepare($sqlCheck);
+
+    $stmtCheck->execute([$medicine]);
+
+    $med = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+    if($quantity > $med['quantity']){
+        die("Недостаточно товара на складе");
+    }
+
+    # VERIFIER SI CLIENT EXISTE
+    $sqlCustomer = "SELECT id
+                    FROM customers
+                    WHERE full_name=?";
+
+    $stmtCustomer = $pdo->prepare($sqlCustomer);
+
+    $stmtCustomer->execute([$customer_name]);
+
+    $customer = $stmtCustomer->fetch(PDO::FETCH_ASSOC);
+
+    # SI CLIENT N'EXISTE PAS
+    if(!$customer){
+
+        $sqlInsertCustomer = "INSERT INTO customers
+                              (full_name, phone)
+                              VALUES(?, ?)";
+
+        $stmtInsert = $pdo->prepare($sqlInsertCustomer);
+
+        $stmtInsert->execute([
+            $customer_name,
+            $customer_phone
+        ]);
+
+        $customer_id = $pdo->lastInsertId();
+    }
+    else{
+
+        $customer_id = $customer['id'];
+    }
+
+    # AJOUT VENTE
     $sql = "INSERT INTO sales
-            (medicine_id, customer_id, employee_id, quantity, sale_date)
+            (medicine_id, customer_id,
+             employee_id, quantity, sale_date)
             VALUES (?, ?, ?, ?, NOW())";
 
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute([
         $medicine,
-        $customer,
+        $customer_id,
         $employee,
         $quantity
     ]);
@@ -32,6 +88,9 @@ if(isset($_POST['add'])) {
     $stmt2 = $pdo->prepare($sql2);
 
     $stmt2->execute([$quantity, $medicine]);
+
+    header("Location: sales.php");
+    exit;
 }
 
 # SUPPRESSION
@@ -44,9 +103,12 @@ if(isset($_GET['delete'])) {
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute([$id]);
+
+    header("Location: sales.php");
+    exit;
 }
 
-# AFFICHAGE AVEC JOIN
+# AFFICHAGE
 $sql = "SELECT sales.id,
         medicines.name AS medicine,
         customers.full_name AS customer,
@@ -70,17 +132,20 @@ $sql = "SELECT sales.id,
 $result = $pdo->query($sql);
 
 $medicines = $pdo->query("SELECT * FROM medicines");
-$customers = $pdo->query("SELECT * FROM customers");
 $employees = $pdo->query("SELECT * FROM employees");
 
 ?>
 
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
+
 <meta charset="UTF-8">
 <title>Продажи</title>
+
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -97,46 +162,48 @@ $employees = $pdo->query("SELECT * FROM employees");
 
 <form method="POST">
 
-<select name="medicine">
+<select name="medicine" required>
 
 <?php while($m = $medicines->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <option value="<?= $m['id'] ?>">
+
 <?= $m['name'] ?>
+(остаток: <?= $m['quantity'] ?>)
+
 </option>
 
 <?php } ?>
 
 </select>
 
-<select name="customer">
-
-<?php while($c = $customers->fetch(PDO::FETCH_ASSOC)) { ?>
-
-<option value="<?= $c['id'] ?>">
-<?= $c['full_name'] ?>
-</option>
-
-<?php } ?>
-
-</select>
-
-<select name="employee">
+<select name="employee" required>
 
 <?php while($e = $employees->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <option value="<?= $e['id'] ?>">
+
 <?= $e['full_name'] ?>
+
 </option>
 
 <?php } ?>
 
 </select>
 
+<input type="text"
+name="customer_name"
+placeholder="Имя клиента"
+required>
+
+<input type="text"
+name="customer_phone"
+placeholder="Телефон">
+
 <input type="number"
 name="quantity"
-min="1"
 placeholder="Количество"
+min="1"
 required>
 
 <button type="submit"
@@ -149,6 +216,7 @@ name="add">
 <table>
 
 <tr>
+
 <th>ID</th>
 <th>Лекарство</th>
 <th>Клиент</th>
@@ -156,6 +224,7 @@ name="add">
 <th>Количество</th>
 <th>Дата</th>
 <th>Действие</th>
+
 </tr>
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
@@ -175,10 +244,12 @@ name="add">
 <td><?= $row['sale_date'] ?></td>
 
 <td>
+
 <a class="delete"
 href="?delete=<?= $row['id'] ?>">
 Удалить
 </a>
+
 </td>
 
 </tr>
