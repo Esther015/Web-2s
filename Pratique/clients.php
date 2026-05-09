@@ -94,7 +94,7 @@ name="add">
 </button>
 
 </form>
-
+<div class="table-wrapper">
 <table>
 
 <tr>
@@ -157,7 +157,7 @@ href="?delete=<?= $row['id'] ?>">
 <?php } ?>
 
 </table>
-
+</div>
 </div>
 
 </body>
