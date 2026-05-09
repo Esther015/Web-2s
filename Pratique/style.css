@@ -38,7 +38,7 @@ body{
     background:#2d8a3f;
 }
 
-/* CONTENU */
+/* CONTENU 
 .content{
     flex:1;
     padding:30px;
@@ -77,7 +77,7 @@ h1{
     text-align:center;
 }
 */
-/* CARTES */
+/* CARTES 
 .menu{
     display:grid;
     grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
@@ -113,7 +113,82 @@ h1{
 }
 .card p:hover{
     color:white;
-    /*line-height:1.5;*/
+    /*line-height:1.5;
+}
+*/
+
+
+/* Pour que les liens des cartes se comportent comme des cartes */
+.card-link {
+    text-decoration: none;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.card-link:hover {
+    transform: translateY(-5px);
+}
+
+/* Supprimer le hover individuel des cartes pour le mettre sur le lien */
+.card {
+    background: white;
+    padding: 30px;
+    color: #333;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+    height: 100%;
+    cursor: pointer;
+}
+
+.card-link:hover .card {
+    background: #1d981d;
+    transform: translateY(-5px);
+}
+
+.card-link:hover .card h2,
+.card-link:hover .card p {
+    color: white;
+}
+
+.card h2 {
+    margin-bottom: 15px;
+    margin-top: 0;
+    color: #333;
+}
+
+.card p {
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 0;
+}
+
+/* CONTENU - Version corrigée */
+.content {
+    flex: 1;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-header {
+    width: 100%;
+    margin-bottom: 40px;
+}
+
+.content-header h1 {
+    color: #2c3e50;
+    margin: 0;
+    text-align: center;
+    font-size: 32px;
+}
+
+/* GRILLE DES CARTES - Version corrigée */
+.menu {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    width: 100%;
 }
 /* FORMULAIRES */
 form{
