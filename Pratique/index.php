@@ -48,17 +48,15 @@
         <a href="medicines.php" class="card-link">
             <div class="card">
                 <h2>Лекарства</h2>
-                
                 <p>
                    Управление лекарственными средствами, 
                     запасами и сроками годности.
                 </p>
             </div>
          </a>
-            <a>
+            <a href="medicines.php" class="card-link">
                 <div class="card">
                 <h2> Сотрудники</h2>
-                <a href="employees.php" class="card-link"> </a>
                 <p>
                     Управление персоналом
                     и персонал.
@@ -66,10 +64,9 @@
             </div>
             </a>
             
-            <a>
+            <a href="clients.php" class="card-link"> >
                 <div class="card">
                 <h2> Клиенты</h2>
-                <a href="clients.php" class="card-link"> </a>
                 <p>
                     Информация для клиентов
                     и исторический.
@@ -77,10 +74,9 @@
             </div>
             </a>
             
-            <a>
+            <a href="sales.php" class="card-link">>
                 <div class="card">
                 <h2>Продажи</h2>
-                <a href="sales.php" class="card-link"> </a>
                 <p>
                     Управление продажами
                     и запас.
