@@ -141,10 +141,24 @@ tr:hover{
     text-decoration:none;
 }
 
-.back{
+
+/*.back{
     border:1px solid #ddd;
     text-decoration:none;
     color:#3498db;
     background:#3ed25b;
     font-weight:bold;
+}
+*/
+.back {
+    display: inline-block;        
+    padding: 10px 20px;          
+    background-color: #3ed25b;   
+    color: white;               
+    text-decoration: none;       
+    border: none;                
+    border-radius: 5px;          
+    cursor: pointer;             
+    font-size: 16px;            
+    font-family: inherit;       
 }
