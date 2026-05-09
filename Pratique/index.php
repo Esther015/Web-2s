@@ -44,17 +44,18 @@
         <h1>Система управления аптекой</h1>
 
         <div class="menu">
-
+        <a href="medicines.php" class="card-link">
             <div class="card">
                 <h2>Лекарства</h2>
-                <a href="medicines.php" class="card-link"> </a>
+                
                 <p>
                    Управление лекарственными средствами, 
                     запасами и сроками годности.
                 </p>
             </div>
-
-            <div class="card">
+         </a>
+            <a>
+                <div class="card">
                 <h2> Сотрудники</h2>
                 <a href="employees.php" class="card-link"> </a>
                 <p>
@@ -62,8 +63,10 @@
                     и персонал.
                 </p>
             </div>
-
-            <div class="card">
+            </a>
+            
+            <a>
+                <div class="card">
                 <h2> Клиенты</h2>
                 <a href="clients.php" class="card-link"> </a>
                 <p>
@@ -71,8 +74,10 @@
                     и исторический.
                 </p>
             </div>
-
-            <div class="card">
+            </a>
+            
+            <a>
+                <div class="card">
                 <h2>Продажи</h2>
                 <a href="sales.php" class="card-link"> </a>
                 <p>
@@ -80,6 +85,8 @@
                     и запас.
                 </p>
             </div>
+            </a>
+            
 
         </div>
 
