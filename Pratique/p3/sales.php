@@ -55,3 +55,164 @@ $stmt2->execute([$quantity, $medicine]);
 header("Location: sales.php");
 exit;
   }
+
+# AFFICHAGE
+$sql = "SELECT sales.id,
+        medicines.name AS medicine,
+        customers.full_name AS customer,
+        employees.full_name AS employee,
+        sales.quantity,
+        sales.sale_date
+
+        FROM sales
+
+        JOIN medicines
+        ON sales.medicine_id = medicines.id
+
+        JOIN customers
+        ON sales.customer_id = customers.id
+
+        JOIN employees
+        ON sales.employee_id = employees.id
+
+        ORDER BY sales.id DESC";
+
+$result = $pdo->query($sql);
+
+$medicines = $pdo->query("SELECT * FROM medicines");
+$employees = $pdo->query("SELECT * FROM employees");
+
+?>
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Продажи</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Продажи</h1>
+
+<a href="index.php" 
+   class="back"
+   aria-label="Назад">
+   Назад
+</a>
+
+<h2>Добавить продажу</h2>
+
+<form method="POST">
+
+<select name="medicine" required>
+
+<?php while($m = $medicines->fetch(PDO::FETCH_ASSOC)) { ?>
+
+<option value="<?= $m['id'] ?>">
+
+<?= $m['name'] ?>
+(остаток: <?= $m['quantity'] ?>)
+
+</option>
+
+<?php } ?>
+
+</select>
+
+<select name="employee" required>
+
+<?php while($e = $employees->fetch(PDO::FETCH_ASSOC)) { ?>
+
+<option value="<?= $e['id'] ?>">
+
+<?= $e['full_name'] ?>
+
+</option>
+
+<?php } ?>
+
+</select>
+
+<input type="text"
+name="customer_name"
+placeholder="Имя клиента"
+required>
+
+<input type="text"
+name="customer_phone"
+placeholder="Телефон">
+
+<input type="number"
+name="quantity"
+placeholder="Количество"
+min="1"
+required>
+
+<button type="submit"
+name="add">
+Добавить
+</button>
+
+</form>
+<div class="table-wrapper">
+<table>
+
+<tr>
+
+<th>ID</th>
+<th>Лекарство</th>
+<th>Клиент</th>
+<th>Сотрудник</th>
+<th>Количество</th>
+<th>Дата</th>
+<th>Действие</th>
+
+</tr>
+
+<?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+
+<tr>
+
+<td><?= $row['id'] ?></td>
+
+<td><?= $row['medicine'] ?></td>
+
+<td><?= $row['customer'] ?></td>
+
+<td><?= $row['employee'] ?></td>
+
+<td><?= $row['quantity'] ?></td>
+
+<td><?= $row['sale_date'] ?></td>
+
+<td>
+<button type="submit"
+name="update">
+Изменить
+</button>
+    
+<a class="delete"
+href="?delete=<?= $row['id'] ?>">
+Удалить
+</a>
+
+</td>
+
+</tr>
+
+<?php } ?>
+
+</table>
+</div>
+</div>
+
+</body>
+</html>
