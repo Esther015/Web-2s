@@ -107,7 +107,70 @@ if(isset($_GET['delete'])) {
     header("Location: sales.php");
     exit;
 }
+# MODIFICATION VENTE
+if(isset($_POST['update'])) {
 
+    $id = $_POST['id'];
+    $medicine = $_POST['medicine'];
+    $employee = $_POST['employee'];
+    $quantity = $_POST['quantity'];
+
+    if($quantity <= 0){
+        die("Количество должно быть больше нуля");
+    }
+
+    # RÉCUPÉRER ANCIENNE VENTE POUR RESTAURER STOCK
+    $sqlOld = "SELECT medicine_id, quantity FROM sales WHERE id=?";
+    $stmtOld = $pdo->prepare($sqlOld);
+    $stmtOld->execute([$id]);
+    $oldSale = $stmtOld->fetch(PDO::FETCH_ASSOC);
+
+    if(!$oldSale){
+        die("Продажа не найдена");
+    }
+
+    # RESTAURER STOCK ANCIEN
+    $sqlRestore = "UPDATE medicines SET quantity = quantity + ? WHERE id=?";
+    $stmtRestore = $pdo->prepare($sqlRestore);
+    $stmtRestore->execute([$oldSale['quantity'], $oldSale['medicine_id']]);
+
+    # VÉRIFIER STOCK NOUVEAU
+    $sqlCheck = "SELECT quantity FROM medicines WHERE id=?";
+    $stmtCheck = $pdo->prepare($sqlCheck);
+    $stmtCheck->execute([$medicine]);
+    $med = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+    if($quantity > $med['quantity']){
+        die("Недостаточно товара на складе");
+    }
+
+    # UPDATE VENTE
+    $sql = "UPDATE sales
+            SET medicine_id=?,
+                employee_id=?,
+                quantity=?
+            WHERE id=?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        $medicine,
+        $employee,
+        $quantity,
+        $id
+    ]);
+
+    # DÉCRÉMENTER NOUVEAU STOCK
+    $sql2 = "UPDATE medicines
+             SET quantity = quantity - ?
+             WHERE id=?";
+
+    $stmt2 = $pdo->prepare($sql2);
+    $stmt2->execute([$quantity, $medicine]);
+
+    header("Location: sales.php");
+    exit;
+}
 # AFFICHAGE
 $sql = "SELECT sales.id,
         medicines.name AS medicine,
