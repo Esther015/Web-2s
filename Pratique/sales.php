@@ -309,10 +309,9 @@ name="add">
 <td><?= $row['sale_date'] ?></td>
 
 <td>
-<button type="submit"
-name="update">
-Изменить
-</button>
+<a href="sales.php?edit=<?= $row['id'] ?>" class="edit">
+    Изменить
+</a>
     
 <a class="delete"
 href="?delete=<?= $row['id'] ?>">
