@@ -77,7 +77,31 @@ $sql = "SELECT sales.id,
 
         ORDER BY sales.id DESC";
 
-$result = $pdo->query($sql);
+if(isset($_GET['search'])){
+
+    $search = "%" . $_GET['search'] . "%";
+
+    $sql .= " WHERE
+            medicines.name LIKE ?
+            OR customers.full_name LIKE ?
+            OR employees.full_name LIKE ?
+            OR sales.sale_date LIKE ?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        $search,
+        $search,
+        $search,
+        $search
+    ]);
+
+    $result = $stmt;
+
+} else {
+
+    $result = $pdo->query($sql);
+}
 
 $medicines = $pdo->query("SELECT * FROM medicines");
 $employees = $pdo->query("SELECT * FROM employees");
@@ -107,6 +131,18 @@ $employees = $pdo->query("SELECT * FROM employees");
    aria-label="Назад">
    Назад
 </a>
+
+  <form method="GET">
+
+<input type="text"
+name="search"
+placeholder="Поиск продажи">
+
+<button type="submit">
+Поиск
+</button>
+
+</form>
 
 <h2>Добавить продажу</h2>
 
