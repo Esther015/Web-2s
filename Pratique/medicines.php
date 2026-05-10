@@ -131,7 +131,7 @@ else {
 
 <body>
 
-<div class="container\">
+<div class="container">
 
 <h1>Лекарства</h1>
     
