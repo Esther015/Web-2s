@@ -76,6 +76,7 @@ $result = $pdo->query("SELECT * FROM employees ORDER BY id DESC");
 </head>
 <body>
 <div class="container">
+<div class="page-content">
 <h1>Сотрудники</h1>
 <a href="index.php" class="back">Назад</a>
 <form method="GET">
@@ -122,6 +123,7 @@ $result = $pdo->query("SELECT * FROM employees ORDER BY id DESC");
 </tr>
 <?php } ?>
 </table>
+</div>
 </div>
 </div>
 </body>
