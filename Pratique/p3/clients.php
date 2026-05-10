@@ -96,7 +96,7 @@ else {
 <body>
 
 <div class="container">
-
+<div class="page-content">
 <h1>Клиенты</h1>
 
 <a href="index.php" class="back">Назад</a>
@@ -179,6 +179,6 @@ name="add">
     </table>
 </div>
 </div>
-
+</div>
 </body>
 </html>
