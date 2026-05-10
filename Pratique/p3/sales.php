@@ -46,7 +46,6 @@ $medicine,
 $customer_id,
 $employee,
 $quantity
-11
 ]);
 $sql2 = "UPDATE medicines
 SET quantity = quantity - ?
