@@ -123,7 +123,7 @@ $employees = $pdo->query("SELECT * FROM employees");
 <body>
 
 <div class="container">
-
+<div class="page-content">
 <h1>Продажи</h1>
 
 <a href="index.php" 
@@ -249,6 +249,6 @@ href="?delete=<?= $row['id'] ?>">
 </table>
 </div>
 </div>
-
+</div>
 </body>
 </html>
