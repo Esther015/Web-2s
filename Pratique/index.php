@@ -54,7 +54,7 @@
                 </p>
             </div>
          </a>
-            <a href="medicines.php" class="card-link">
+            <a href="employees.php" class="card-link">
                 <div class="card">
                 <h2> Сотрудники</h2>
                 <p>
