@@ -118,13 +118,14 @@ body{
 
 /* FORMULAIRES */
 form{
-    margin:20px 0;
+     margin:20px auto;
     background:white;
     padding:20px;
     border-radius:10px;
     box-shadow:0 0 10px rgba(0,0,0,0.05);
+
     width:85%;
-    box-sizing: border-box;
+    box-sizing:border-box;
 }
 
 input, select{
@@ -151,6 +152,7 @@ button:hover{
 }
 /* TABLEAUX */
 table{
+    /*
     width:85%;
     background:white;
     border-collapse:separate;
@@ -158,7 +160,14 @@ table{
     box-shadow:0 0 10px #1d981d;
     border-radius:10px;
     overflow:hidden;  
-    margin:0 auto;
+    margin:0 auto;*/
+    width:100%;
+    background:white;
+    border-collapse:separate;
+    border-spacing:0;
+    box-shadow:0 0 10px #1d981d;
+    border-radius:10px;
+    overflow:hidden;
 }
 
 th, td{
@@ -226,10 +235,15 @@ table td:last-child .delete {
 }
 
 /* RESPONSIVE  */
-/* Conteneur défilant pour tableau */
+/* Conteneur défilant pour tableau 
 .table-wrapper {
     overflow-x: auto;
     width: 100%;
+}*/
+.table-wrapper{
+    width:85%;
+    margin:20px auto;
+    overflow-x:auto;
 }
 
 /* Tablettes (max-width: 992px) */
@@ -295,9 +309,14 @@ table td:last-child .delete {
     }
     
     .container {
-        width: 100%;
-        padding: 10px;
+       width: 85%;
+        margin:auto;
     }
+
+    form,
+.table-wrapper{
+    width:100%;
+}
     
     /* Cartes en colonne */
     .menu {
