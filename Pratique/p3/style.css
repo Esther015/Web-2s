@@ -97,7 +97,7 @@ body{
 }
 
 .page-content{
-    width:85%;
+    width:95%;
     margin:auto;
 }
 
@@ -142,7 +142,7 @@ form{
 
 input, select{
     padding:10px;
-    margin:5px;
+    margin:0;
     border:1px solid #ccc;
     border-radius:5px;
 
