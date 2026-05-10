@@ -27,7 +27,6 @@ $expiration
 ]);
 header("Location: medicines.php");
 exit;
-8
 }
 # SUPPRESSION
 if(isset($_GET['delete'])) {
