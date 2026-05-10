@@ -12,7 +12,6 @@ die("Введите имя клиента");
 if($quantity <= 0){
 die("Количество должно быть больше нуля");
 }
-10
 $sqlCheck = "SELECT quantity FROM medicines WHERE id=?";
 $stmtCheck = $pdo->prepare($sqlCheck);
 $stmtCheck->execute([$medicine]);
