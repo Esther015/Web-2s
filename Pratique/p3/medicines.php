@@ -135,7 +135,7 @@ else {
 <body>
 
 <div class="container">
-
+<div class="page-content">
 <h1>Лекарства</h1>
     
 <a href="index.php" 
@@ -287,6 +287,6 @@ href="?delete=<?= $row['id'] ?>">
 </table>
 </div>
 </div>
-
+</div>
 </body>
 </html>
