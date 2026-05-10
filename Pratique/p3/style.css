@@ -406,6 +406,10 @@ table td:last-child .delete {
     .container {
         padding:5px;
     }
+    .page-content{
+    width:97%;
+    margin:auto;
+}
 
     /* Tableau plus petit */
     .table-wrapper table {
