@@ -126,17 +126,14 @@ if(isset($_POST['update'])) {
         die("Количество должно быть больше нуля");
     }
 
-    # récupérer ancienne vente
     $sqlOld = "SELECT medicine_id, quantity FROM sales WHERE id=?";
     $stmtOld = $pdo->prepare($sqlOld);
     $stmtOld->execute([$id]);
     $old = $stmtOld->fetch(PDO::FETCH_ASSOC);
 
-    # restaurer stock
     $pdo->prepare("UPDATE medicines SET quantity = quantity + ? WHERE id=?")
         ->execute([$old['quantity'], $old['medicine_id']]);
 
-    # vérifier stock
     $sqlCheck = "SELECT quantity FROM medicines WHERE id=?";
     $stmtCheck = $pdo->prepare($sqlCheck);
     $stmtCheck->execute([$medicine]);
@@ -146,7 +143,6 @@ if(isset($_POST['update'])) {
         die("Недостаточно товара");
     }
 
-    # update vente
     $sql = "UPDATE sales
             SET medicine_id=?, employee_id=?, quantity=?
             WHERE id=?";
@@ -158,13 +154,13 @@ if(isset($_POST['update'])) {
         $id
     ]);
 
-    # nouveau stock
     $pdo->prepare("UPDATE medicines SET quantity = quantity - ? WHERE id=?")
         ->execute([$quantity, $medicine]);
 
     header("Location: sales.php");
     exit;
 }
+
 # AFFICHAGE
 $sql = "SELECT sales.id,
         medicines.name AS medicine,
@@ -187,14 +183,11 @@ $sql = "SELECT sales.id,
 $conditions = [];
 $params = [];
 
-# FILTRE CLIENT
 if(isset($_GET['customer'])) {
-
     $conditions[] = "customers.id = ?";
     $params[] = $_GET['customer'];
 }
 
-# RECHERCHE
 if(isset($_GET['search']) && !empty($_GET['search'])) {
 
     $search = "%" . $_GET['search'] . "%";
@@ -210,13 +203,10 @@ if(isset($_GET['search']) && !empty($_GET['search'])) {
     $params[] = $search;
 }
 
-# AJOUT CONDITIONS SQL
 if(count($conditions) > 0){
-
     $sql .= " WHERE " . implode(" AND ", $conditions);
 }
 
-# TRI
 $sql .= " ORDER BY sales.id DESC";
 
 $stmt = $pdo->prepare($sql);
@@ -233,12 +223,10 @@ $employees = $pdo->query("SELECT * FROM employees");
 <html lang="ru">
 
 <head>
-
 <meta charset="UTF-8">
 <title>Продажи</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -248,62 +236,39 @@ $employees = $pdo->query("SELECT * FROM employees");
 
 <h1>Продажи</h1>
 
-<a href="index.php"
-class="back"
-aria-label="Назад">
-Назад
-</a>
+<a href="index.php" class="back">Назад</a>
 
-<!-- RECHERCHE -->
 <form method="GET">
-
-<input type="text"
-name="search"
-placeholder="Поиск продажи">
-
-<button type="submit">
-Поиск
-</button>
-
+<input type="text" name="search" placeholder="Поиск продажи">
+<button type="submit">Поиск</button>
 </form>
 
-<h2>Добавить продажу</h2>
+<h2>
+<?= isset($editSale) ? "Modifier une vente" : "Добавить продажу" ?>
+</h2>
 
-<!-- AJOUT VENTE -->
 <form method="POST">
 
-<!-- MEDICAMENT -->
+<?php if(isset($editSale)) { ?>
+    <input type="hidden" name="id" value="<?= $editSale['id'] ?>">
+<?php } ?>
+
 <select name="medicine" required>
-
 <?php while($m = $medicines->fetch(PDO::FETCH_ASSOC)) { ?>
-
 <option value="<?= $m['id'] ?>">
-
-<?= $m['name'] ?>
-(остаток: <?= $m['quantity'] ?>)
-
+<?= $m['name'] ?> (остаток: <?= $m['quantity'] ?>)
 </option>
-
 <?php } ?>
-
 </select>
 
-<!-- EMPLOYE -->
 <select name="employee" required>
-
 <?php while($e = $employees->fetch(PDO::FETCH_ASSOC)) { ?>
-
 <option value="<?= $e['id'] ?>">
-
 <?= $e['full_name'] ?>
-
 </option>
-
 <?php } ?>
-
 </select>
 
-<!-- CLIENT -->
 <input type="text"
 name="customer_name"
 placeholder="Имя клиента"
@@ -312,51 +277,30 @@ autocomplete="off"
 required>
 
 <datalist id="customers_list">
-
 <?php
-
-$customersList = $pdo->query("
-SELECT full_name
-FROM customers
-ORDER BY full_name ASC
-");
-
+$customersList = $pdo->query("SELECT full_name FROM customers ORDER BY full_name ASC");
 while($c = $customersList->fetch(PDO::FETCH_ASSOC)) {
-
 ?>
-
 <option value="<?= $c['full_name'] ?>">
-
 <?php } ?>
-
 </datalist>
 
-<!-- TELEPHONE -->
-<input type="text"
-name="customer_phone"
-placeholder="Телефон">
+<input type="text" name="customer_phone" placeholder="Телефон">
 
-<!-- QUANTITE -->
-<input type="number"
-name="quantity"
-placeholder="Количество"
-min="1"
-required>
+<input type="number" name="quantity" min="1" required>
 
 <button type="submit"
-name="add">
-Добавить
+name="<?= isset($editSale) ? 'update' : 'add' ?>">
+<?= isset($editSale) ? "Сохранить" : "Добавить" ?>
 </button>
 
 </form>
 
-<!-- TABLEAU -->
 <div class="table-wrapper">
 
 <table>
 
 <tr>
-
 <th>ID</th>
 <th>Лекарство</th>
 <th>Клиент</th>
@@ -364,13 +308,11 @@ name="add">
 <th>Количество</th>
 <th>Дата</th>
 <th>Действие</th>
-
 </tr>
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <tr>
-
 <td><?= $row['id'] ?></td>
 <td><?= $row['medicine'] ?></td>
 <td><?= $row['customer'] ?></td>
@@ -379,20 +321,8 @@ name="add">
 <td><?= $row['sale_date'] ?></td>
 
 <td>
-
-<!-- MODIFIER -->
-<a class="edit-btn"
-href="sales.php?edit=<?= $row['id'] ?>">
-Изменить
-</a>
-
-<!-- SUPPRIMER -->
-<a class="delete"
-href="sales.php?delete=<?= $row['id'] ?>"
-onclick="return confirm('Supprimer cette vente ?')">
-Удалить
-</a>
-
+<a class="edit-btn" href="sales.php?edit=<?= $row['id'] ?>">Изменить</a>
+<a class="delete" href="sales.php?delete=<?= $row['id'] ?>" onclick="return confirm('Supprimer cette vente ?')">Удалить</a>
 </td>
 
 </tr>
@@ -402,6 +332,7 @@ onclick="return confirm('Supprimer cette vente ?')">
 </table>
 
 </div>
+
 </div>
 </div>
 
