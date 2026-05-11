@@ -1,60 +1,100 @@
 <?php
+
 include 'config.php';
+
+# AJOUT VENTE
 if(isset($_POST['add'])) {
-$medicine = $_POST['medicine'];
-$employee = $_POST['employee'];
-$customer_name = trim($_POST['customer_name']);
-$customer_phone = trim($_POST['customer_phone']);
-$quantity = $_POST['quantity'];
-if(empty($customer_name)){
-die("Введите имя клиента");
-}
-if($quantity <= 0){
-die("Количество должно быть больше нуля");
-}
-$sqlCheck = "SELECT quantity FROM medicines WHERE id=?";
-$stmtCheck = $pdo->prepare($sqlCheck);
-$stmtCheck->execute([$medicine]);
-$med = $stmtCheck->fetch(PDO::FETCH_ASSOC);
-if($quantity > $med['quantity']){
-die("Недостаточно товара на складе");
-}
-$sqlCustomer = "SELECT id FROM customers WHERE full_name=?";
-$stmtCustomer = $pdo->prepare($sqlCustomer);
-$stmtCustomer->execute([$customer_name]);
-$customer = $stmtCustomer->fetch(PDO::FETCH_ASSOC);
-if(!$customer){
-$sqlInsertCustomer = "INSERT INTO customers
+
+    $medicine = $_POST['medicine'];
+    $employee = $_POST['employee'];
+
+    $customer_name = trim($_POST['customer_name']);
+    $customer_phone = trim($_POST['customer_phone']);
+
+    $quantity = $_POST['quantity'];
+
+    if(empty($customer_name)){
+        die("Введите имя клиента");
+    }
+
+    if($quantity <= 0){
+        die("Количество должно быть больше нуля");
+    }
+
+    # VERIFICATION STOCK
+    $sqlCheck = "SELECT quantity FROM medicines WHERE id=?";
+    $stmtCheck = $pdo->prepare($sqlCheck);
+    $stmtCheck->execute([$medicine]);
+
+    $med = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+    if($quantity > $med['quantity']){
+        die("Недостаточно товара на складе");
+    }
+
+    # VERIFIER SI CLIENT EXISTE
+    $sqlCustomer = "SELECT id
+                    FROM customers
+                    WHERE full_name=?
+                    OR phone=?";
+
+    $stmtCustomer = $pdo->prepare($sqlCustomer);
+
+    $stmtCustomer->execute([
+        $customer_name,
+        $customer_phone
+    ]);
+
+    $customer = $stmtCustomer->fetch(PDO::FETCH_ASSOC);
+
+    # AJOUT CLIENT SI N'EXISTE PAS
+    if(!$customer){
+
+        $sqlInsertCustomer = "INSERT INTO customers
                               (full_name, phone)
                               VALUES(?, ?)";
-$stmtInsert = $pdo->prepare($sqlInsertCustomer);
-$stmtInsert->execute([
-$customer_name,
-$customer_phone
-]);
-$customer_id = $pdo->lastInsertId();
-} else {
-$customer_id = $customer['id'];
-}
-$sql = "INSERT INTO sales
+
+        $stmtInsert = $pdo->prepare($sqlInsertCustomer);
+
+        $stmtInsert->execute([
+            $customer_name,
+            $customer_phone
+        ]);
+
+        $customer_id = $pdo->lastInsertId();
+
+    } else {
+
+        $customer_id = $customer['id'];
+    }
+
+    # AJOUT VENTE
+    $sql = "INSERT INTO sales
             (medicine_id, customer_id,
              employee_id, quantity, sale_date)
             VALUES (?, ?, ?, ?, NOW())";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([
-$medicine,
-$customer_id,
-$employee,
-$quantity
-]);
-$sql2 = "UPDATE medicines
-SET quantity = quantity - ?
-WHERE id=?";
-$stmt2 = $pdo->prepare($sql2);
-$stmt2->execute([$quantity, $medicine]);
-header("Location: sales.php");
-exit;
-  }
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        $medicine,
+        $customer_id,
+        $employee,
+        $quantity
+    ]);
+
+    # DIMINUER STOCK
+    $sql2 = "UPDATE medicines
+             SET quantity = quantity - ?
+             WHERE id=?";
+
+    $stmt2 = $pdo->prepare($sql2);
+
+    $stmt2->execute([$quantity, $medicine]);
+
+    header("Location: sales.php");
+    exit;
+}
 
 # AFFICHAGE
 $sql = "SELECT sales.id,
@@ -114,10 +154,6 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 
 $result = $stmt;
-} else {
-
-    $result = $pdo->query($sql);
-}
 
 $medicines = $pdo->query("SELECT * FROM medicines");
 $employees = $pdo->query("SELECT * FROM employees");
@@ -140,15 +176,17 @@ $employees = $pdo->query("SELECT * FROM employees");
 
 <div class="container">
 <div class="page-content">
+
 <h1>Продажи</h1>
 
-<a href="index.php" 
-   class="back"
-   aria-label="Назад">
-   Назад
+<a href="index.php"
+class="back"
+aria-label="Назад">
+Назад
 </a>
 
-  <form method="GET">
+<!-- RECHERCHE -->
+<form method="GET">
 
 <input type="text"
 name="search"
@@ -162,8 +200,10 @@ placeholder="Поиск продажи">
 
 <h2>Добавить продажу</h2>
 
+<!-- AJOUT VENTE -->
 <form method="POST">
 
+<!-- MEDICAMENT -->
 <select name="medicine" required>
 
 <?php while($m = $medicines->fetch(PDO::FETCH_ASSOC)) { ?>
@@ -179,6 +219,7 @@ placeholder="Поиск продажи">
 
 </select>
 
+<!-- EMPLOYE -->
 <select name="employee" required>
 
 <?php while($e = $employees->fetch(PDO::FETCH_ASSOC)) { ?>
@@ -192,13 +233,9 @@ placeholder="Поиск продажи">
 <?php } ?>
 
 </select>
-<!--
+
+<!-- CLIENT -->
 <input type="text"
-name="customer_name"
-placeholder="Имя клиента"
-required>
--->
-  <input type="text"
 name="customer_name"
 placeholder="Имя клиента"
 list="customers_list"
@@ -208,9 +245,15 @@ required>
 <datalist id="customers_list">
 
 <?php
-$customersList = $pdo->query("SELECT full_name FROM customers ORDER BY full_name ASC");
+
+$customersList = $pdo->query("
+SELECT full_name
+FROM customers
+ORDER BY full_name ASC
+");
 
 while($c = $customersList->fetch(PDO::FETCH_ASSOC)) {
+
 ?>
 
 <option value="<?= $c['full_name'] ?>">
@@ -218,11 +261,13 @@ while($c = $customersList->fetch(PDO::FETCH_ASSOC)) {
 <?php } ?>
 
 </datalist>
-  
+
+<!-- TELEPHONE -->
 <input type="text"
 name="customer_phone"
 placeholder="Телефон">
 
+<!-- QUANTITE -->
 <input type="number"
 name="quantity"
 placeholder="Количество"
@@ -235,7 +280,10 @@ name="add">
 </button>
 
 </form>
+
+<!-- TABLEAU -->
 <div class="table-wrapper">
+
 <table>
 
 <tr>
@@ -246,7 +294,6 @@ name="add">
 <th>Сотрудник</th>
 <th>Количество</th>
 <th>Дата</th>
-<th>Действие</th>
 
 </tr>
 
@@ -266,26 +313,15 @@ name="add">
 
 <td><?= $row['sale_date'] ?></td>
 
-<td>
-<button type="submit"
-name="update">
-Изменить
-</button>
-    
-<a class="delete"
-href="?delete=<?= $row['id'] ?>">
-Удалить
-</a>
-
-</td>
-
 </tr>
 
 <?php } ?>
 
 </table>
+
 </div>
 </div>
 </div>
+
 </body>
 </html>
