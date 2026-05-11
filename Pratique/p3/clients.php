@@ -144,6 +144,7 @@ name="add">
 <th>ID</th>
 <th>Имя</th>
 <th>Телефон</th>
+<th>Покупки</th>
 <th>Действия</th>
 </tr>
 
@@ -164,6 +165,26 @@ name="add">
 <input type="text" name="phone" value="<?= $row['phone'] ?>" required>
 </td>
 
+    <td>
+
+<?php
+#AJOUT DE ACHATS
+$sqlPurchases = "SELECT COUNT(*) AS total
+                 FROM sales
+                 WHERE customer_id=?";
+
+$stmtPurchases = $pdo->prepare($sqlPurchases);
+
+$stmtPurchases->execute([$row['id']]);
+
+$purchases = $stmtPurchases->fetch(PDO::FETCH_ASSOC);
+
+echo $purchases['total'];
+
+?>
+
+</td>
+    
 <td>
 <button type="submit" name="update">Изменить</button>
 
