@@ -212,6 +212,21 @@ tr:hover{
     background:#d41c1c;
 }
 
+.edit-btn {
+    padding: 10px 15px;
+    background: #1d981d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.edit-btn:hover {
+    background: #176a17;
+}
 .back {
     display:inline-block;
     padding:10px 20px;
@@ -228,6 +243,7 @@ tr:hover{
 .back:hover{
     background:#176a17;
 }
+
 
 table td:last-child {
     text-align:center;
