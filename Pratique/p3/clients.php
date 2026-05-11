@@ -24,19 +24,19 @@ if(isset($_POST['add'])) {
 }
 
 # SUPPRESSION
-if(isset($_GET['delete'])) {
+#if(isset($_GET['delete'])) {
 
-    $id = $_GET['delete'];
+ #   $id = $_GET['delete'];
 
-    $sql = "DELETE FROM customers WHERE id=?";
+  #  $sql = "DELETE FROM customers WHERE id=?";
 
-    $stmt = $pdo->prepare($sql);
+   # $stmt = $pdo->prepare($sql);
 
-    $stmt->execute([$id]);
+    #$stmt->execute([$id]);
 
-    header("Location: clients.php");
-    exit;
-}
+    #header("Location: clients.php");
+    #exit;
+#}
 
 # MODIFICATION
 if(isset($_POST['update'])) {
@@ -167,9 +167,10 @@ name="add">
 <td>
 <button type="submit" name="update">Изменить</button>
 
-<a class="delete" href="?delete=<?= $row['id'] ?>">
+<!--
+    <a class="delete" href="?delete=<?= $row['id'] ?>">
 Удалить
-</a>
+</a> -->
 </td>
 
 </form>
