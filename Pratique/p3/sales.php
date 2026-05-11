@@ -176,12 +176,33 @@ placeholder="Поиск продажи">
 <?php } ?>
 
 </select>
-
+<!--
 <input type="text"
 name="customer_name"
 placeholder="Имя клиента"
 required>
+-->
+  <input type="text"
+name="customer_name"
+placeholder="Имя клиента"
+list="customers_list"
+autocomplete="off"
+required>
 
+<datalist id="customers_list">
+
+<?php
+$customersList = $pdo->query("SELECT full_name FROM customers ORDER BY full_name ASC");
+
+while($c = $customersList->fetch(PDO::FETCH_ASSOC)) {
+?>
+
+<option value="<?= $c['full_name'] ?>">
+
+<?php } ?>
+
+</datalist>
+  
 <input type="text"
 name="customer_phone"
 placeholder="Телефон">
