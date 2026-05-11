@@ -1,8 +1,10 @@
+<!-- clients.php -->
+
 <?php
 
 include 'config.php';
 
-# AJOUT CLIENT
+# AJOUT
 if(isset($_POST['add'])) {
 
     $name = trim($_POST['name']);
@@ -16,16 +18,18 @@ if(isset($_POST['add'])) {
             VALUES(?, ?)";
 
     $stmt = $pdo->prepare($sql);
+
     $stmt->execute([$name, $phone]);
 
     header("Location: clients.php");
     exit;
 }
 
-# MODIFICATION CLIENT
+# MODIFICATION
 if(isset($_POST['update'])) {
 
     $id = $_POST['id'];
+
     $name = trim($_POST['name']);
     $phone = trim($_POST['phone']);
 
@@ -38,6 +42,7 @@ if(isset($_POST['update'])) {
             WHERE id=?";
 
     $stmt = $pdo->prepare($sql);
+
     $stmt->execute([$name, $phone, $id]);
 
     header("Location: clients.php");
@@ -69,10 +74,12 @@ if(isset($_GET['search'])) {
 <html lang="ru">
 
 <head>
+
 <meta charset="UTF-8">
 <title>Клиенты</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -85,16 +92,36 @@ if(isset($_GET['search'])) {
 <a href="index.php" class="back">Назад</a>
 
 <form method="GET">
-<input type="text" name="search" placeholder="Поиск клиента">
-<button type="submit">Поиск</button>
+
+<input type="text"
+name="search"
+placeholder="Поиск клиента">
+
+<button type="submit">
+Поиск
+</button>
+
 </form>
 
 <h2>Добавить клиента</h2>
 
 <form method="POST">
-<input type="text" name="name" placeholder="Имя" required>
-<input type="text" name="phone" placeholder="Телефон" required>
-<button type="submit" name="add">Добавить</button>
+
+<input type="text"
+name="name"
+placeholder="Имя"
+required>
+
+<input type="text"
+name="phone"
+placeholder="Телефон"
+required>
+
+<button type="submit"
+name="add">
+Добавить
+</button>
+
 </form>
 
 <div class="table-wrapper">
@@ -105,36 +132,96 @@ if(isset($_GET['search'])) {
 <th>ID</th>
 <th>Имя</th>
 <th>Телефон</th>
+<th>Achats</th>
 <th>Действия</th>
 </tr>
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+
+<?php
+
+# PREMIERE VENTE DU CLIENT
+$sqlSale = "SELECT id
+            FROM sales
+            WHERE customer_id=?
+            ORDER BY id DESC
+            LIMIT 1";
+
+$stmtSale = $pdo->prepare($sqlSale);
+
+$stmtSale->execute([$row['id']]);
+
+$sale = $stmtSale->fetch(PDO::FETCH_ASSOC);
+
+?>
 
 <tr>
 
 <form method="POST">
 
 <td>
+
 <?= $row['id'] ?>
-<input type="hidden" name="id" value="<?= $row['id'] ?>">
-</td>
 
-<td>
-<input type="text" name="name" value="<?= $row['full_name'] ?>" required>
-</td>
+<input type="hidden"
+name="id"
+value="<?= $row['id'] ?>">
 
-<td>
-<input type="text" name="phone" value="<?= $row['phone'] ?>" required>
 </td>
 
 <td>
 
-<button type="submit" name="update">Изменить</button>
+<input type="text"
+name="name"
+value="<?= $row['full_name'] ?>"
+required>
+
+</td>
+
+<td>
+
+<input type="text"
+name="phone"
+value="<?= $row['phone'] ?>"
+required>
+
+</td>
+
+<td>
+
+<?php
+
+$sqlPurchases = "SELECT COUNT(*) AS total
+                 FROM sales
+                 WHERE customer_id=?";
+
+$stmtPurchases = $pdo->prepare($sqlPurchases);
+
+$stmtPurchases->execute([$row['id']]);
+
+$purchases = $stmtPurchases->fetch(PDO::FETCH_ASSOC);
+
+echo $purchases['total'];
+
+?>
+
+</td>
+
+<td>
+
+<button type="submit"
+name="update">
+Изменить
+</button>
+
+<?php if($sale) { ?>
 
 <a class="delete"
-href="sales.php?customer=<?= $row['id'] ?>">
-Voir les ventes
+href="sales.php?sale=<?= $sale['id'] ?>">
+Просмотреть продажи
 </a>
+
+<?php } ?>
 
 </td>
 
