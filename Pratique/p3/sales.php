@@ -302,16 +302,28 @@ name="add">
 <tr>
 
 <td><?= $row['id'] ?></td>
-
 <td><?= $row['medicine'] ?></td>
-
 <td><?= $row['customer'] ?></td>
-
 <td><?= $row['employee'] ?></td>
-
 <td><?= $row['quantity'] ?></td>
-
 <td><?= $row['sale_date'] ?></td>
+
+<td>
+
+<!-- MODIFIER -->
+<a class="edit"
+href="sales.php?edit=<?= $row['id'] ?>">
+Изменить
+</a>
+
+<!-- SUPPRIMER -->
+<a class="delete"
+href="sales.php?delete=<?= $row['id'] ?>"
+onclick="return confirm('Supprimer cette vente ?')">
+Удалить
+</a>
+
+</td>
 
 </tr>
 
