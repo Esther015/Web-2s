@@ -2,6 +2,24 @@
 
 include 'config.php';
 
+# MODE EDITION
+$editSale = null;
+
+if(isset($_GET['edit'])) {
+
+    $id = $_GET['edit'];
+
+    $sql = "SELECT * FROM sales WHERE id=?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$id]);
+
+    $editSale = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if(!$editSale){
+        die("Продажа не найдена");
+    }
+}
+
 # AJOUT VENTE
 if(isset($_POST['add'])) {
 
@@ -96,6 +114,57 @@ if(isset($_POST['add'])) {
     exit;
 }
 
+# MODIFICATION VENTE
+if(isset($_POST['update'])) {
+
+    $id = $_POST['id'];
+    $medicine = $_POST['medicine'];
+    $employee = $_POST['employee'];
+    $quantity = $_POST['quantity'];
+
+    if($quantity <= 0){
+        die("Количество должно быть больше нуля");
+    }
+
+    # récupérer ancienne vente
+    $sqlOld = "SELECT medicine_id, quantity FROM sales WHERE id=?";
+    $stmtOld = $pdo->prepare($sqlOld);
+    $stmtOld->execute([$id]);
+    $old = $stmtOld->fetch(PDO::FETCH_ASSOC);
+
+    # restaurer stock
+    $pdo->prepare("UPDATE medicines SET quantity = quantity + ? WHERE id=?")
+        ->execute([$old['quantity'], $old['medicine_id']]);
+
+    # vérifier stock
+    $sqlCheck = "SELECT quantity FROM medicines WHERE id=?";
+    $stmtCheck = $pdo->prepare($sqlCheck);
+    $stmtCheck->execute([$medicine]);
+    $med = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+    if($quantity > $med['quantity']){
+        die("Недостаточно товара");
+    }
+
+    # update vente
+    $sql = "UPDATE sales
+            SET medicine_id=?, employee_id=?, quantity=?
+            WHERE id=?";
+
+    $pdo->prepare($sql)->execute([
+        $medicine,
+        $employee,
+        $quantity,
+        $id
+    ]);
+
+    # nouveau stock
+    $pdo->prepare("UPDATE medicines SET quantity = quantity - ? WHERE id=?")
+        ->execute([$quantity, $medicine]);
+
+    header("Location: sales.php");
+    exit;
+}
 # AFFICHAGE
 $sql = "SELECT sales.id,
         medicines.name AS medicine,
@@ -312,7 +381,7 @@ name="add">
 <td>
 
 <!-- MODIFIER -->
-<a class="edit"
+<a class="edit-btn"
 href="sales.php?edit=<?= $row['id'] ?>">
 Изменить
 </a>
