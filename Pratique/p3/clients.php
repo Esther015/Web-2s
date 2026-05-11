@@ -188,8 +188,14 @@ echo $purchases['total'];
 <td>
 <button type="submit" name="update">Изменить</button>
 
+    <!--
 <a class="delete" href="sales.php?customer=<?= $row['id'] ?>">
 Продажи
+</a>
+    -->
+    <a class="delete"
+href="sales.php?customer=<?= $row['id'] ?>">
+Voir les ventes
 </a>
     
 </td>
