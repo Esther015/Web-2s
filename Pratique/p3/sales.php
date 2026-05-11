@@ -150,6 +150,8 @@ $employees = $pdo->query("SELECT * FROM employees");
 
 <h1>Продажи</h1>
 
+    <a href="index.php" class="back">Назад</a>
+    
 <?php if($activeCustomer) { ?>
 <h3>Клиент: <?= $activeCustomer['full_name'] ?></h3>
 <?php } ?>
