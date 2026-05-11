@@ -73,31 +73,47 @@ $sql = "SELECT sales.id,
         ON sales.customer_id = customers.id
 
         JOIN employees
-        ON sales.employee_id = employees.id
+        ON sales.employee_id = employees.id";
 
-        ORDER BY sales.id DESC";
+$conditions = [];
+$params = [];
 
-if(isset($_GET['search'])){
+# FILTRE CLIENT
+if(isset($_GET['customer'])) {
+
+    $conditions[] = "customers.id = ?";
+    $params[] = $_GET['customer'];
+}
+
+# RECHERCHE
+if(isset($_GET['search']) && !empty($_GET['search'])) {
 
     $search = "%" . $_GET['search'] . "%";
 
-    $sql .= " WHERE
-            medicines.name LIKE ?
-            OR customers.full_name LIKE ?
-            OR employees.full_name LIKE ?
-            OR sales.sale_date LIKE ?";
+    $conditions[] = "(medicines.name LIKE ?
+                    OR customers.full_name LIKE ?
+                    OR employees.full_name LIKE ?
+                    OR sales.sale_date LIKE ?)";
 
-    $stmt = $pdo->prepare($sql);
+    $params[] = $search;
+    $params[] = $search;
+    $params[] = $search;
+    $params[] = $search;
+}
 
-    $stmt->execute([
-        $search,
-        $search,
-        $search,
-        $search
-    ]);
+# AJOUT CONDITIONS SQL
+if(count($conditions) > 0){
 
-    $result = $stmt;
+    $sql .= " WHERE " . implode(" AND ", $conditions);
+}
 
+# TRI
+$sql .= " ORDER BY sales.id DESC";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute($params);
+
+$result = $stmt;
 } else {
 
     $result = $pdo->query($sql);
