@@ -1,45 +1,45 @@
 <?php
 /**
- * Configuration sécurisée de l'application
- * MODIFICATIONS DE SÉCURITÉ :
- * - Ajout de la gestion des erreurs sans affichage
- * - Ajout des en-têtes de sécurité HTTP
- * - Ajout des fonctions de protection CSRF
- * - Ajout de la fonction d'échappement HTML
+ * Конфигурация безопасности приложения
+ * МОДИФИКАЦИИ БЕЗОПАСНОСТИ :
+ * - Добавлено управление ошибками без отображения (Information Disclosure)
+ * - Добавлены HTTP-заголовки безопасности
+ * - Добавлены функции защиты CSRF
+ * - Добавлена функция экранирования HTML (XSS)
  */
 
-// ========== MODIF SÉCURITÉ #1 : Gestion des erreurs ==========
-// Désactiver l'affichage des erreurs (Information Disclosure)
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #1 : Управление ошибками ==========
+// Отключение отображения ошибок (Information Disclosure)
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 ini_set('log_errors', 1);
 ini_set('error_log', __DIR__ . '/logs/php_errors.log');
 
-// ========== MODIF SÉCURITÉ #2 : Session sécurisée ==========
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #2 : Безопасная сессия ==========
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// ========== MODIF SÉCURITÉ #3 : Connexion BDD sécurisée ==========
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #3 : Безопасное подключение БД ==========
 $host = 'localhost';
-$dbname = 'u82384';  // À modifier selon votre configuration
-$username = 'u82384'; // À modifier selon votre configuration
-$password = 'd5#RdgdgH'; // À modifier selon votre configuration
+$dbname = 'votre_base';  // Измените под вашу конфигурацию
+$username = 'votre_user'; // Измените под вашу конфигурацию
+$password = 'votre_pass'; // Измените под вашу конфигурацию
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    // Désactiver les requêtes préparées émulées (SQL Injection)
+    // Отключение эмуляции подготовленных запросов (SQL Injection)
     $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 } catch(PDOException $e) {
     error_log($e->getMessage());
-    die('Erreur de connexion à la base de données'); // Message générique (Information Disclosure)
+    die('Ошибка подключения к базе данных'); // Общее сообщение (Information Disclosure)
 }
 
-// ========== MODIF SÉCURITÉ #4 : Protection CSRF ==========
-// Fonction pour générer un token CSRF unique
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #4 : Защита CSRF ==========
+// Функция генерации CSRF-токена
 function generateCSRFToken() {
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -47,23 +47,23 @@ function generateCSRFToken() {
     return $_SESSION['csrf_token'];
 }
 
-// Fonction pour vérifier le token CSRF (comparaison temps constant)
+// Функция проверки CSRF-токена (сравнение с постоянным временем)
 function verifyCSRFToken($token) {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
 }
 
-// ========== MODIF SÉCURITÉ #5 : Protection XSS ==========
-// Fonction d'échappement HTML pour tous les affichages
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #5 : Защита XSS ==========
+// Функция экранирования HTML для всего вывода
 function e($string) {
     return htmlspecialchars($string, ENT_QUOTES, 'UTF-8');
 }
 
-// ========== MODIF SÉCURITÉ #6 : En-têtes HTTP sécurité ==========
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #6 : HTTP-заголовки безопасности ==========
 header('X-XSS-Protection: 1; mode=block');
 header('X-Content-Type-Options: nosniff');
 header('X-Frame-Options: DENY');
 
-// ========== FONCTIONS EXISTANTES CONSERVÉES ==========
+// ========== СУЩЕСТВУЮЩИЕ ФУНКЦИИ (сохранены) ==========
 function generateRandomPassword($length = 8) {
     $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     $password = '';
