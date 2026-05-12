@@ -4,6 +4,7 @@ include 'config.php';
 
 # MODE EDITION
 $editSale = null;
+$editId = null;
 
 if(isset($_GET['edit'])) {
 
@@ -31,6 +32,7 @@ if(isset($_GET['edit'])) {
         die("Продажа не найдена");
     }
 }
+
 # VENTE SELECTIONNEE
 $selectedSale = null;
 
@@ -94,13 +96,10 @@ if(isset($_POST['add'])) {
     } else {
 
         $customer_id = $customer['id'];
-        #recuperer le num
+
         if(empty($phone)) {
-
-        $phone = $customer['phone'];
-
-    }
-
+            $phone = $customer['phone'];
+        }
     }
 
     # AJOUT VENTE
@@ -212,6 +211,7 @@ if(isset($_POST['update'])) {
 
     exit;
 }
+
 # SUPPRESSION
 if(isset($_GET['delete'])) {
 
@@ -418,58 +418,18 @@ name="add">
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
 
-<?php if($editId == $row['id']) { ?>
-
-<form method="POST">
-
-<tr
-id="sale<?= $row['id'] ?>"
-class="highlight">
-
-<input
-type="hidden"
-name="id"
-value="<?= $row['id'] ?>">
-
-<?php } else { ?>
-
 <tr
 id="sale<?= $row['id'] ?>"
 class="<?= ($row['id'] == $selectedSale) ? 'highlight' : '' ?>">
 
-<?php } ?>
-
-<td>
-<?= $row['id'] ?>
-</td>
-
-<td>
-<?= $row['medicine_name'] ?>
-</td>
-
-<td>
-<?= $row['full_name'] ?>
-</td>
-
-<td>
-<?= $row['phone'] ?>
-</td>
-
-<td>
-<?= $row['employee_name'] ?>
-</td>
-
-<td>
-<?= $row['quantity'] ?>
-</td>
-
-<td>
-<?= $row['medicine_price'] ?> ₽
-</td>
-
-<td>
-<?= $row['sale_date'] ?>
-</td>
+<td><?= $row['id'] ?></td>
+<td><?= $row['medicine_name'] ?></td>
+<td><?= $row['full_name'] ?></td>
+<td><?= $row['phone'] ?></td>
+<td><?= $row['employee_name'] ?></td>
+<td><?= $row['quantity'] ?></td>
+<td><?= $row['medicine_price'] ?> ₽</td>
+<td><?= $row['sale_date'] ?></td>
 
 <td>
 
@@ -477,6 +437,7 @@ class="<?= ($row['id'] == $selectedSale) ? 'highlight' : '' ?>">
 href="?edit=<?= $row['id'] ?>">
 Изменить
 </a>
+
 <a class="delete"
 href="?delete=<?= $row['id'] ?>"
 onclick="return confirm('Удалить продажу ?')">
