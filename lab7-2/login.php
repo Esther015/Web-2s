@@ -1,27 +1,27 @@
 <?php
 /**
- * Page de connexion
- * MODIFICATIONS DE SÉCURITÉ :
- * - Nettoyage des entrées login/password
- * - Utilisation de requêtes préparées
- * - Session sécurisée avec régénération d'ID
- * - Protection contre les sessions fixes
+ * Страница входа
+ * МОДИФИКАЦИИ БЕЗОПАСНОСТИ :
+ * - Очистка входных данных login/password
+ * - Использование подготовленных запросов
+ * - Безопасная сессия с регенерацией ID
+ * - Защита от фиксации сессии
  */
 
 require_once 'config.php';
 
 header('Content-Type: text/html; charset=UTF-8');
 
-// ========== MODIF SÉCURITÉ #1 : Gestion sécurisée de la déconnexion ==========
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #1 : Безопасный выход ==========
 if (isset($_GET['logout'])) {
     session_start();
     
-    // Régénérer l'ID de session avant destruction (sécurité)
+    // Регенерация ID сессии перед уничтожением
     session_regenerate_id(true);
     
     $_SESSION = array();
     
-    // Supprimer le cookie de session
+    // Удаление cookie сессии
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
         setcookie(session_name(), '', time() - 42000,
@@ -37,7 +37,7 @@ if (isset($_GET['logout'])) {
 
 session_start();
 
-// Si déjà connecté, redirection
+// Если уже вошли, перенаправление
 if (!empty($_SESSION['login'])) {
     header('Location: ./');
     exit();
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Connexion</title>
+    <title>Вход в систему</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -96,21 +96,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 </head>
 <body>
     <div class="container">
-        <h2>Connexion</h2>
+        <h2>Вход в систему</h2>
         <div class="info">
-            Après l'envoi du formulaire, un login et mot de passe vous seront générés.
-            Conservez-les pour modifier vos données ultérieurement.
+            После отправки формы вам будут сгенерированы логин и пароль.
+            Сохраните их для последующего изменения данных.
         </div>
         <?php if (isset($_GET['error'])): ?>
-            <div class="error">Login ou mot de passe incorrect</div>
+            <div class="error">Неверный логин или пароль</div>
         <?php endif; ?>
         
-        <!-- ========== MODIF SÉCURITÉ #2 : Ajout token CSRF pour login ========== -->
+        <!-- ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #2 : Добавление CSRF-токена ========== -->
         <form action="" method="post">
             <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
-            <input type="text" name="login" placeholder="Login" required autofocus />
-            <input type="password" name="pass" placeholder="Mot de passe" required />
-            <input type="submit" value="Se connecter" />
+            <input type="text" name="login" placeholder="Логин" required autofocus />
+            <input type="password" name="pass" placeholder="Пароль" required />
+            <input type="submit" value="Войти" />
         </form>
     </div>
 </body>
@@ -118,35 +118,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 <?php
 }
 else {
-    // ========== MODIF SÉCURITÉ #3 : Vérification CSRF ==========
+    // ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #3 : Проверка CSRF ==========
     if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
-        die('Erreur CSRF : requête invalide');
+        die('Ошибка CSRF: недействительный запрос');
     }
     
-    // ========== MODIF SÉCURITÉ #4 : Nettoyage des entrées ==========
+    // ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #4 : Очистка входных данных ==========
     $login = isset($_POST['login']) ? trim(strip_tags($_POST['login'])) : '';
     $pass = isset($_POST['pass']) ? $_POST['pass'] : '';
     
-    // Validation simple
+    // Простая валидация
     if (empty($login) || empty($pass)) {
         header('Location: login.php?error=1');
         exit();
     }
     
-    // ========== MODIF SÉCURITÉ #5 : Requête préparée ==========
+    // ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #5 : Подготовленный запрос ==========
     $stmt = $pdo->prepare("SELECT id, login, password_hash FROM users WHERE login = ?");
     $stmt->execute([$login]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    // Vérification du mot de passe avec password_verify()
+    // Проверка пароля с password_verify()
     if ($user && password_verify($pass, $user['password_hash'])) {
-        // ========== MODIF SÉCURITÉ #6 : Régénération ID session ==========
+        // ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #6 : Регенерация ID сессии ==========
         session_regenerate_id(true);
         
         $_SESSION['login'] = $user['login'];
         $_SESSION['uid'] = $user['id'];
         
-        // Option : définir un timeout de session
+        // Опционально: установка таймаута сессии
         $_SESSION['last_activity'] = time();
         
         header('Location: ./');
