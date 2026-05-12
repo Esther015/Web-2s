@@ -32,7 +32,7 @@ if(isset($_POST['add'])) {
 
     # RECHERCHE CLIENT
     $sqlCustomer = "
-    SELECT id
+    SELECT id , phone
     FROM customers
     WHERE full_name=?
     LIMIT 1
@@ -65,6 +65,12 @@ if(isset($_POST['add'])) {
     } else {
 
         $customer_id = $customer['id'];
+        #recuperer le num
+        if(empty($phone)) {
+
+        $phone = $customer['phone'];
+
+    }
 
     }
 
@@ -328,7 +334,7 @@ class="<?= ($row['id'] == $selectedSale) ? 'highlight' : '' ?>">
 </td>
 
 <td>
-<?= $row['medicine_price'] ?> €
+<?= $row['medicine_price'] ?> ₽
 </td>
 
 <td>
@@ -337,9 +343,10 @@ class="<?= ($row['id'] == $selectedSale) ? 'highlight' : '' ?>">
 
 <td>
 
-<a href="#">
+<button type="submit"
+name="update">
 Изменить
-</a>
+</button>
 
 <a class="delete"
 href="?delete=<?= $row['id'] ?>"
