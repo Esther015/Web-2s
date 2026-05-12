@@ -23,9 +23,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // ========== MODIF SÉCURITÉ #3 : Connexion BDD sécurisée ==========
 $host = 'localhost';
-$dbname = 'votre_base';  // À modifier selon votre configuration
-$username = 'votre_user'; // À modifier selon votre configuration
-$password = 'votre_pass'; // À modifier selon votre configuration
+$dbname = 'u82384';  // À modifier selon votre configuration
+$username = 'u82384'; // À modifier selon votre configuration
+$password = 'd5#RdgdgH'; // À modifier selon votre configuration
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
