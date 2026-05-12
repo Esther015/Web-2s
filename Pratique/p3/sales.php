@@ -242,7 +242,7 @@ name="add">
 <th>Клиент</th>
 <th>Сотрудник</th>
 <th>Количество</th>
-<th>Prix</th>
+<th>Цена</th>
 <th>Дата</th>
 <th>Действие</th>
 
@@ -286,7 +286,7 @@ class="<?= ($row['id'] == $selectedSale) ? 'highlight' : '' ?>">
 
 <td>
 
-<?= $row['medicine_price'] ?> €
+<?= $row['medicine_price'] ?> ₽
 
 </td>
 
