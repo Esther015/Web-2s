@@ -2,6 +2,35 @@
 
 include 'config.php';
 
+# MODE EDITION
+$editSale = null;
+
+if(isset($_GET['edit'])) {
+
+    $editId = $_GET['edit'];
+
+    $sqlEdit = "
+    SELECT sales.*,
+           customers.full_name,
+           customers.phone
+    FROM sales
+
+    JOIN customers
+    ON sales.customer_id = customers.id
+
+    WHERE sales.id=?
+    ";
+
+    $stmtEdit = $pdo->prepare($sqlEdit);
+
+    $stmtEdit->execute([$editId]);
+
+    $editSale = $stmtEdit->fetch(PDO::FETCH_ASSOC);
+
+    if(!$editSale){
+        die("Продажа не найдена");
+    }
+}
 # VENTE SELECTIONNEE
 $selectedSale = null;
 
@@ -99,6 +128,90 @@ if(isset($_POST['add'])) {
     exit;
 }
 
+# MODIFICATION
+if(isset($_POST['update'])) {
+
+    $id = $_POST['id'];
+
+    $medicine_id = $_POST['medicine_id'];
+    $employee_id = $_POST['employee_id'];
+
+    $customer_name = trim($_POST['customer_name']);
+    $phone = trim($_POST['phone']);
+
+    $quantity = trim($_POST['quantity']);
+
+    if(
+        empty($medicine_id) ||
+        empty($customer_name) ||
+        empty($employee_id) ||
+        empty($quantity)
+    ) {
+        die("Заполните все обязательные поля");
+    }
+
+    # CLIENT
+    $sqlCustomer = "
+    SELECT id
+    FROM customers
+    WHERE full_name=?
+    LIMIT 1
+    ";
+
+    $stmtCustomer = $pdo->prepare($sqlCustomer);
+
+    $stmtCustomer->execute([$customer_name]);
+
+    $customer = $stmtCustomer->fetch(PDO::FETCH_ASSOC);
+
+    if(!$customer){
+
+        $sqlInsertCustomer = "
+        INSERT INTO customers(full_name, phone)
+        VALUES(?, ?)
+        ";
+
+        $stmtInsert = $pdo->prepare($sqlInsertCustomer);
+
+        $stmtInsert->execute([
+            $customer_name,
+            $phone
+        ]);
+
+        $customer_id = $pdo->lastInsertId();
+
+    } else {
+
+        $customer_id = $customer['id'];
+    }
+
+    # UPDATE SALE
+    $sql = "
+    UPDATE sales
+
+    SET
+        medicine_id=?,
+        customer_id=?,
+        employee_id=?,
+        quantity=?
+
+    WHERE id=?
+    ";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        $medicine_id,
+        $customer_id,
+        $employee_id,
+        $quantity,
+        $id
+    ]);
+
+    header("Location: sales.php?sale=".$id);
+
+    exit;
+}
 # SUPPRESSION
 if(isset($_GET['delete'])) {
 
@@ -297,7 +410,7 @@ name="add">
 <th>Телефон</th>
 <th>Сотрудник</th>
 <th>Количество</th>
-<th>Prix</th>
+<th>Цена</th>
 <th>Дата</th>
 <th>Действие</th>
 
@@ -305,9 +418,26 @@ name="add">
 
 <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
 
+<?php if($editId == $row['id']) { ?>
+
+<form method="POST">
+
+<tr
+id="sale<?= $row['id'] ?>"
+class="highlight">
+
+<input
+type="hidden"
+name="id"
+value="<?= $row['id'] ?>">
+
+<?php } else { ?>
+
 <tr
 id="sale<?= $row['id'] ?>"
 class="<?= ($row['id'] == $selectedSale) ? 'highlight' : '' ?>">
+
+<?php } ?>
 
 <td>
 <?= $row['id'] ?>
@@ -343,11 +473,10 @@ class="<?= ($row['id'] == $selectedSale) ? 'highlight' : '' ?>">
 
 <td>
 
-<button type="submit"
-name="update">
+<a class="edit"
+href="?edit=<?= $row['id'] ?>">
 Изменить
-</button>
-
+</a>
 <a class="delete"
 href="?delete=<?= $row['id'] ?>"
 onclick="return confirm('Удалить продажу ?')">
