@@ -23,9 +23,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
 // ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #3 : Безопасное подключение БД ==========
 $host = 'localhost';
-$dbname = 'votre_base';  // Измените под вашу конфигурацию
-$username = 'votre_user'; // Измените под вашу конфигурацию
-$password = 'votre_pass'; // Измените под вашу конфигурацию
+$dbname = 'u82384'; 
+$username = 'u82384';
+$password = 'd5#RdgdgH';
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
