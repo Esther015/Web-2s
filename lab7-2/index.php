@@ -1,20 +1,20 @@
 <?php
 /**
- * Page principale avec formulaire
- * MODIFICATIONS DE SÉCURITÉ :
- * - Ajout du token CSRF dans le formulaire
- * - Validation CSRF avant traitement
- * - Nettoyage des entrées avec filter_var()
- * - Utilisation de requêtes préparées pour toutes les requêtes SQL
- * - Échappement de toutes les sorties avec e()
- * - Session sécurisée
+ * Главная страница с формой
+ * МОДИФИКАЦИИ БЕЗОПАСНОСТИ :
+ * - Добавлен CSRF-токен в форму
+ * - Проверка CSRF перед обработкой
+ * - Очистка входных данных с filter_var()
+ * - Использование подготовленных запросов для всех SQL-запросов
+ * - Экранирование всего вывода через e()
+ * - Безопасная сессия
  */
 
 require_once 'config.php';
 
 header('Content-Type: text/html; charset=UTF-8');
 
-// ========== MODIF SÉCURITÉ #1 : Récupération des données avec échappement ==========
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #1 : Получение данных с экранированием ==========
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $messages = array();
     $errors = array();
@@ -27,29 +27,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($field == 'languages') {
             $values[$field] = empty($_COOKIE[$field . '_value']) ? [] : explode(',', strip_tags($_COOKIE[$field . '_value']));
         } else {
-            // Échappement des valeurs des cookies (XSS)
+            // Экранирование значений cookies (XSS)
             $values[$field] = empty($_COOKIE[$field . '_value']) ? '' : e($_COOKIE[$field . '_value']);
         }
     }
 
-    // Affichage des messages de succès avec échappement
+    // Отображение сообщений об успехе с экранированием
     if (!empty($_COOKIE['save'])) {
         setcookie('save', '', 100000);
         setcookie('login', '', 100000);
         setcookie('pass', '', 100000);
-        $messages[] = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:10px;">Merci, résultats enregistrés.</div>';
+        $messages[] = '<div style="color:green; padding:10px; background:#d4edda; margin-bottom:10px;">Спасибо, результаты сохранены.</div>';
         
         if (!empty($_COOKIE['pass'])) {
-            $messages[] = sprintf('<div style="color:#155724; padding:10px; background:#d4edda; margin-bottom:10px;">Vous pouvez <a href="login.php">vous connecter</a> avec le login <strong>%s</strong> et le mot de passe <strong>%s</strong> pour modifier vos données.</div>',
+            $messages[] = sprintf('<div style="color:#155724; padding:10px; background:#d4edda; margin-bottom:10px;">Вы можете <a href="login.php">войти</a> с логином <strong>%s</strong> и паролем <strong>%s</strong> для изменения данных.</div>',
                 e($_COOKIE['login']), e($_COOKIE['pass']));
         }
     }
 
-    // Vérification session utilisateur
+    // Проверка сессии пользователя
     if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
         $isLoggedIn = true;
         
-        // Requête préparée (SQL Injection)
+        // Подготовленный запрос (SQL Injection)
         $stmt = $pdo->prepare("SELECT application_id FROM users WHERE id = ?");
         $stmt->execute([$_SESSION['uid']]);
         $userData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $appData = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($appData) {
-                // Échappement des valeurs (XSS)
+                // Экранирование значений (XSS)
                 $values['name'] = e($appData['name']);
                 $values['phone'] = e($appData['phone']);
                 $values['email'] = e($appData['email']);
@@ -75,45 +75,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $langData = $stmt->fetchAll(PDO::FETCH_COLUMN);
             $values['languages'] = $langData;
         }
-        $messages[] = '<div style="color:#0c5460; padding:10px; background:#d1ecf1; margin-bottom:10px;">Connecté avec ' . e($_SESSION['login']) . ' | <a href="login.php?logout=1">Déconnexion</a></div>';
+        $messages[] = '<div style="color:#0c5460; padding:10px; background:#d1ecf1; margin-bottom:10px;">Вход с логином ' . e($_SESSION['login']) . ' | <a href="login.php?logout=1">Выйти</a></div>';
     }
 
     include('form.php');
 }
 
-// ========== MODIF SÉCURITÉ #2 : Traitement POST avec CSRF et validation ==========
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #2 : Обработка POST с CSRF и валидацией ==========
 else {
     $errors = false;
     $isLoggedIn = false;
     $userId = null;
     
-    // ========== MODIF SÉCURITÉ #3 : Vérification CSRF ==========
+    // ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #3 : Проверка CSRF ==========
     if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
-        die('Erreur CSRF : requête invalide');
+        die('Ошибка CSRF: недействительный запрос');
     }
     
-    // ========== MODIF SÉCURITÉ #4 : Validation et nettoyage des entrées ==========
-    // Validation du nom
+    // ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #4 : Валидация и очистка входных данных ==========
+    // Валидация имени
     if (empty($_POST['name'])) {
         setcookie('name_error', '1', time() + 24 * 60 * 60);
         $errors = true;
     } else {
-        // Nettoyage du nom (XSS)
         $cleanName = strip_tags(trim($_POST['name']));
         setcookie('name_value', $cleanName, time() + 30 * 24 * 60 * 60);
     }
     
-    // Validation du téléphone
+    // Валидация телефона
     if (empty($_POST['phone']) || !preg_match('/^[0-9+\-\s]{10,}$/', $_POST['phone'])) {
         setcookie('phone_error', '1', time() + 24 * 60 * 60);
         $errors = true;
     } else {
-        // Nettoyage du téléphone
         $cleanPhone = preg_replace('/[^0-9+\-\s]/', '', $_POST['phone']);
         setcookie('phone_value', $cleanPhone, time() + 30 * 24 * 60 * 60);
     }
     
-    // Validation de l'email
+    // Валидация email
     if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         setcookie('email_error', '1', time() + 24 * 60 * 60);
         $errors = true;
@@ -122,7 +120,7 @@ else {
         setcookie('email_value', $cleanEmail, time() + 30 * 24 * 60 * 60);
     }
     
-    // Validation de la date
+    // Валидация даты
     if (empty($_POST['birthdate'])) {
         setcookie('birthdate_error', '1', time() + 24 * 60 * 60);
         $errors = true;
@@ -130,7 +128,7 @@ else {
         setcookie('birthdate_value', $_POST['birthdate'], time() + 30 * 24 * 60 * 60);
     }
     
-    // Validation du genre
+    // Валидация пола
     if (empty($_POST['gender'])) {
         setcookie('gender_error', '1', time() + 24 * 60 * 60);
         $errors = true;
@@ -138,18 +136,17 @@ else {
         setcookie('gender_value', $_POST['gender'], time() + 30 * 24 * 60 * 60);
     }
     
-    // Validation des langages
+    // Валидация языков
     if (empty($_POST['languages'])) {
         setcookie('languages_error', '1', time() + 24 * 60 * 60);
         $errors = true;
     } else {
-        // Nettoyage des langages (ne garder que les entiers)
         $cleanLanguages = array_map('intval', $_POST['languages']);
         $languagesCookie = implode(',', $cleanLanguages);
         setcookie('languages_value', $languagesCookie, time() + 30 * 24 * 60 * 60);
     }
     
-    // Validation de la biographie
+    // Валидация биографии
     if (empty($_POST['biography']) || strlen($_POST['biography']) < 10) {
         setcookie('biography_error', '1', time() + 24 * 60 * 60);
         $errors = true;
@@ -158,7 +155,7 @@ else {
         setcookie('biography_value', $cleanBiography, time() + 30 * 24 * 60 * 60);
     }
     
-    // Validation du contrat
+    // Валидация контракта
     if (empty($_POST['contract'])) {
         setcookie('contract_error', '1', time() + 24 * 60 * 60);
         $errors = true;
@@ -171,13 +168,13 @@ else {
         exit();
     }
     
-    // Supprimer les cookies d'erreur
+    // Удаление cookies ошибок
     $fields = ['name', 'phone', 'email', 'birthdate', 'gender', 'languages', 'biography', 'contract'];
     foreach ($fields as $field) {
         setcookie($field . '_error', '', 100000);
     }
     
-    // Vérification de session
+    // Проверка сессии
     if (!empty($_SESSION['login']) && !empty($_SESSION['uid'])) {
         $isLoggedIn = true;
         $userId = $_SESSION['uid'];
@@ -188,7 +185,7 @@ else {
     
     try {
         if ($isLoggedIn && $userId) {
-            // Mise à jour avec requêtes préparées
+            // Обновление с подготовленными запросами
             $stmt = $pdo->prepare("SELECT application_id FROM users WHERE id = ?");
             $stmt->execute([$userId]);
             $userData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -211,7 +208,7 @@ else {
                 }
             }
         } else {
-            // Insertion avec requêtes préparées
+            // Вставка с подготовленными запросами
             $pdo->beginTransaction();
             
             $stmt = $pdo->prepare("INSERT INTO application (name, phone, email, birthdate, gender, biography, contract) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -247,8 +244,8 @@ else {
         if (isset($pdo) && $pdo->inTransaction()) {
             $pdo->rollBack();
         }
-        error_log($e->getMessage()); // Log seulement
-        die("Erreur lors de l'enregistrement. Veuillez réessayer."); // Message générique
+        error_log($e->getMessage()); // Только в лог
+        die("Ошибка при сохранении. Пожалуйста, попробуйте снова."); // Общее сообщение
     }
 }
 ?>
