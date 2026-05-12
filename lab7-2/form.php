@@ -1,10 +1,10 @@
 <?php
 /**
- * Formulaire d'inscription
- * MODIFICATIONS DE SÉCURITÉ :
- * - Ajout du token CSRF dans le formulaire
- * - Échappement de toutes les valeurs affichées avec e()
- * - Validation des entrées existante
+ * Форма анкеты
+ * МОДИФИКАЦИИ БЕЗОПАСНОСТИ :
+ * - Добавлен CSRF-токен в форму
+ * - Экранирование всех выводимых значений через e()
+ * - Существующая валидация сохранена
  */
 ?>
 <html>
@@ -65,11 +65,11 @@
 </head>
 <body>
 <div class="container">
-    <h2>Questionnaire</h2>
+    <h2>Анкета</h2>
     
     <div style="text-align:right; margin-bottom:15px;">
         <a href="login.php" style="color:#1a237e; text-decoration:none; font-size:14px;">
-            Déjà un compte ? Se connecter
+            Уже есть аккаунт? Войти
         </a>
     </div>
     
@@ -81,20 +81,20 @@
         </div>
     <?php endif; ?>
 
-    <!-- ========== MODIF SÉCURITÉ #1 : Ajout du token CSRF ========== -->
+    <!-- ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #1 : Добавление CSRF-токена ========== -->
     <form action="" method="POST">
         <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
         
-        <!-- Nom -->
-        <label>Nom complet :</label>
+        <!-- ФИО -->
+        <label>ФИО:</label>
         <input name="name" 
             <?php if (!empty($errors['name'])) {print 'class="error"';} ?> 
             value="<?php echo e($values['name']); ?>" 
-            placeholder="Votre nom complet"
+            placeholder="Введите ваше ФИО"
         />
 
-        <!-- Téléphone -->
-        <label>Téléphone :</label>
+        <!-- Телефон -->
+        <label>Телефон:</label>
         <input name="phone" 
             <?php if (!empty($errors['phone'])) {print 'class="error"';} ?> 
             value="<?php echo e($values['phone']); ?>" 
@@ -102,30 +102,30 @@
         />
 
         <!-- Email -->
-        <label>Email :</label>
+        <label>Email:</label>
         <input name="email" 
             <?php if (!empty($errors['email'])) {print 'class="error"';} ?> 
             value="<?php echo e($values['email']); ?>" 
-            placeholder="exemple@mail.com"
+            placeholder="example@mail.com"
         />
 
-        <!-- Date de naissance -->
-        <label>Date de naissance :</label>
+        <!-- Дата рождения -->
+        <label>Дата рождения:</label>
         <input type="date" name="birthdate" 
             <?php if (!empty($errors['birthdate'])) {print 'class="error"';} ?> 
             value="<?php echo e($values['birthdate']); ?>" 
         />
 
-        <!-- Genre -->
-        <label>Genre :</label>
+        <!-- Пол -->
+        <label>Пол:</label>
         <div class="radio-group">
-            <label><input type="radio" name="gender" value="male" <?php if ($values['gender'] == 'male') echo 'checked'; ?>> Homme</label>
-            <label><input type="radio" name="gender" value="female" <?php if ($values['gender'] == 'female') echo 'checked'; ?>> Femme</label>
+            <label><input type="radio" name="gender" value="male" <?php if ($values['gender'] == 'male') echo 'checked'; ?>> Мужской</label>
+            <label><input type="radio" name="gender" value="female" <?php if ($values['gender'] == 'female') echo 'checked'; ?>> Женский</label>
         </div>
-        <?php if (!empty($errors['gender'])) {print '<div style="color:red;">Veuillez sélectionner un genre</div>';} ?>
+        <?php if (!empty($errors['gender'])) {print '<div style="color:red;">Выберите пол</div>';} ?>
 
-        <!-- Langages préférés -->
-        <label>Langages préférés :</label>
+        <!-- Любимые языки -->
+        <label>Любимые языки:</label>
         <select name="languages[]" multiple size="3"
             <?php if ($errors['languages']) print 'class="error"'; ?>>
             <option value="1" <?php if (in_array("1", $values['languages'])) print 'selected'; ?>>Pascal</option>
@@ -136,22 +136,22 @@
             <option value="6" <?php if (in_array("6", $values['languages'])) print 'selected'; ?>>Java</option>
             <option value="7" <?php if (in_array("7", $values['languages'])) print 'selected'; ?>>Python</option>
         </select>
-        <?php if ($errors['languages']) print '<div class="error-message">Veuillez sélectionner au moins un langage</div>'; ?>
+        <?php if ($errors['languages']) print '<div class="error-message">Выберите хотя бы один язык</div>'; ?>
 
-        <!-- Biographie -->
-        <label>Biographie :</label>
+        <!-- Биография -->
+        <label>Биография:</label>
         <textarea name="biography" rows="5" 
             <?php if (!empty($errors['biography'])) {print 'class="error"';} ?> 
-            placeholder="Parlez de vous (minimum 10 caractères)"><?php echo e($values['biography']); ?></textarea>
+            placeholder="Расскажите о себе (минимум 10 символов)"><?php echo e($values['biography']); ?></textarea>
 
-        <!-- Contrat -->
+        <!-- Контракт -->
         <label>
             <input type="checkbox" name="contract" value="1" <?php if ($values['contract'] == '1') echo 'checked'; ?>>
-            J'accepte les conditions du contrat
+            Я согласен с условиями контракта
         </label>
-        <?php if (!empty($errors['contract'])) {print '<div style="color:red;">Vous devez accepter les conditions du contrat</div>';} ?>
+        <?php if (!empty($errors['contract'])) {print '<div style="color:red;">Необходимо принять условия контракта</div>';} ?>
 
-        <input type="submit" value="Envoyer" />
+        <input type="submit" value="Отправить" />
     </form>
 </div>
 </body>
