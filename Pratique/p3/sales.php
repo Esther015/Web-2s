@@ -1,5 +1,3 @@
-<!-- sales.php -->
-
 <?php
 
 include 'config.php';
@@ -15,20 +13,62 @@ if(isset($_GET['sale'])) {
 if(isset($_POST['add'])) {
 
     $medicine_id = $_POST['medicine_id'];
-    $customer_id = $_POST['customer_id'];
+
+    $customer_name = trim($_POST['customer_name']);
+    $phone = trim($_POST['phone']);
+
     $employee_id = $_POST['employee_id'];
-    $quantity = $_POST['quantity'];
+
+    $quantity = trim($_POST['quantity']);
 
     if(
         empty($medicine_id) ||
-        empty($customer_id) ||
+        empty($customer_name) ||
         empty($employee_id) ||
         empty($quantity)
     ) {
         die("Заполните все обязательные поля");
     }
 
-    # AJOUT
+    # RECHERCHE CLIENT
+    $sqlCustomer = "
+    SELECT id
+    FROM customers
+    WHERE full_name=?
+    LIMIT 1
+    ";
+
+    $stmtCustomer = $pdo->prepare($sqlCustomer);
+
+    $stmtCustomer->execute([$customer_name]);
+
+    $customer = $stmtCustomer->fetch(PDO::FETCH_ASSOC);
+
+    # SI CLIENT N'EXISTE PAS
+    if(!$customer) {
+
+        $sqlInsertCustomer = "
+        INSERT INTO customers(full_name, phone)
+        VALUES(?, ?)
+        ";
+
+        $stmtInsertCustomer =
+        $pdo->prepare($sqlInsertCustomer);
+
+        $stmtInsertCustomer->execute([
+            $customer_name,
+            $phone
+        ]);
+
+        $customer_id = $pdo->lastInsertId();
+
+    } else {
+
+        $customer_id = $customer['id'];
+
+    }
+
+    # AJOUT VENTE
     $sql = "
     INSERT INTO sales(
         medicine_id,
@@ -75,17 +115,17 @@ FROM medicines
 ORDER BY name ASC
 ");
 
-# CLIENTS
-$customers = $pdo->query("
-SELECT *
-FROM customers
-ORDER BY full_name ASC
-");
-
 # EMPLOYES
 $employees = $pdo->query("
 SELECT *
 FROM employees
+ORDER BY full_name ASC
+");
+
+# CLIENTS POUR SUGGESTIONS
+$customers = $pdo->query("
+SELECT *
+FROM customers
 ORDER BY full_name ASC
 ");
 
@@ -100,6 +140,7 @@ SELECT
     medicines.price AS medicine_price,
 
     customers.full_name,
+    customers.phone,
 
     employees.full_name AS employee_name
 
@@ -181,24 +222,30 @@ class="back">
 
 </select>
 
-<select name="customer_id" required>
+<!-- CLIENT -->
+<input
+list="customers"
+type="text"
+name="customer_name"
+placeholder="Имя клиента"
+required>
 
-<option value="">
-Клиент
-</option>
+<datalist id="customers">
 
 <?php while($customer = $customers->fetch(PDO::FETCH_ASSOC)) { ?>
 
-<option value="<?= $customer['id'] ?>">
-
-<?= $customer['full_name'] ?>
-
-</option>
+<option value="<?= $customer['full_name'] ?>">
 
 <?php } ?>
 
-</select>
+</datalist>
 
+<input
+type="text"
+name="phone"
+placeholder="Телефон">
+
+<!-- EMPLOYE -->
 <select name="employee_id" required>
 
 <option value="">
@@ -217,7 +264,8 @@ class="back">
 
 </select>
 
-<input type="number"
+<input
+type="number"
 name="quantity"
 placeholder="Количество"
 required>
@@ -240,9 +288,10 @@ name="add">
 <th>ID</th>
 <th>Лекарство</th>
 <th>Клиент</th>
+<th>Телефон</th>
 <th>Сотрудник</th>
 <th>Количество</th>
-<th>Цена</th>
+<th>Prix</th>
 <th>Дата</th>
 <th>Действие</th>
 
@@ -255,45 +304,35 @@ id="sale<?= $row['id'] ?>"
 class="<?= ($row['id'] == $selectedSale) ? 'highlight' : '' ?>">
 
 <td>
-
 <?= $row['id'] ?>
-
 </td>
 
 <td>
-
 <?= $row['medicine_name'] ?>
-
 </td>
 
 <td>
-
 <?= $row['full_name'] ?>
-
 </td>
 
 <td>
+<?= $row['phone'] ?>
+</td>
 
+<td>
 <?= $row['employee_name'] ?>
-
 </td>
 
 <td>
-
 <?= $row['quantity'] ?>
-
 </td>
 
 <td>
-
-<?= $row['medicine_price'] ?> ₽
-
+<?= $row['medicine_price'] ?> €
 </td>
 
 <td>
-
 <?= $row['sale_date'] ?>
-
 </td>
 
 <td>
