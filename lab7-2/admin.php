@@ -1,47 +1,47 @@
 <?php
 /**
- * Administration sécurisée
- * MODIFICATIONS DE SÉCURITÉ :
- * - Utilisation de password_hash() pour le mot de passe admin
- * - Ajout de la validation CSRF pour la suppression
- * - Ajout de htmlspecialchars() pour tous les affichages (XSS)
- * - Validation stricte des types avec filter_input()
- * - Messages d'erreur génériques (Information Disclosure)
- * - Utilisation de requêtes préparées PDO (SQL Injection)
+ * Безопасная панель администратора
+ * МОДИФИКАЦИИ БЕЗОПАСНОСТИ :
+ * - Использование password_hash() вместо md5() для пароля admin
+ * - Добавлена проверка CSRF для удаления
+ * - Добавлен htmlspecialchars() для всего вывода (XSS)
+ * - Строгая валидация типов с filter_input()
+ * - Общие сообщения об ошибках (Information Disclosure)
+ * - Использование подготовленных запросов PDO (SQL Injection)
  */
 
 require_once 'config.php';
 
-// ========== MODIF SÉCURITÉ #1 : Authentification admin sécurisée ==========
-// Utilisation de password_hash() au lieu de md5()
-// Pour générer le hash : password_hash('123', PASSWORD_DEFAULT)
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #1 : Безопасная аутентификация admin ==========
+// Использование password_hash() вместо md5()
+// Для генерации хеша: password_hash('123', PASSWORD_DEFAULT)
 if (empty($_SERVER['PHP_AUTH_USER']) ||
     empty($_SERVER['PHP_AUTH_PW']) ||
     $_SERVER['PHP_AUTH_USER'] != 'admin' ||
-    !password_verify($_SERVER['PHP_AUTH_PW'], '$2y$10$ExempleHashQueVousDevezGenerer')) { // Remplacez par votre hash
+    !password_verify($_SERVER['PHP_AUTH_PW'], '$2y$10$ExempleHashQueVousDevezGenerer')) { // Замените на ваш хеш
     header('HTTP/1.1 401 Unauthorized');
-    header('WWW-Authenticate: Basic realm="Administration"');
-    print('<h1>401 Authentification requise</h1>');
+    header('WWW-Authenticate: Basic realm="Администрирование"');
+    print('<h1>401 Требуется авторизация</h1>');
     exit();
 }
 
-// ========== MODIF SÉCURITÉ #2 : Traitement suppression avec CSRF ==========
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #2 : Обработка удаления с CSRF ==========
 $message = '';
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
     
-    // Vérification CSRF (protection contre les attaques cross-site)
+    // Проверка CSRF (защита от межсайтовых атак)
     if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
-        $message = '<div class="error">Token CSRF invalide</div>';
+        $message = '<div class="error">Недействительный CSRF-токен</div>';
     } else {
-        // Validation stricte du type de l'ID (SQL Injection)
+        // Строгая валидация ID (SQL Injection)
         $deleteId = filter_input(INPUT_POST, 'delete_id', FILTER_VALIDATE_INT);
         if ($deleteId === false || $deleteId <= 0) {
-            $message = '<div class="error">ID invalide</div>';
+            $message = '<div class="error">Недействительный ID</div>';
         } else {
             try {
                 $pdo->beginTransaction();
                 
-                // Toutes les requêtes sont préparées (SQL Injection)
+                // Все запросы подготовленные (SQL Injection)
                 $stmt = $pdo->prepare("SELECT id FROM users WHERE application_id = ?");
                 $stmt->execute([$deleteId]);
                 $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -58,24 +58,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['delete_id'])) {
                 $stmt->execute([$deleteId]);
                 
                 $pdo->commit();
-                $message = '<div class="success">Enregistrement #' . e($deleteId) . ' supprimé avec succès.</div>';
+                $message = '<div class="success">Запись #' . e($deleteId) . ' успешно удалена.</div>';
             } catch (Exception $e) {
                 $pdo->rollBack();
-                error_log($e->getMessage()); // Log uniquement, pas d'affichage (Information Disclosure)
-                $message = '<div class="error">Erreur lors de la suppression.</div>'; // Message générique
+                error_log($e->getMessage()); // Только в лог, не на экран (Information Disclosure)
+                $message = '<div class="error">Ошибка при удалении.</div>'; // Общее сообщение
             }
         }
     }
 }
 
-// ========== MODIF SÉCURITÉ #3 : Requêtes préparées pour la lecture ==========
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #3 : Подготовленные запросы для чтения ==========
 try {
-    // Requête préparée (SQL Injection)
     $stmt = $pdo->prepare("SELECT * FROM application ORDER BY id DESC");
     $stmt->execute();
     $applications = $stmt->fetchAll();
     
-    // Ajout des langages avec requête préparée
+    // Добавление языков с подготовленным запросом
     foreach ($applications as &$app) {
         $stmt = $pdo->prepare("
             SELECT l.name 
@@ -87,7 +86,7 @@ try {
         $app['languages'] = $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
     
-    // Statistiques
+    // Статистика
     $stmt = $pdo->prepare("
         SELECT l.name, COUNT(al.application_id) as count
         FROM programming_language l
@@ -100,16 +99,16 @@ try {
     
 } catch (Exception $e) {
     error_log($e->getMessage());
-    die('Erreur lors du chargement des données'); // Message générique
+    die('Ошибка загрузки данных'); // Общее сообщение
 }
 
-// ========== MODIF SÉCURITÉ #4 : Tous les affichages utilisent e() pour XSS ==========
+// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #4 : Весь вывод использует e() для XSS ==========
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Panel Administrateur</title>
+    <title>Панель администратора</title>
     <style>
         body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 20px; }
         .container { max-width: 1200px; margin: 0 auto; }
@@ -128,49 +127,50 @@ try {
 </head>
 <body>
 <div class="container">
-    <h1>Panel Administrateur</h1>
+    <h1>Панель администратора</h1>
+    <p>Вы успешно авторизовались и видите защищенные паролем данные.</p>
     
     <?php echo $message; ?>
     
-    <h2>Statistiques par langage</h2>
+    <h2>Статистика по языкам</h2>
     <div class="stats">
         <?php foreach ($stats as $s): ?>
         <div class="stat-card">
-            <div class="num"><?php echo e($s['count']); ?></div>  <!-- e() pour XSS -->
-            <div class="lbl"><?php echo e($s['name']); ?></div>    <!-- e() pour XSS -->
+            <div class="num"><?php echo e($s['count']); ?></div>
+            <div class="lbl"><?php echo e($s['name']); ?></div>
         </div>
         <?php endforeach; ?>
     </div>
     
-    <h2>Toutes les données (<?php echo count($applications); ?> enregistrements)</h2>
+    <h2>Все данные (<?php echo count($applications); ?> записей)</h2>
     
     <?php if (empty($applications)): ?>
-        <p>Aucune donnée.</p>
+        <p>Нет данных.</p>
     <?php else: ?>
         <table>
             <thead>
-                <tr><th>ID</th><th>Nom</th><th>Téléphone</th><th>Email</th><th>Date naiss.</th><th>Genre</th><th>Langages</th><th>Action</th></tr>
+                <tr><th>ID</th><th>ФИО</th><th>Телефон</th><th>Email</th><th>Дата рождения</th><th>Пол</th><th>Языки</th><th>Действие</th></tr>
             </thead>
             <tbody>
             <?php foreach ($applications as $a): ?>
             <tr>
-                <td><?php echo e($a['id']); ?></td>      <!-- e() pour XSS -->
-                <td><?php echo e($a['name']); ?></td>    <!-- e() pour XSS -->
-                <td><?php echo e($a['phone']); ?></td>   <!-- e() pour XSS -->
-                <td><?php echo e($a['email']); ?></td>   <!-- e() pour XSS -->
-                <td><?php echo e($a['birthdate']); ?></td> <!-- e() pour XSS -->
-                <td><?php echo $a['gender'] === 'male' ? 'Homme' : 'Femme'; ?></td>
+                <td><?php echo e($a['id']); ?></td>
+                <td><?php echo e($a['name']); ?></td>
+                <td><?php echo e($a['phone']); ?></td>
+                <td><?php echo e($a['email']); ?></td>
+                <td><?php echo e($a['birthdate']); ?></td>
+                <td><?php echo $a['gender'] === 'male' ? 'Муж' : 'Жен'; ?></td>
                 <td>
                     <?php foreach ($a['languages'] as $l): ?>
-                        <span class="badge"><?php echo e($l); ?></span>  <!-- e() pour XSS -->
+                        <span class="badge"><?php echo e($l); ?></span>
                     <?php endforeach; ?>
                 </td>
                 <td>
-                    <!-- ========== MODIF SÉCURITÉ #5 : Formulaire avec token CSRF ========== -->
-                    <form method="post" onsubmit="return confirm('Supprimer #<?php echo e($a['id']); ?> ?');">
+                    <!-- ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #5 : Форма с CSRF-токеном ========== -->
+                    <form method="post" onsubmit="return confirm('Удалить запись #<?php echo e($a['id']); ?>?');">
                         <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                         <input type="hidden" name="delete_id" value="<?php echo e($a['id']); ?>">
-                        <button type="submit" class="btn-del">Supprimer</button>
+                        <button type="submit" class="btn-del">Удалить</button>
                     </form>
                 </td>
             </tr>
