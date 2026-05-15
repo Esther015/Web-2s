@@ -2,6 +2,29 @@
 
 include 'config.php';
 
+# AJAX CLIENT SEARCH
+if(isset($_GET['ajax'])){
+
+    $search = $_GET['search'] . '%';
+
+    $sql = "
+    SELECT *
+    FROM customers
+    WHERE full_name LIKE ?
+    LIMIT 5
+    ";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$search]);
+
+    echo json_encode(
+        $stmt->fetchAll(PDO::FETCH_ASSOC)
+    );
+
+    exit;
+}
+
 # AJOUT VENTE
 if(isset($_POST['save_sale'])) {
 
@@ -17,8 +40,14 @@ if(isset($_POST['save_sale'])) {
     }
 
     # CLIENT EXISTE ?
-    $sqlCustomer = "SELECT * FROM customers WHERE full_name=?";
+    $sqlCustomer = "
+    SELECT *
+    FROM customers
+    WHERE full_name=?
+    ";
+
     $stmtCustomer = $pdo->prepare($sqlCustomer);
+
     $stmtCustomer->execute([$customer_name]);
 
     $customer = $stmtCustomer->fetch(PDO::FETCH_ASSOC);
@@ -50,8 +79,14 @@ if(isset($_POST['save_sale'])) {
 
         $qty = $quantities[$index];
 
-        $sqlMed = "SELECT * FROM medicines WHERE id=?";
+        $sqlMed = "
+        SELECT *
+        FROM medicines
+        WHERE id=?
+        ";
+
         $stmtMed = $pdo->prepare($sqlMed);
+
         $stmtMed->execute([$med_id]);
 
         $med = $stmtMed->fetch(PDO::FETCH_ASSOC);
@@ -65,7 +100,8 @@ if(isset($_POST['save_sale'])) {
 
     # CREER VENTE
     $sqlSale = "
-    INSERT INTO sales(customer_id, employee_id, total_price, sale_date)
+    INSERT INTO sales
+    (customer_id, employee_id, total_price, sale_date)
     VALUES(?, ?, ?, NOW())
     ";
 
@@ -83,8 +119,14 @@ if(isset($_POST['save_sale'])) {
 
         $qty = $quantities[$index];
 
-        $sqlMed = "SELECT * FROM medicines WHERE id=?";
+        $sqlMed = "
+        SELECT *
+        FROM medicines
+        WHERE id=?
+        ";
+
         $stmtMed = $pdo->prepare($sqlMed);
+
         $stmtMed->execute([$med_id]);
 
         $med = $stmtMed->fetch(PDO::FETCH_ASSOC);
@@ -130,11 +172,13 @@ if(isset($_GET['delete'])) {
     $id = $_GET['delete'];
 
     $sqlItems = "
-    SELECT * FROM sale_items
+    SELECT *
+    FROM sale_items
     WHERE sale_id=?
     ";
 
     $stmtItems = $pdo->prepare($sqlItems);
+
     $stmtItems->execute([$id]);
 
     while($item = $stmtItems->fetch(PDO::FETCH_ASSOC)){
@@ -153,15 +197,20 @@ if(isset($_GET['delete'])) {
         ]);
     }
 
-    $sqlDelete = "DELETE FROM sales WHERE id=?";
+    $sqlDelete = "
+    DELETE FROM sales
+    WHERE id=?
+    ";
+
     $stmtDelete = $pdo->prepare($sqlDelete);
+
     $stmtDelete->execute([$id]);
 
     header("Location: sales.php");
     exit;
 }
 
-# AFFICHAGE
+# AFFICHAGE VENTES
 $sql = "
 SELECT sales.*,
 customers.full_name AS customer,
@@ -180,13 +229,17 @@ ORDER BY sales.id DESC
 
 $result = $pdo->query($sql);
 
+# MEDICAMENTS
 $medicines = $pdo->query("
-SELECT * FROM medicines
+SELECT *
+FROM medicines
 ORDER BY name
 ");
 
+# EMPLOYES
 $employees = $pdo->query("
-SELECT * FROM employees
+SELECT *
+FROM employees
 ORDER BY full_name
 ");
 
@@ -199,6 +252,8 @@ ORDER BY full_name
 
 <meta charset="UTF-8">
 <title>Продажи</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="stylesheet" href="style.css">
 
 </head>
@@ -286,7 +341,7 @@ href="?delete=<?= $row['id'] ?>">
 <input type="text"
 name="customer_name"
 id="customer_name"
-placeholder="Клиент"
+placeholder="Имя клиента"
 autocomplete="off"
 required>
 
@@ -315,16 +370,24 @@ placeholder="Телефон">
 
 <div class="cart-row">
 
-<select name="medicine_id[]" required>
+<select name="medicine_id[]" class="medicine-select" required>
 
-<?php while($m = $medicines->fetch(PDO::FETCH_ASSOC)) { ?>
+<?php
+$medicines2 = $pdo->query("
+SELECT *
+FROM medicines
+ORDER BY name
+");
+
+while($m = $medicines2->fetch(PDO::FETCH_ASSOC)) {
+?>
 
 <option
 value="<?= $m['id'] ?>"
 data-price="<?= $m['price'] ?>">
 
 <?= $m['name'] ?>
-(<?= $m['quantity'] ?>)
+(остаток: <?= $m['quantity'] ?>)
 
 </option>
 
@@ -334,6 +397,7 @@ data-price="<?= $m['price'] ?>">
 
 <input type="number"
 name="quantity[]"
+class="qty"
 placeholder="Количество"
 min="1"
 value="1"
@@ -345,7 +409,9 @@ required>
 
 <button type="button"
 onclick="addMedicine()">
+
 + Добавить лекарство
+
 </button>
 
 <h3 id="total">
@@ -354,12 +420,16 @@ onclick="addMedicine()">
 
 <button type="submit"
 name="save_sale">
+
 Сохранить
+
 </button>
 
 <button type="button"
 onclick="closeModal()">
+
 Закрыть
+
 </button>
 
 </form>
@@ -371,35 +441,110 @@ onclick="closeModal()">
 <script>
 
 function openModal(){
-    document.getElementById('saleModal').style.display='flex';
+
+    document.getElementById(
+    'saleModal'
+    ).style.display='flex';
 }
 
 function closeModal(){
-    document.getElementById('saleModal').style.display='none';
+
+    document.getElementById(
+    'saleModal'
+    ).style.display='none';
 }
 
 function addMedicine(){
 
-    let row = document.querySelector('.cart-row').cloneNode(true);
+    let row =
+    document.querySelector('.cart-row')
+    .cloneNode(true);
 
-    document.getElementById('cart-items').appendChild(row);
+    document.getElementById(
+    'cart-items'
+    ).appendChild(row);
+
+    calculateTotal();
+
+    attachEvents();
 }
 
-const customerInput =
-document.getElementById('customer_name');
+function calculateTotal(){
 
-customerInput.addEventListener('keyup', function(){
+    let total = 0;
+
+    let rows =
+    document.querySelectorAll('.cart-row');
+
+    rows.forEach(row => {
+
+        let select =
+        row.querySelector('.medicine-select');
+
+        let qty =
+        row.querySelector('.qty');
+
+        let price =
+        select.options[
+        select.selectedIndex
+        ].dataset.price;
+
+        total += price * qty.value;
+    });
+
+    document.getElementById(
+    'total'
+    ).innerHTML =
+    'Итого: ' + total + ' ₽';
+}
+
+function attachEvents(){
+
+    document.querySelectorAll(
+    '.medicine-select'
+    ).forEach(select => {
+
+        select.onchange =
+        calculateTotal;
+    });
+
+    document.querySelectorAll(
+    '.qty'
+    ).forEach(qty => {
+
+        qty.oninput =
+        calculateTotal;
+    });
+}
+
+attachEvents();
+
+# CLIENT SEARCH
+
+const customerInput =
+document.getElementById(
+'customer_name'
+);
+
+customerInput.addEventListener(
+'keyup',
+function(){
 
     let value = this.value;
 
-    fetch('search_customer.php?search=' + value)
+    fetch(
+    'sales.php?ajax=1&search='
+    + value
+    )
 
     .then(res => res.json())
 
     .then(data => {
 
         let suggestions =
-        document.getElementById('suggestions');
+        document.getElementById(
+        'suggestions'
+        );
 
         suggestions.innerHTML='';
 
@@ -408,9 +553,12 @@ customerInput.addEventListener('keyup', function(){
             let div =
             document.createElement('div');
 
-            div.classList.add('suggestion-item');
+            div.classList.add(
+            'suggestion-item'
+            );
 
-            div.innerHTML = customer.full_name;
+            div.innerHTML =
+            customer.full_name;
 
             div.onclick = function(){
 
@@ -419,7 +567,8 @@ customerInput.addEventListener('keyup', function(){
 
                 document.getElementById(
                 'customer_phone'
-                ).value = customer.phone;
+                ).value =
+                customer.phone;
 
                 suggestions.innerHTML='';
             }
@@ -428,6 +577,8 @@ customerInput.addEventListener('keyup', function(){
         });
     });
 });
+
+calculateTotal();
 
 </script>
 
