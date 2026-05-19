@@ -14,7 +14,7 @@ require_once 'config.php';
 
 header('Content-Type: text/html; charset=UTF-8');
 
-// ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #1 : Получение данных с экранированием ==========
+// МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #1 : Получение данных с экранированием 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $messages = array();
     $errors = array();
