@@ -136,7 +136,7 @@
             <option value="6" <?php if (in_array("6", $values['languages'])) print 'selected'; ?>>Java</option>
             <option value="7" <?php if (in_array("7", $values['languages'])) print 'selected'; ?>>Python</option>
         </select>
-        <?php if (!empty(($errors['languages'])) print '<div class="error-message">Выберите хотя бы один язык</div>'; ?>
+        <?php if (!empty($errors['languages'])) print '<div class="error-message">Выберите хотя бы один язык</div>'; ?>
 
         <!-- Биография -->
         <label>Биография:</label>
