@@ -61,6 +61,13 @@
             margin-top: -8px;
             margin-bottom: 10px;
         }
+        .messages {
+    background: #d4edda;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    color: #155724;
+}
     </style>
 </head>
 <body>
