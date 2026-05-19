@@ -18,7 +18,7 @@ require_once 'config.php';
 if (empty($_SERVER['PHP_AUTH_USER']) ||
     empty($_SERVER['PHP_AUTH_PW']) ||
     $_SERVER['PHP_AUTH_USER'] != 'admin' ||
-    !password_verify($_SERVER['PHP_AUTH_PW'], '$2y$10$kBeuB2haNiuQ.DyNUDjsh.fKkaJZvrK/aExHUVqFMFOXJHdeDNMLO')) { // Замените на ваш хеш
+    !password_verify($_SERVER['PHP_AUTH_PW'], '$2y$10$kBeuB2haNiuQ.DyNUDjsh.fKkaJZvrK/aExHUVqFMFOXJHdeDNMLO')) {
     header('HTTP/1.1 401 Unauthorized');
     header('WWW-Authenticate: Basic realm="Администрирование"');
     print('<h1>401 Требуется авторизация</h1>');
