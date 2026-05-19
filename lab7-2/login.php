@@ -11,6 +11,9 @@
 require_once 'config.php';
 
 header('Content-Type: text/html; charset=UTF-8');
+header('X-XSS-Protection: 1; mode=block');
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: DENY');
 
 // ========== МОДИФИКАЦИЯ БЕЗОПАСНОСТИ #1 : Безопасный выход ==========
 if (isset($_GET['logout'])) {
