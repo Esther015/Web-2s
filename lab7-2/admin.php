@@ -110,19 +110,94 @@ try {
     <meta charset="UTF-8">
     <title>Панель администратора</title>
     <style>
-        body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 20px; }
-        .container { max-width: 1200px; margin: 0 auto; }
-        h1 { color: #1a237e; }
-        .success { color: #155724; background: #d4edda; padding: 10px; margin-bottom: 15px; border-radius: 4px; }
-        .error { color: #721c24; background: #f8d7da; padding: 10px; margin-bottom: 15px; border-radius: 4px; }
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
-        th { background: #1a237e; color: white; }
-        .badge { background: #e3f2fd; color: #1a237e; padding: 2px 8px; border-radius: 11px; font-size: 11px; margin: 1px; display: inline-block; }
-        .btn-del { background: #dc3545; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
-        .stats { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-        .stat-card { background: white; padding: 15px 25px; border-radius: 8px; text-align: center; }
-        .stat-card .num { font-size: 30px; font-weight: bold; color: #1a237e; }
+         body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #1a237e;
+            border-bottom: 3px solid #1a237e;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #283593;
+            margin-top: 30px;
+        }
+        
+        /* Statistiques */
+        .stats {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: white;
+            padding: 18px 25px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            min-width: 130px;
+        }
+        .stat-card .num {
+            font-size: 30px;
+            font-weight: bold;
+            color: #1a237e;
+        }
+        .stat-card .lbl {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        /* Tableau */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+        th {
+            background: #1a237e;
+            color: white;
+        }
+        tr:hover { background: #f5f5f5; }
+        tr:nth-child(even) { background: #fafafa; }
+        
+        .badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1a237e;
+            padding: 2px 9px;
+            border-radius: 11px;
+            font-size: 11px;
+            margin: 1px;
+        }
+        .btn-del {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .btn-del:hover { background: #c82333; }
+        
     </style>
 </head>
 <body>
