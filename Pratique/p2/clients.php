@@ -49,7 +49,7 @@ else{
     $customers = $pdo->query("SELECT * FROM customers ORDER BY full_name");
 }
 
-# HISTORIQUE CLIENT AJAX - AVEC DÉTAILS DES MÉDICAMENTS
+# HISTORIQUE CLIENT AJAX 
 if(isset($_GET['history'])){
     $id = (int)$_GET['history'];
     
@@ -87,32 +87,32 @@ if(isset($_GET['history'])){
     }
     
     if(count($sales) > 0){
-        echo "<table style='width:100%; border-collapse:collapse;'>";
+        echo "<table class='history-table'>";
         echo "<thead>";
-        echo "<tr style='background:#4CAF50; color:white;'>";
-        echo "<th style='padding:10px; text-align:left;'>Дата</th>";
-        echo "<th style='padding:10px; text-align:left;'>Лекарства</th>";
-        echo "<th style='padding:10px; text-align:left;'>Сумма</th>";
+        echo "<tr>";
+        echo "<th>Дата</th>";
+        echo "<th>Лекарства</th>";
+        echo "<th>Сумма</th>";
         echo "<tr>";
         echo "</thead>";
         echo "<tbody>";
         
         foreach($sales as $sale){
-            echo "<tr>";
-            echo "<td style='padding:10px; border-bottom:1px solid #ddd; vertical-align:top;'>" . htmlspecialchars($sale['date']) . "</td>";
-            echo "<td style='padding:10px; border-bottom:1px solid #ddd;'>";
+           echo "<tr>";
+            echo "<td>" . htmlspecialchars($sale['date']) . "</td>";
+            echo "<td>";
             foreach($sale['medicines'] as $medicine){
                 echo "• " . htmlspecialchars($medicine) . "<br>";
             }
             echo "</td>";
-            echo "<td style='padding:10px; border-bottom:1px solid #ddd; font-weight:bold; color:#4CAF50;'>" . htmlspecialchars($sale['total']) . " ₽</td>";
+            echo "<td class='total-price'>" . htmlspecialchars($sale['total']) . " ₽</td>";
             echo "</tr>";
         }
         
         echo "</tbody>";
         echo "</table>";
     } else {
-        echo "<p style='text-align:center; color:#999; padding:20px;'>У этого клиента нет покупок</p>";
+        echo "<p class='no-purchases'>У этого клиента нет покупок</p>";
     }
     
     exit;
