@@ -267,14 +267,9 @@ ORDER BY full_name
 <h1>Продажи</h1>
 
 <div class="actions">
-
-<button onclick="openModal()">
-Новая продажа
-</button>
-
-<a href="index.php" class="back">
-Назад
-</a>
+    <a href="index.php" class="back">
+        Назад
+    </a>
 
 </div>
 
