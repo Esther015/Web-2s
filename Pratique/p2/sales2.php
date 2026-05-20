@@ -202,24 +202,15 @@ h1 {
     transition: all 0.3s ease;
 }
 
-.back {
-    background-color: #6c757d;
-    color: white;
-}
-
-.back:hover {
-    background-color: #5a6268;
-}
-
 .add-btn {
-    background-color: #28a745;
+    background-color: #1d981d;
     color: white;
     border: none;
     cursor: pointer;
 }
 
 .add-btn:hover {
-    background-color: #218838;
+    background-color: #176a17;
 }
     </style>
 </head>
