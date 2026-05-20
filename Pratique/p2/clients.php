@@ -22,7 +22,6 @@ if(isset($_POST['add'])) {
 if(isset($_GET['delete'])) {
     $id = $_GET['delete'];
     
-    // Vérifier si le client a des ventes avant de supprimer
     $check = $pdo->prepare("SELECT COUNT(*) FROM sales WHERE customer_id = ?");
     $check->execute([$id]);
     if($check->fetchColumn() > 0) {
@@ -49,11 +48,10 @@ else{
     $customers = $pdo->query("SELECT * FROM customers ORDER BY full_name");
 }
 
-# HISTORIQUE CLIENT AJAX 
+# HISTORIQUE CLIENT AJAX
 if(isset($_GET['history'])){
     $id = (int)$_GET['history'];
     
-    // Récupérer les ventes avec les médicaments
     $sql = "
     SELECT 
         sales.id as sale_id,
@@ -87,32 +85,32 @@ if(isset($_GET['history'])){
     }
     
     if(count($sales) > 0){
-        echo "<table class='history-table'>";
+        echo "<table>";
         echo "<thead>";
         echo "<tr>";
         echo "<th>Дата</th>";
         echo "<th>Лекарства</th>";
         echo "<th>Сумма</th>";
-        echo "<tr>";
+        echo "</tr>";
         echo "</thead>";
         echo "<tbody>";
         
         foreach($sales as $sale){
-           echo "<tr>";
+            echo "<tr>";
             echo "<td>" . htmlspecialchars($sale['date']) . "</td>";
             echo "<td>";
             foreach($sale['medicines'] as $medicine){
                 echo "• " . htmlspecialchars($medicine) . "<br>";
             }
             echo "</td>";
-            echo "<td class='total-price'>" . htmlspecialchars($sale['total']) . " ₽</td>";
+            echo "<td>" . htmlspecialchars($sale['total']) . " ₽</td>";
             echo "</tr>";
         }
         
         echo "</tbody>";
         echo "</table>";
     } else {
-        echo "<p class='no-purchases'>У этого клиента нет покупок</p>";
+        echo "<p>У этого клиента нет покупок</p>";
     }
     
     exit;
@@ -156,7 +154,7 @@ if(isset($_GET['history'])){
 
     <!-- TABLEAU DES CLIENTS -->
     <div class="table-wrapper">
-        <table style="width:100%; border-collapse:collapse;">
+        <table>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -168,20 +166,20 @@ if(isset($_GET['history'])){
             <tbody>
                 <?php while($row = $customers->fetch(PDO::FETCH_ASSOC)) { ?>
                 <tr>
-                    <td style="padding:8px; border-bottom:1px solid #ddd;"><?= htmlspecialchars($row['id']) ?></td>
-                    <td style="padding:8px; border-bottom:1px solid #ddd;">
-                         <a href="#" class="client-link" 
+                    <td><?= htmlspecialchars($row['id']) ?></td>
+                    <td>
+                        <a href="#" class="client-link" 
                            data-id="<?= htmlspecialchars($row['id']) ?>" 
                            data-name="<?= htmlspecialchars($row['full_name']) ?>" 
                            data-phone="<?= htmlspecialchars($row['phone']) ?>">
                             <?= htmlspecialchars($row['full_name']) ?>
-                    </a>
+                        </a>
                     </td>
                     <td><?= htmlspecialchars($row['phone']) ?></td>
-                <td>
-                    <a class="delete" href="?delete=<?= htmlspecialchars($row['id']) ?>" 
-                       onclick="return confirm('Удалить клиента?')">Удалить</a>
-                </td>
+                    <td>
+                        <a class="delete" href="?delete=<?= htmlspecialchars($row['id']) ?>" 
+                           onclick="return confirm('Удалить клиента?')">Удалить</a>
+                    </td>
                 </tr>
                 <?php } ?>
             </tbody>
@@ -190,19 +188,15 @@ if(isset($_GET['history'])){
 </div>
 
 <!-- MODAL CLIENT -->
-<div class="modal" id="clientModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
-    <div class="modal-content" style="background:white; padding:20px; border-radius:8px; max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
-        <h2 id="modal-name" style="margin-top:0; color:#333;">Клиент</h2>
-        <p style="margin-bottom:20px;"><strong>Телефон :</strong> <span id="modal-phone"></span></p>
+<div class="modal" id="clientModal">
+    <div class="modal-content">
+        <h2 id="modal-name">Клиент</h2>
+        <p><strong>Телефон :</strong> <span id="modal-phone"></span></p>
         
-        <h3 style="color:#4CAF50;">История покупок</h3>
-        <div id="purchase-history" style="margin-top:15px;">
-            <!-- Les achats du client seront chargés ici -->
-        </div>
+        <h3>История покупок</h3>
+        <div id="purchase-history"></div>
         
-        <button onclick="closeModal()" style="margin-top:20px; padding:10px 20px; background:#6c757d; color:white; border:none; border-radius:4px; cursor:pointer; font-size:14px;">
-            Закрыть
-        </button>
+        <button onclick="closeModal()">Закрыть</button>
     </div>
 </div>
 
@@ -222,17 +216,15 @@ document.querySelectorAll('.client-link').forEach(link => {
         document.getElementById('modal-name').innerHTML = htmlEscape(name);
         document.getElementById('modal-phone').innerHTML = htmlEscape(phone);
         
-        // Afficher le chargement
-        document.getElementById('purchase-history').innerHTML = '<p style="text-align:center; color:#999;">Загрузка...</p>';
+        document.getElementById('purchase-history').innerHTML = '<p>Загрузка...</p>';
         
-        // Récupérer l'historique des achats du client
         fetch('clients.php?history=' + id)
             .then(res => res.text())
             .then(data => {
                 document.getElementById('purchase-history').innerHTML = data;
             })
             .catch(error => {
-                document.getElementById('purchase-history').innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки истории</p>';
+                document.getElementById('purchase-history').innerHTML = '<p style="color:red;">Ошибка загрузки истории</p>';
                 console.error('Erreur:', error);
             });
         
