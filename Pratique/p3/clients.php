@@ -49,37 +49,63 @@ else{
     $customers = $pdo->query("SELECT * FROM customers ORDER BY full_name");
 }
 
-# HISTORIQUE CLIENT AJAX - DOIT ÊTRE AVANT LE HTML
+# HISTORIQUE CLIENT AJAX - AVEC DÉTAILS DES MÉDICAMENTS
 if(isset($_GET['history'])){
     $id = (int)$_GET['history'];
     
-    // Récupérer uniquement les ventes de CE client
+    // Récupérer les ventes avec les médicaments
     $sql = "
-    SELECT sales.id, sales.sale_date, sales.total_price
+    SELECT 
+        sales.id as sale_id,
+        sales.sale_date,
+        sales.total_price,
+        medicines.name as medicine_name,
+        sale_items.quantity
     FROM sales
+    JOIN sale_items ON sales.id = sale_items.sale_id
+    JOIN medicines ON sale_items.medicine_id = medicines.id
     WHERE sales.customer_id = ?
-    ORDER BY sales.id DESC
+    ORDER BY sales.id DESC, sale_items.id ASC
     ";
     
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$id]);
     
-    $sales = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $sales = [];
+    while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
+        $sale_id = $row['sale_id'];
+        
+        if(!isset($sales[$sale_id])){
+            $sales[$sale_id] = [
+                'date' => $row['sale_date'],
+                'total' => $row['total_price'],
+                'medicines' => []
+            ];
+        }
+        
+        $sales[$sale_id]['medicines'][] = $row['medicine_name'] . ' (' . $row['quantity'] . ' шт.)';
+    }
     
     if(count($sales) > 0){
         echo "<table style='width:100%; border-collapse:collapse;'>";
         echo "<thead>";
-        echo "<tr style='background:#f5f5f5;'>";
-        echo "<th style='padding:8px; text-align:left;'>Дата</th>";
-        echo "<th style='padding:8px; text-align:left;'>Сумма</th>";
-        echo "</tr>";
+        echo "<tr style='background:#4CAF50; color:white;'>";
+        echo "<th style='padding:10px; text-align:left;'>Дата</th>";
+        echo "<th style='padding:10px; text-align:left;'>Лекарства</th>";
+        echo "<th style='padding:10px; text-align:left;'>Сумма</th>";
+        echo "<tr>";
         echo "</thead>";
         echo "<tbody>";
         
         foreach($sales as $sale){
             echo "<tr>";
-            echo "<td style='padding:8px; border-bottom:1px solid #ddd;'>" . htmlspecialchars($sale['sale_date']) . "</td>";
-            echo "<td style='padding:8px; border-bottom:1px solid #ddd;'>" . htmlspecialchars($sale['total_price']) . " ₽</td>";
+            echo "<td style='padding:10px; border-bottom:1px solid #ddd; vertical-align:top;'>" . htmlspecialchars($sale['date']) . "</td>";
+            echo "<td style='padding:10px; border-bottom:1px solid #ddd;'>";
+            foreach($sale['medicines'] as $medicine){
+                echo "• " . htmlspecialchars($medicine) . "<br>";
+            }
+            echo "</td>";
+            echo "<td style='padding:10px; border-bottom:1px solid #ddd; font-weight:bold; color:#4CAF50;'>" . htmlspecialchars($sale['total']) . " ₽</td>";
             echo "</tr>";
         }
         
@@ -115,6 +141,15 @@ if(isset($_GET['history'])){
         }
         
         .client-link:hover {
+            text-decoration: underline;
+        }
+        
+        .delete {
+            color: #dc3545;
+            text-decoration: none;
+        }
+        
+        .delete:hover {
             text-decoration: underline;
         }
     </style>
@@ -172,9 +207,7 @@ if(isset($_GET['history'])){
                     <td style="padding:8px; border-bottom:1px solid #ddd;"><?= htmlspecialchars($row['phone']) ?></td>
                     <td style="padding:8px; border-bottom:1px solid #ddd;">
                         <a class="delete" href="?delete=<?= htmlspecialchars($row['id']) ?>" 
-                           onclick="return confirm('Удалить клиента?')" style="color:red; text-decoration:none;">
-                            Удалить
-                        </a>
+                           onclick="return confirm('Удалить клиента?')">Удалить</a>
                     </td>
                 </tr>
                 <?php } ?>
@@ -185,16 +218,16 @@ if(isset($_GET['history'])){
 
 <!-- MODAL CLIENT -->
 <div class="modal" id="clientModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
-    <div class="modal-content" style="background:white; padding:20px; border-radius:8px; max-width:600px; width:90%;">
-        <h2 id="modal-name">Клиент</h2>
-        <p><strong>Телефон :</strong> <span id="modal-phone"></span></p>
+    <div class="modal-content" style="background:white; padding:20px; border-radius:8px; max-width:700px; width:90%; max-height:80vh; overflow-y:auto;">
+        <h2 id="modal-name" style="margin-top:0; color:#333;">Клиент</h2>
+        <p style="margin-bottom:20px;"><strong>Телефон :</strong> <span id="modal-phone"></span></p>
         
-        <h3>История покупок</h3>
-        <div id="purchase-history" style="margin-top:10px; max-height:400px; overflow-y:auto;">
+        <h3 style="color:#4CAF50;">История покупок</h3>
+        <div id="purchase-history" style="margin-top:15px;">
             <!-- Les achats du client seront chargés ici -->
         </div>
         
-        <button onclick="closeModal()" style="margin-top:20px; padding:8px 16px; background:#6c757d; color:white; border:none; border-radius:4px; cursor:pointer;">
+        <button onclick="closeModal()" style="margin-top:20px; padding:10px 20px; background:#6c757d; color:white; border:none; border-radius:4px; cursor:pointer; font-size:14px;">
             Закрыть
         </button>
     </div>
@@ -217,7 +250,7 @@ document.querySelectorAll('.client-link').forEach(link => {
         document.getElementById('modal-phone').innerHTML = htmlEscape(phone);
         
         // Afficher le chargement
-        document.getElementById('purchase-history').innerHTML = '<p style="text-align:center;">Загрузка...</p>';
+        document.getElementById('purchase-history').innerHTML = '<p style="text-align:center; color:#999;">Загрузка...</p>';
         
         // Récupérer l'historique des achats du client
         fetch('clients.php?history=' + id)
@@ -226,7 +259,7 @@ document.querySelectorAll('.client-link').forEach(link => {
                 document.getElementById('purchase-history').innerHTML = data;
             })
             .catch(error => {
-                document.getElementById('purchase-history').innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки</p>';
+                document.getElementById('purchase-history').innerHTML = '<p style="color:red; text-align:center;">Ошибка загрузки истории</p>';
                 console.error('Erreur:', error);
             });
         
