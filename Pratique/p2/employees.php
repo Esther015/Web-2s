@@ -69,7 +69,14 @@ $result = $pdo->query("SELECT * FROM employees");
 <title>Сотрудники</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
-
+ <style>
+        h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 0;
+    padding-top: 20px;
+}
+    </style>
 </head>
 
 <body>
