@@ -16,7 +16,7 @@ if(isset($_GET['ajax'])){
 # AJOUT VENTE (CORRIGÉ AVEC TRANSACTION)
 if(isset($_POST['save_sale'])) {
     try {
-        $pdo->beginTransaction(); // Démarrer la transaction
+        $pdo->beginTransaction();
         
         $customer_name = trim($_POST['customer_name']);
         $customer_phone = trim($_POST['customer_phone']);
@@ -25,7 +25,7 @@ if(isset($_POST['save_sale'])) {
         $quantities = $_POST['quantity'];
         
         if(empty($customer_name)){
-            throw new Exception("Veuillez entrer le nom du client");
+            throw new Exception("Введите имя клиента");
         }
         
         # GESTION CLIENT
@@ -51,7 +51,7 @@ if(isset($_POST['save_sale'])) {
             $qty = (int)$quantities[$index];
             
             if($qty <= 0){
-                throw new Exception("Quantité invalide pour le médicament");
+                throw new Exception("Неверное количество товара");
             }
             
             $sqlMed = "SELECT * FROM medicines WHERE id=?";
@@ -60,11 +60,11 @@ if(isset($_POST['save_sale'])) {
             $med = $stmtMed->fetch(PDO::FETCH_ASSOC);
             
             if(!$med){
-                throw new Exception("Médicament non trouvé");
+                throw new Exception("Лекарство не найдено");
             }
             
             if($qty > $med['quantity']){
-                throw new Exception("Stock insuffisant pour : " . htmlspecialchars($med['name']));
+                throw new Exception("Недостаточно товара: " . htmlspecialchars($med['name']));
             }
             
             $total += $med['price'] * $qty;
@@ -91,13 +91,13 @@ if(isset($_POST['save_sale'])) {
             $stmtStock->execute([$qty, $med['id']]);
         }
         
-        $pdo->commit(); // Valider la transaction
+        $pdo->commit();
         header("Location: sales.php");
         exit;
         
     } catch(Exception $e) {
-        $pdo->rollBack(); // Annuler en cas d'erreur
-        die("Erreur : " . htmlspecialchars($e->getMessage()));
+        $pdo->rollBack();
+        die("Ошибка: " . htmlspecialchars($e->getMessage()));
     }
 }
 
@@ -108,7 +108,6 @@ if(isset($_GET['delete'])){
         
         $id = (int)$_GET['delete'];
         
-        # Récupérer les items
         $sqlItems = "SELECT * FROM sale_items WHERE sale_id=?";
         $stmtItems = $pdo->prepare($sqlItems);
         $stmtItems->execute([$id]);
@@ -119,7 +118,6 @@ if(isset($_GET['delete'])){
             $stmtRestore->execute([$item['quantity'], $item['medicine_id']]);
         }
         
-        # Supprimer la vente
         $sqlDelete = "DELETE FROM sales WHERE id=?";
         $stmtDelete = $pdo->prepare($sqlDelete);
         $stmtDelete->execute([$id]);
@@ -130,7 +128,7 @@ if(isset($_GET['delete'])){
         
     } catch(Exception $e) {
         $pdo->rollBack();
-        die("Erreur lors de la suppression : " . htmlspecialchars($e->getMessage()));
+        die("Ошибка при удалении: " . htmlspecialchars($e->getMessage()));
     }
 }
 
@@ -150,10 +148,10 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Ventes</title>
+    <title>Продажи</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <style>
@@ -185,10 +183,10 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
 
 <div class="container">
     <div class="top-bar">
-        <h1>Ventes</h1>
+        <h1>Продажи</h1>
         <div class="actions">
-            <a href="index.php" class="back">Retour</a>
-            <button onclick="openModal()" class="add-btn">+ Nouvelle vente</button>
+            <a href="index.php" class="back">Назад</a>
+            <button onclick="openModal()" class="add-btn">+ Новая продажа</button>
         </div>
     </div>
     
@@ -197,11 +195,11 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Client</th>
-                    <th>Employé</th>
-                    <th>Total</th>
-                    <th>Date</th>
-                    <th>Actions</th>
+                    <th>Клиент</th>
+                    <th>Сотрудник</th>
+                    <th>Сумма</th>
+                    <th>Дата</th>
+                    <th>Действия</th>
                 </tr>
             </thead>
             <tbody>
@@ -210,12 +208,12 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
                     <td><?= htmlspecialchars($row['id']) ?></td>
                     <td><?= htmlspecialchars($row['customer']) ?></td>
                     <td><?= htmlspecialchars($row['employee']) ?></td>
-                    <td><?= htmlspecialchars($row['total_price']) ?> €</td>
+                    <td><?= htmlspecialchars($row['total_price']) ?> ₽</td>
                     <td><?= htmlspecialchars($row['sale_date']) ?></td>
                     <td>
                         <a class="delete" href="?delete=<?= htmlspecialchars($row['id']) ?>" 
-                           onclick="return confirm('Supprimer cette vente ?')">
-                            Supprimer
+                           onclick="return confirm('Удалить эту продажу?')">
+                            Удалить
                         </a>
                     </td>
                 </tr>
@@ -228,14 +226,14 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
 <!-- MODAL -->
 <div class="modal" id="saleModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); justify-content:center; align-items:center; z-index:1000;">
     <div class="modal-content" style="background:white; padding:20px; border-radius:8px; max-width:600px; width:90%; max-height:80vh; overflow-y:auto;">
-        <h2>Nouvelle vente</h2>
+        <h2>Новая продажа</h2>
         
         <form method="POST" id="saleForm">
             <div style="position:relative;">
                 <input type="text"
                        name="customer_name"
                        id="customer_name"
-                       placeholder="Nom du client"
+                       placeholder="Имя клиента"
                        autocomplete="off"
                        required
                        style="width:100%; padding:8px;">
@@ -245,12 +243,12 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
             <input type="text"
                    name="customer_phone"
                    id="customer_phone"
-                   placeholder="Téléphone"
+                   placeholder="Телефон"
                    style="width:100%; padding:8px; margin-top:10px;">
             
             <select name="employee" required style="width:100%; padding:8px; margin-top:10px;">
                 <?php 
-                $employees->execute(); // Réinitialiser le curseur
+                $employees->execute();
                 while($e = $employees->fetch(PDO::FETCH_ASSOC)) { ?>
                     <option value="<?= htmlspecialchars($e['id']) ?>">
                         <?= htmlspecialchars($e['full_name']) ?>
@@ -262,13 +260,13 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
                 <div class="cart-row">
                     <select name="medicine_id[]" class="medicine-select" required style="width:60%; padding:8px;">
                         <?php 
-                        $medicines->execute(); // Réinitialiser le curseur
+                        $medicines->execute();
                         while($m = $medicines->fetch(PDO::FETCH_ASSOC)) { ?>
                             <option value="<?= htmlspecialchars($m['id']) ?>" 
                                     data-price="<?= htmlspecialchars($m['price']) ?>"
                                     data-stock="<?= htmlspecialchars($m['quantity']) ?>">
                                 <?= htmlspecialchars($m['name']) ?> 
-                                (stock: <?= htmlspecialchars($m['quantity']) ?>, prix: <?= htmlspecialchars($m['price']) ?>€)
+                                (остаток: <?= htmlspecialchars($m['quantity']) ?>, цена: <?= htmlspecialchars($m['price']) ?> ₽)
                             </option>
                         <?php } ?>
                     </select>
@@ -276,7 +274,7 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
                     <input type="number"
                            name="quantity[]"
                            class="qty"
-                           placeholder="Quantité"
+                           placeholder="Количество"
                            min="1"
                            value="1"
                            required
@@ -287,17 +285,17 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
             </div>
             
             <button type="button" onclick="addMedicine()" style="margin-top:10px;">
-                + Ajouter un médicament
+                + Добавить лекарство
             </button>
             
-            <h3 id="total" style="margin-top:20px;">Total: 0 €</h3>
+            <h3 id="total" style="margin-top:20px;">Итого: 0 ₽</h3>
             
             <button type="submit" name="save_sale" style="background:#4CAF50; color:white; padding:10px 20px; margin-top:10px;">
-                Enregistrer
+                Сохранить
             </button>
             
             <button type="button" onclick="closeModal()" style="background:#f44336; color:white; padding:10px 20px; margin-top:10px;">
-                Fermer
+                Закрыть
             </button>
         </form>
     </div>
@@ -316,14 +314,11 @@ function addMedicine(){
     let originalRow = document.querySelector('.cart-row');
     let newRow = originalRow.cloneNode(true);
     
-    // Réinitialiser les valeurs
     let qtyInput = newRow.querySelector('.qty');
     if(qtyInput) qtyInput.value = '1';
     
-    // Ajouter la nouvelle ligne
     document.getElementById('cart-items').appendChild(newRow);
     
-    // Réattacher les événements
     attachEventsToRow(newRow);
     calculateTotal();
 }
@@ -354,10 +349,10 @@ function calculateTotal(){
         }
     });
     
-    document.getElementById('total').innerHTML = 'Total: ' + total + ' €';
+    document.getElementById('total').innerHTML = 'Итого: ' + total + ' ₽';
 }
 
-// RECHERCHE CLIENT
+// ПОИСК КЛИЕНТА
 const customerInput = document.getElementById('customer_name');
 if(customerInput){
     customerInput.addEventListener('keyup', function(){
@@ -389,7 +384,7 @@ if(customerInput){
                     suggestions.appendChild(div);
                 });
             })
-            .catch(error => console.error('Erreur:', error));
+            .catch(error => console.error('Ошибка:', error));
     });
 }
 
@@ -403,16 +398,16 @@ function htmlEscape(str){
     });
 }
 
-// Attacher les événements aux lignes existantes
+// Привязка событий к существующим строкам
 document.querySelectorAll('.cart-row').forEach(row => attachEventsToRow(row));
 calculateTotal();
 
-// Validation du formulaire
+// Валидация формы
 document.getElementById('saleForm')?.addEventListener('submit', function(e){
     let rows = document.querySelectorAll('.cart-row');
     if(rows.length === 0){
         e.preventDefault();
-        alert('Ajoutez au moins un médicament');
+        alert('Добавьте хотя бы одно лекарство');
         return false;
     }
     
@@ -422,15 +417,14 @@ document.getElementById('saleForm')?.addEventListener('submit', function(e){
         
         if(!qty.value || qty.value < 1){
             e.preventDefault();
-            alert('Quantité invalide');
+            alert('Неверное количество');
             return false;
         }
         
-        // Vérifier le stock
         let maxStock = parseInt(select.options[select.selectedIndex].dataset.stock);
         if(parseInt(qty.value) > maxStock){
             e.preventDefault();
-            alert('Stock insuffisant pour ' + select.options[select.selectedIndex].text);
+            alert('Недостаточно товара: ' + select.options[select.selectedIndex].text);
             return false;
         }
     }
