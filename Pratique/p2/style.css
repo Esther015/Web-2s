@@ -3,7 +3,31 @@ body{
     background:#7fd37f;
     margin:0;
 }
+/* Pour la table d'historique dans le modal */
+#purchase-history table {
+    width: 100%;
+    margin-top: 10px;
+}
 
+#purchase-history th {
+    background: #1d981d;
+    color: white;
+}
+
+#purchase-history td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+#purchase-history .total-price {
+    font-weight: bold;
+}
+
+#purchase-history p {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+}
 /* STRUCTURE PRINCIPALE */
 .layout{
     display:flex;
