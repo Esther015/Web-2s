@@ -159,10 +159,10 @@ if(isset($_GET['history'])){
         <table style="width:100%; border-collapse:collapse;">
             <thead>
                 <tr>
-                    <th style="padding:8px; text-align:left; background:#f5f5f5;">ID</th>
-                    <th style="padding:8px; text-align:left; background:#f5f5f5;">Имя клиента</th>
-                    <th style="padding:8px; text-align:left; background:#f5f5f5;">Телефон</th>
-                    <th style="padding:8px; text-align:left; background:#f5f5f5;">Действие</th>
+                    <th>ID</th>
+                    <th>Имя клиента</th>
+                    <th>Телефон</th>
+                    <th>Действие</th>
                 </tr>
             </thead>
             <tbody>
@@ -170,18 +170,18 @@ if(isset($_GET['history'])){
                 <tr>
                     <td style="padding:8px; border-bottom:1px solid #ddd;"><?= htmlspecialchars($row['id']) ?></td>
                     <td style="padding:8px; border-bottom:1px solid #ddd;">
-                        <a href="#" class="client-link" 
+                         <a href="#" class="client-link" 
                            data-id="<?= htmlspecialchars($row['id']) ?>" 
                            data-name="<?= htmlspecialchars($row['full_name']) ?>" 
                            data-phone="<?= htmlspecialchars($row['phone']) ?>">
                             <?= htmlspecialchars($row['full_name']) ?>
-                        </a>
+                    </a>
                     </td>
-                    <td style="padding:8px; border-bottom:1px solid #ddd;"><?= htmlspecialchars($row['phone']) ?></td>
-                    <td style="padding:8px; border-bottom:1px solid #ddd;">
-                        <a class="delete" href="?delete=<?= htmlspecialchars($row['id']) ?>" 
-                           onclick="return confirm('Удалить клиента?')">Удалить</a>
-                    </td>
+                    <td><?= htmlspecialchars($row['phone']) ?></td>
+                <td>
+                    <a class="delete" href="?delete=<?= htmlspecialchars($row['id']) ?>" 
+                       onclick="return confirm('Удалить клиента?')">Удалить</a>
+                </td>
                 </tr>
                 <?php } ?>
             </tbody>
