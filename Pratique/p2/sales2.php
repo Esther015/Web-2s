@@ -196,12 +196,14 @@ h1 {
 }
 
 .back, .add-btn {
-    padding: 8px 16px;
+    padding: 10px 20px;
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: 5px;
     transition: all 0.3s ease;
 }
-
+back {
+    margin-right: auto;
+}
 .add-btn {
     background-color: #1d981d;
     color: white;
