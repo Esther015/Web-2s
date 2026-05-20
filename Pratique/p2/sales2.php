@@ -209,6 +209,7 @@ back {
     color: white;
     border: none;
     cursor: pointer;
+    font-size:16px;
 }
 
 .add-btn:hover {
