@@ -316,6 +316,9 @@ function addMedicine(){
     
     let qtyInput = newRow.querySelector('.qty');
     if(qtyInput) qtyInput.value = '1';
+
+    let select = newRow.querySelector('.medicine-select');
+    if(select) select.selectedIndex = 0;
     
     document.getElementById('cart-items').appendChild(newRow);
     
@@ -327,9 +330,26 @@ function attachEventsToRow(row){
     let select = row.querySelector('.medicine-select');
     let qty = row.querySelector('.qty');
     
-    if(select) select.onchange = calculateTotal;
-    if(qty) qty.oninput = calculateTotal;
+    if(select) {
+        select.onchange = function() {
+            if(qty && (!qty.value || qty.value === '')) {
+                qty.value = 1;
+            }
+            calculateTotal();
+        };
+    }
+    if(qty) {
+        qty.oninput = function() {
+            if(this.value === '' || this.value <= 0) {
+                this.value = '';
+            }
+            calculateTotal();
+        };
+    }
 }
+    document.addEventListener('DOMContentLoaded', function() {
+    initializeFirstRow();
+});
 
 function calculateTotal(){
     let total = 0;
@@ -339,7 +359,7 @@ function calculateTotal(){
         let select = row.querySelector('.medicine-select');
         let qty = row.querySelector('.qty');
         
-        if(select && qty && qty.value > 0){
+        if(select && qty && qty.value && qty.value > 0 && select.selectedIndex >= 0){
             let price = parseFloat(select.options[select.selectedIndex].dataset.price);
             let quantity = parseFloat(qty.value);
             
@@ -351,6 +371,27 @@ function calculateTotal(){
     
     document.getElementById('total').innerHTML = 'Итого: ' + total + ' ₽';
 }
+
+    function initializeFirstRow(){
+    let firstRow = document.querySelector('.cart-row');
+    if(firstRow){
+        let qtyInput = firstRow.querySelector('.qty');
+        if(qtyInput) qtyInput.value = ''; // Laisser vide au lieu de 1
+        
+        // Optionnel : ajouter un placeholder "Sélectionnez un médicament"
+        let select = firstRow.querySelector('.medicine-select');
+        if(select && select.options.length > 0){
+            // Créer une option vide par défaut
+            let emptyOption = document.createElement('option');
+            emptyOption.value = '';
+            emptyOption.text = '-- Выберите лекарство --';
+            emptyOption.disabled = true;
+            emptyOption.selected = true;
+            select.insertBefore(emptyOption, select.firstChild);
+        }
+    }
+    calculateTotal();
+    }
 
 // ПОИСК КЛИЕНТА
 const customerInput = document.getElementById('customer_name');
