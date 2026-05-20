@@ -177,6 +177,50 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
             padding: 5px 10px;
             cursor: pointer;
         }
+        .top-bar {
+    margin-bottom: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 0;
+    padding-top: 20px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back, .add-btn {
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.back {
+    background-color: #6c757d;
+    color: white;
+}
+
+.back:hover {
+    background-color: #5a6268;
+}
+
+.add-btn {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.add-btn:hover {
+    background-color: #218838;
+}
     </style>
 </head>
 <body>
