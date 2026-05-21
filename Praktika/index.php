@@ -17,7 +17,7 @@
     <!-- MENU GAUCHE -->
     <div class="sidebar">
 
-        <h2> ⚕️Аптека</h2>
+        <h2>⚕️Аптека</h2>
 
         <a href="medicines.php" class="menu-link">
             💊 Лекарства
