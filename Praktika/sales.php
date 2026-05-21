@@ -155,6 +155,31 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <style>
+        .suggestion-item {
+            cursor: pointer;
+            padding: 8px;
+            border: 1px solid #ddd;
+            background: white;
+        }
+        .suggestion-item:hover {
+            background: #f0f0f0;
+        }
+        .cart-row {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #eee;
+        }
+        .delete-row {
+            margin-left: 10px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .top-bar {
+    margin-bottom: 20px;
+}
         .buttons {
     display: flex;
     justify-content: space-between;
