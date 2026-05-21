@@ -1,9 +1,33 @@
 body{
     font-family: Arial;
-    background:#a2d8a2;
+    background:#7fd37f;
     margin:0;
 }
+/* Pour la table d'historique dans le modal */
+#purchase-history table {
+    width: 100%;
+    margin-top: 10px;
+}
 
+#purchase-history th {
+    background: #1d981d;
+    color: white;
+}
+
+#purchase-history td {
+    padding: 8px;
+    border: 1px solid #ddd;
+}
+
+#purchase-history .total-price {
+    font-weight: bold;
+}
+
+#purchase-history p {
+    text-align: center;
+    color: #999;
+    padding: 20px;
+}
 /* STRUCTURE PRINCIPALE */
 .layout{
     display:flex;
@@ -43,6 +67,7 @@ body{
     margin:auto;
     padding:20px;
 }
+
 .card-link {
     text-decoration: none;
     display: block;
@@ -52,6 +77,7 @@ body{
 .card-link:hover {
     transform: translateY(-5px);
 }
+
 .card {
     background: white;
     padding: 30px;
@@ -94,6 +120,11 @@ body{
     justify-content: center;
 }
 
+.page-content{
+    width:97%;
+    margin:auto;
+}
+
 .content-header {
     width: 100%;
     margin-bottom: 40px;
@@ -123,17 +154,26 @@ form{
     padding:20px;
     border-radius:10px;
     box-shadow:0 0 10px rgba(0,0,0,0.05);
-    width:85%;
-    box-sizing: border-box;
+
+    width:100%;
+    box-sizing:border-box;
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
 }
 
 input, select{
     padding:10px;
-    margin:5px;
+    margin:0;
     border:1px solid #ccc;
     border-radius:5px;
-    max-width: calc(100% - 10px);
-    box-sizing: border-box;
+
+    box-sizing:border-box;
+
+    flex:1;
+    min-width:150px;
 }
 
 button{
@@ -143,22 +183,28 @@ button{
     border:none;
     border-radius:5px;
     cursor:pointer;
-    box-sizing: border-box;  
+    box-sizing:border-box;
+
+    white-space:nowrap;
 }
 
 button:hover{
     background:#176a17;
 }
+
 /* TABLEAUX */
+.table-wrapper{
+    width:100%;
+}
+
 table{
-    width:85%;
+    width:100%;
     background:white;
     border-collapse:separate;
     border-spacing:0;
     box-shadow:0 0 10px #1d981d;
     border-radius:10px;
-    overflow:hidden;  
-    margin:0 auto;
+    overflow:hidden;
 }
 
 th, td{
@@ -174,237 +220,376 @@ th{
 tr:hover{
     background:#f9f9f9;
 }
+
 /* LIENS */
 .delete{
-     padding:10px 15px;
+    padding:10px 15px;
     background:red;
     color:white;
     border:none;
     border-radius:5px;
     cursor:pointer;
-    color: white;
     text-decoration:none;
 }
+
 .delete:hover{
     background:#d41c1c;
 }
 
-.back {
-    display: inline-block;        
-    padding: 10px 20px;          
-    background-color: #1d981d;   
-    color: white;               
-    text-decoration: none;       
-    border: none;                
-    border-radius: 5px;          
-    cursor: pointer;             
-    font-size: 16px;            
-    font-family: inherit;       
+.edit-btn {
+    padding: 10px 15px;
+    background: #1d981d;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 5px;
 }
+
+.edit-btn:hover {
+    background: #176a17;
+}
+.back {
+    display:inline-block;
+    padding:10px 20px;
+    background-color:#1d981d;
+    color:white;
+    text-decoration:none;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:16px;
+    font-family:inherit;
+}
+
 .back:hover{
     background:#176a17;
 }
 
 
 table td:last-child {
-    text-align: center;
-    vertical-align: middle;
+    text-align:center;
+    vertical-align:middle;
 }
 
 table td:last-child form {
-    margin: 0;
-    padding: 0;
-    background: none;
-    box-shadow: none;
-    display: inline-block;
+    margin:0;
+    padding:0;
+    background:none;
+    box-shadow:none;
+    display:inline-block;
 }
 
 table td:last-child button,
 table td:last-child .delete {
-    display: inline-block;
-    margin: 2px;
+    display:inline-block;
+    margin:2px;
 }
 
-/* RESPONSIVE  */
-/* Conteneur défilant pour tableau */
-.table-wrapper {
-    overflow-x: auto;
-    width: 100%;
-}
-
-/* Tablettes (max-width: 992px) */
+/* TABLETTES */
 @media screen and (max-width: 992px) {
+
     .sidebar {
-        width: 200px;
+        width:200px;
     }
-    
+
     .container {
-        width: 90%;
+        width:90%;
     }
-    
+
     .content-header h1 {
-        font-size: 28px;
+        font-size:28px;
     }
-    
+
     .menu {
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 15px;
+        gap:15px;
     }
 }
 
-/* Mobiles (max-width: 768px) */
+/* MOBILES */
 @media screen and (max-width: 768px) {
-    /* Layout en colonne */
+
+    /* Layout colonne */
     .layout {
-        flex-direction: column;
+        flex-direction:column;
     }
-    
-    /* Sidebar horizontale */
+
+    /* Sidebar */
     .sidebar {
-        width: 100%;
-        padding: 15px;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
+        width:100%;
+        padding:15px;
+        flex-direction:row;
+        flex-wrap:wrap;
+        justify-content:center;
     }
-    
+
     .sidebar h2 {
-        width: 100%;
-        margin-bottom: 15px;
-        font-size: 20px;
+        width:100%;
+        margin-bottom:15px;
+        font-size:20px;
     }
-    
+
     .menu-link {
-        padding: 10px 15px;
-        margin: 5px;
-        display: inline-block;
+        padding:10px 15px;
+        margin:5px;
+        display:inline-block;
     }
-    
+
     /* Contenu */
     .content {
-        padding: 15px;
+        padding:15px;
     }
-    
+
     .content-header {
-        margin-top: -20px;
-        margin-bottom: 20px;
+        margin-top:-20px;
+        margin-bottom:20px;
     }
-    
+
     .content-header h1 {
-        font-size: 24px;
+        font-size:24px;
     }
-    
+
     .container {
-        width: 100%;
-        padding: 10px;
+        width:85%;
+        margin:auto;
     }
-    
-    /* Cartes en colonne */
+
+    form,
+    .table-wrapper{
+        width:100%;
+    }
+
+    /* Cartes */
     .menu {
-        grid-template-columns: 1fr;
-        gap: 15px;
+        grid-template-columns:1fr;
+        gap:15px;
     }
-    
+
     .card {
-        padding: 20px;
+        padding:20px;
     }
-    
-    /* TABLEAU DEFILABLE HORIZONTALEMENT */
+
+    /* TABLEAU MOBILE */
     .table-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch; 
-        margin: 10px 0;
+        overflow-x:auto;
+        -webkit-overflow-scrolling:touch;
+        margin:10px 0;
     }
-    
+
     .table-wrapper table {
-        min-width: 650px; 
-        width: 100%;
+        min-width:650px;
+        width:100%;
     }
-    
-    /* Formulaire dans le tableau */
+
+    /* Formulaire tableau */
     table td form {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        margin: 0;
-        padding: 5px;
-        background: none;
-        box-shadow: none;
+        display:flex;
+        flex-wrap:wrap;
+        gap:5px;
+        margin:0;
+        padding:5px;
+        background:none;
+        box-shadow:none;
     }
-    
-    /* Boutons dans le tableau */
+
+    /* Boutons tableau */
     table td:last-child {
-        white-space: nowrap;
+        white-space:nowrap;
     }
-    
+
     table td:last-child button,
     table td:last-child .delete {
-        display: inline-block;
-        margin: 2px;
+        display:inline-block;
+        margin:2px;
     }
-    
+
     /* Formulaire principal */
     form {
-        padding: 15px;
+        padding:15px;
     }
-    
-    input, select, button {
-        width: 100%;
-        margin: 5px 0;
-        box-sizing: border-box;
+
+    input,
+    select{
+        width:auto;
+        margin:5px 0;
     }
-    
+
     button {
-        width: auto;
+        width:auto;
     }
-    
-    .delete, .back {
-        display: inline-block;
-        margin-top: 5px;
+
+    .delete,
+    .back {
+        display:inline-block;
+        margin-top:5px;
     }
 }
 
-/* Petits mobiles (max-width: 480px) */
+/* PETITS MOBILES */
 @media screen and (max-width: 480px) {
+
     .content-header h1 {
-        font-size: 20px;
+        font-size:20px;
     }
-    
+
     .card h2 {
-        font-size: 18px;
+        font-size:18px;
     }
-    
+
     .card p {
-        font-size: 14px;
+        font-size:14px;
     }
-    
+
     .container {
-        padding: 5px;
+        padding:5px;
     }
-    
-    /* Tableau encore plus petit */
+    .page-content{
+    width:100%;
+    margin:auto;
+}
+
+    /* Tableau plus petit */
     .table-wrapper table {
-        min-width: 550px;
+        min-width:550px;
     }
-    
+
     th, td {
-        padding: 6px;
-        font-size: 12px;
+        padding:6px;
+        font-size:12px;
     }
-    
-    th input, td input {
-        font-size: 12px;
-        padding: 5px;
+
+    th input,
+    td input {
+        font-size:12px;
+        padding:5px;
     }
-    
-    button, .delete, .back {
-        padding: 8px 12px;
-        font-size: 14px;
+
+    button,
+    .delete,
+    .back {
+        padding:8px 12px;
+        font-size:14px;
     }
-    
+
     table td:last-child button,
     table td:last-child .delete {
-        display: block;
-        margin: 5px 0;
+        display:block;
+        margin:5px 0;
     }
+
+    .top-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.actions{
+    display:flex;
+    gap:10px;
+}
+
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.5);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.modal-content{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    width:90%;
+    max-width:700px;
+    max-height:90vh;
+    overflow:auto;
+}
+
+.cart-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+}
+
+#suggestions{
+    background:white;
+    border:1px solid #ccc;
+    border-radius:5px;
+    overflow:hidden;
+    width:100%;
+}
+
+.suggestion-item{
+    padding:10px;
+    cursor:pointer;
+    border-bottom:1px solid #eee;
+}
+
+.suggestion-item:hover{
+    background:#f4f4f4;
+}
+
+@media screen and (max-width:768px){
+
+    .top-bar{
+        flex-direction:column;
+        gap:10px;
+        align-items:flex-start;
+    }
+
+    .actions{
+        width:100%;
+        flex-wrap:wrap;
+    }
+
+    .modal-content{
+        width:95%;
+        padding:20px;
+    }
+
+    .cart-row{
+        flex-direction:column;
+    }
+}
+}
+
+/*CLIENTS.PHP*/
+.search-form{
+    margin-bottom:20px;
+}
+
+.add-client-box{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.05);
+    margin-bottom:20px;
+}
+
+.add-client-box h2{
+    margin-top:0;
+}
+
+.client-link{
+    color:#1d981d;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.client-link:hover{
+    text-decoration:underline;
+}
+
+#purchase-history{
+    margin-top:20px;
 }
