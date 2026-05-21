@@ -8,14 +8,15 @@ if(isset($_POST['add'])) {
     $name = $_POST['name'];
     $position = $_POST['position'];
     $phone = $_POST['phone'];
+    $hire_date = $_POST['hire_date'];
 
     $sql = "INSERT INTO employees
-            (full_name, position, phone)
-            VALUES(?, ?, ?)";
+            (full_name, position, phone, hire_date)
+            VALUES(?, ?, ?, ?)";
 
     $stmt = $pdo->prepare($sql);
 
-    $stmt->execute([$name, $position, $phone]);
+    $stmt->execute([$name, $position, $phone, $hire_date]);
 }
 
 # SUPPRESSION
@@ -38,12 +39,14 @@ if(isset($_POST['update'])) {
     $name = $_POST['name'];
     $position = $_POST['position'];
     $phone = $_POST['phone'];
+    $hire_date = $_POST['hire_date'];
 
     $sql = "UPDATE employees
             SET
             full_name=?,
             position=?,
-            phone=?
+            phone=?,
+            hire_date=?
             WHERE id=?";
 
     $stmt = $pdo->prepare($sql);
@@ -52,6 +55,7 @@ if(isset($_POST['update'])) {
         $name,
         $position,
         $phone,
+        $hire_date,
         $id
     ]);
 }
@@ -69,7 +73,6 @@ $result = $pdo->query("SELECT * FROM employees");
 <title>Сотрудники</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="style.css">
-
 </head>
 
 <body>
@@ -103,6 +106,11 @@ name="phone"
 placeholder="Телефон"
 required>
 
+<input type="date"
+name="hire_date"
+placeholder="Дата найма"
+required>
+
 <button type="submit"
 name="add">
 Добавить
@@ -117,6 +125,7 @@ name="add">
 <th>Имя</th>
 <th>Должность</th>
 <th>Телефон</th>
+<th>Дата найма</th>
 <th>Действия</th>
 </tr>
 
@@ -157,6 +166,14 @@ value="<?= $row['position'] ?>">
 <input type="text"
 name="phone"
 value="<?= $row['phone'] ?>">
+
+</td>
+
+<td>
+
+<input type="date"
+name="hire_date"
+value="<?= $row['hire_date'] ?>">
 
 </td>
 
