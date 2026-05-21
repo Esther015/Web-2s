@@ -20,19 +20,19 @@
         <h2> Аптека</h2>
 
         <a href="medicines.php" class="menu-link">
-            Лекарства
+            💊 Лекарства
         </a>
 
         <a href="employees.php" class="menu-link">
-             Сотрудники
+            🥼 Сотрудники
         </a>
 
         <a href="clients.php" class="menu-link">
-             Клиенты
+            👥 Клиенты
         </a>
 
         <a href="sales.php" class="menu-link">
-             Продажи
+            🛒 Продажи
         </a>
 
     </div>
@@ -47,7 +47,7 @@
         <div class="menu">
         <a href="medicines.php" class="card-link">
             <div class="card">
-                <h2>Лекарства</h2>
+                <h2> 💊 Лекарства</h2>
                 <p>
                    Управление лекарственными средствами, 
                     запасами и сроками годности.
@@ -56,30 +56,29 @@
          </a>
             <a href="employees.php" class="card-link">
                 <div class="card">
-                <h2> Сотрудники</h2>
+                <h2> 🥼 Сотрудники</h2>
                 <p>
-                    Управление персоналом
-                    и персонал.
+                    Управление персоналом.
                 </p>
             </div>
             </a>
             
             <a href="clients.php" class="card-link" >
                 <div class="card">
-                <h2> Клиенты</h2>
+                <h2> 👥 Клиенты</h2>
                 <p>
-                    Информация для клиентов
-                    и исторический.
+                    Информация о клиентах
+                    и история покупок.
                 </p>
             </div>
             </a>
             
             <a href="sales.php" class="card-link">
                 <div class="card">
-                <h2>Продажи</h2>
+                <h2> 🛒 Продажи</h2>
                 <p>
                     Управление продажами
-                    и запас.
+                    и запасами.
                 </p>
             </div>
             </a>
