@@ -10,18 +10,17 @@ if(isset($_POST['add'])) {
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
     $expiration = $_POST['expiration'];
+    $category_id = !empty($_POST['category_id']) ? $_POST['category_id'] : null;
 
     # EMPÊCHER QUANTITÉ NÉGATIVE
     if($quantity < 0){
-
         die("Количество не может быть отрицательным");
-
     }
 
     $sql = "INSERT INTO medicines
             (name, manufacturer, price,
-            quantity, expiration_date)
-            VALUES(?, ?, ?, ?, ?)";
+            quantity, expiration_date, category_id)
+            VALUES(?, ?, ?, ?, ?, ?)";
 
     $stmt = $pdo->prepare($sql);
 
@@ -30,7 +29,8 @@ if(isset($_POST['add'])) {
         $manufacturer,
         $price,
         $quantity,
-        $expiration
+        $expiration,
+        $category_id
     ]);
 
     header("Location: medicines.php");
@@ -63,12 +63,11 @@ if(isset($_POST['update'])) {
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
     $expiration = $_POST['expiration'];
+    $category_id = !empty($_POST['category_id']) ? $_POST['category_id'] : null;
 
     # EMPÊCHER QUANTITÉ NÉGATIVE
     if($quantity < 0){
-
         die("Количество не может быть отрицательным");
-
     }
 
     $sql = "UPDATE medicines
@@ -77,7 +76,8 @@ if(isset($_POST['update'])) {
             manufacturer=?,
             price=?,
             quantity=?,
-            expiration_date=?
+            expiration_date=?,
+            category_id=?
             WHERE id=?";
 
     $stmt = $pdo->prepare($sql);
@@ -88,6 +88,7 @@ if(isset($_POST['update'])) {
         $price,
         $quantity,
         $expiration,
+        $category_id,
         $id
     ]);
 
@@ -100,8 +101,10 @@ if(isset($_GET['search'])) {
 
     $search = "%" . $_GET['search'] . "%";
 
-    $sql = "SELECT * FROM medicines
-            WHERE name LIKE ?";
+    $sql = "SELECT m.*, c.name as category_name, c.description as category_description
+            FROM medicines m
+            LEFT JOIN categories c ON m.category_id = c.id
+            WHERE m.name LIKE ?";
 
     $stmt = $pdo->prepare($sql);
 
@@ -111,8 +114,13 @@ if(isset($_GET['search'])) {
 }
 else {
 
-    $result = $pdo->query("SELECT * FROM medicines");
+    $result = $pdo->query("SELECT m.*, c.name as category_name, c.description as category_description
+                           FROM medicines m
+                           LEFT JOIN categories c ON m.category_id = c.id");
 }
+
+# Récupérer toutes les catégories pour les formulaires
+$categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
 ?>
 
@@ -120,21 +128,10 @@ else {
 <html lang="ru">
 
 <head>
-
-<meta charset="UTF-8">
-
-<title>Лекарства</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="style.css">
-    <style>
-        h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    margin-top: 0;
-    padding-top: 20px;
-}
-    </style>
-
+    <meta charset="UTF-8">
+    <title>Лекарства</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -148,149 +145,129 @@ else {
    aria-label="Назад">
    Назад
 </a>
+
 <form method="GET">
+    <input type="text"
+    name="search"
+    placeholder="Поиск лекарства">
 
-<input type="text"
-name="search"
-placeholder="Поиск лекарства">
-
-<button type="submit">
-Поиск
-</button>
-
+    <button type="submit">
+    Поиск
+    </button>
 </form>
 
 <h2>Добавить лекарство</h2>
 
 <form method="POST">
+    <input type="text"
+    name="name"
+    placeholder="Название"
+    required>
 
-<input type="text"
-name="name"
-placeholder="Название"
-required>
+    <input type="text"
+    name="manufacturer"
+    placeholder="Производитель">
 
-<input type="text"
-name="manufacturer"
-placeholder="Производитель">
+    <input type="number"
+    step="0.01"
+    name="price"
+    placeholder="Цена"
+    min="0"
+    required>
 
-<input type="number"
-step="0.01"
-name="price"
-placeholder="Цена"
-min="0"
-required>
+    <input type="number"
+    name="quantity"
+    placeholder="Количество"
+    min="0"
+    required>
 
-<input type="number"
-name="quantity"
-placeholder="Количество"
-min="0"
-required>
+    <input type="date"
+    name="expiration">
 
-<input type="date"
-name="expiration">
+    <select name="category_id">
+        <option value="">Выберите категорию</option>
+        <?php foreach($categories as $category): ?>
+            <option value="<?= $category['id'] ?>"
+                    title="<?= htmlspecialchars($category['description']) ?>">
+                <?= htmlspecialchars($category['name']) ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
 
-<button type="submit"
-name="add">
-Добавить
-</button>
-
+    <button type="submit" name="add">
+        Добавить
+    </button>
 </form>
+
 <div class="table-wrapper">
-<table>
-
-<tr>
-
-<th>ID</th>
-<th>Название</th>
-<th>Производитель</th>
-<th>Цена</th>
-<th>Количество</th>
-<th>Срок годности</th>
-<th>Действия</th>
-
-</tr>
-
-<?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
-
-<tr>
-
-<form method="POST">
-
-<td>
-
-<?= $row['id'] ?>
-
-<input type="hidden"
-name="id"
-value="<?= $row['id'] ?>">
-
-</td>
-
-<td>
-
-<input type="text"
-name="name"
-value="<?= $row['name'] ?>">
-
-</td>
-
-<td>
-
-<input type="text"
-name="manufacturer"
-value="<?= $row['manufacturer'] ?>">
-
-</td>
-
-<td>
-
-<input type="number"
-step="0.01"
-name="price"
-value="<?= $row['price'] ?>"
-min="0">
-
-</td>
-
-<td>
-
-<input type="number"
-name="quantity"
-value="<?= $row['quantity'] ?>"
-min="0">
-
-</td>
-
-<td>
-
-<input type="date"
-name="expiration"
-value="<?= $row['expiration_date'] ?>">
-
-</td>
-
-<td>
-
-<button type="submit"
-name="update">
-Изменить
-</button>
-
-<a class="delete"
-href="?delete=<?= $row['id'] ?>">
-Удалить
-</a>
-
-</td>
-
-</form>
-
-</tr>
-
-<?php } ?>
-
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Название</th>
+                <th>Производитель</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Срок годности</th>
+                <th>Категория</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+            <tr>
+                <form method="POST">
+                    <td>
+                        <?= $row['id'] ?>
+                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                    </td>
+                    <td>
+                        <input type="text" name="name" value="<?= htmlspecialchars($row['name']) ?>">
+                    </td>
+                    <td>
+                        <input type="text" name="manufacturer" value="<?= htmlspecialchars($row['manufacturer']) ?>">
+                    </td>
+                    <td>
+                        <input type="number" step="0.01" name="price" value="<?= $row['price'] ?>" min="0">
+                    </td>
+                    <td>
+                        <input type="number" name="quantity" value="<?= $row['quantity'] ?>" min="0">
+                    </td>
+                    <td>
+                        <input type="date" name="expiration" value="<?= $row['expiration_date'] ?>">
+                    </td>
+                    <td>
+                        <select name="category_id">
+                            <option value="">Без категории</option>
+                            <?php foreach($categories as $category): ?>
+                                <option value="<?= $category['id'] ?>"
+                                    <?= ($row['category_id'] == $category['id']) ? 'selected' : '' ?>
+                                    title="<?= htmlspecialchars($category['description']) ?>">
+                                    <?= htmlspecialchars($category['name']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <?php if(!empty($row['category_description'])): ?>
+                            <small style="display: block; font-size: 11px; color: #666;">
+                                <?= htmlspecialchars(substr($row['category_description'], 0, 50)) ?>...
+                            </small>
+                        <?php endif; ?>
+                    </td>
+                    <td>
+                        <button type="submit" name="update">Изменить</button>
+                        <a class="delete" href="?delete=<?= $row['id'] ?>">Удалить</a>
+                    </td>
+                </form>
+            </tr>
+            <?php } ?>
+        </tbody>
+    </table>
 </div>
+
+<?php if($result->rowCount() == 0): ?>
+    <p style="text-align: center; margin-top: 20px;">Лекарства не найдены</p>
+<?php endif; ?>
+
 </div>
 
 </body>
