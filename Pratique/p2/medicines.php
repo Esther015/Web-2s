@@ -248,7 +248,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                             <?php endforeach; ?>
                         </select>
                         <?php if(!empty($row['category_description'])): ?>
-                            <small style="display: block; font-size: 11px; color: #666;">
+                            <small >
                                 <?= htmlspecialchars(substr($row['category_description'], 0, 50)) ?>...
                             </small>
                         <?php endif; ?>
