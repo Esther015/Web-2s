@@ -140,12 +140,11 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
 <h1>Лекарства</h1>
     
-<a href="index.php" 
-   class="back"
-   aria-label="Назад">
+<a href="index.php" class="back">
    Назад
 </a>
 
+    <div class="search-section">
 <form method="GET">
     <input type="text"
     name="search"
@@ -155,7 +154,9 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
     Поиск
     </button>
 </form>
-
+    </div>
+    
+<div class=add-section>
 <h2>Добавить лекарство</h2>
 
 <form method="POST">
@@ -198,7 +199,9 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
         Добавить
     </button>
 </form>
-
+</div>
+    <div class="table-section">
+        <h2> Список лекарств </h2>
 <div class="table-wrapper">
     <table>
         <thead>
@@ -263,6 +266,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
         </tbody>
     </table>
 </div>
+    </div>
 
 <?php if($result->rowCount() == 0): ?>
     <p style="text-align: center; margin-top: 20px;">Лекарства не найдены</p>
