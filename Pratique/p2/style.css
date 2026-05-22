@@ -3,7 +3,7 @@ body{
     background:#7fd37f;
     margin:0;
 }
-body h1{
+body h1 {
     text-align: center;
     margin-bottom: 30px;
     margin-top: 0;
@@ -601,8 +601,8 @@ table td:last-child .delete {
 }
 
 
+/*CE QUE J'AI AJOUTE*/
 
-/*CE QUE J'AJOUTTE*/
 
 /* AJOUTS POUR LA PAGE MEDICINES.PHP SEULEMENT */
 
