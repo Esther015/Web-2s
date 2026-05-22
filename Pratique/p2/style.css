@@ -177,7 +177,6 @@ input, select{
     min-width:120px;
 }
 
-/* Style spécifique pour le champ date */
 input[type="date"] {
     min-width: 140px;
 }
@@ -215,10 +214,10 @@ button:hover{
     color: #2c3e50;
 }
 
-/* TABLEAUX */
+/* TABLEAUX - Sans défilement horizontal sur grand écran */
 .table-wrapper{
     width:100%;
-    overflow-x: auto;
+    overflow-x: visible;
 }
 
 table{
@@ -228,6 +227,7 @@ table{
     box-shadow:0 0 10px rgba(0,0,0,0.1);
     border-radius:10px;
     overflow:hidden;
+    table-layout: fixed;
 }
 
 th, td{
@@ -236,15 +236,15 @@ th, td{
     text-align:left;
 }
 
-/* Largeurs fixes pour certaines colonnes */
+/* Largeurs des colonnes - optimisées sans défilement */
 th:nth-child(1), td:nth-child(1) { width: 5%; }  /* ID */
-th:nth-child(2), td:nth-child(2) { width: 15%; } /* Nom */
-th:nth-child(3), td:nth-child(3) { width: 15%; } /* Produit */
+th:nth-child(2), td:nth-child(2) { width: 18%; } /* Nom */
+th:nth-child(3), td:nth-child(3) { width: 18%; } /* Produit */
 th:nth-child(4), td:nth-child(4) { width: 10%; } /* Prix */
-th:nth-child(5), td:nth-child(5) { width: 8%; }  /* Quantité */
+th:nth-child(5), td:nth-child(5) { width: 6%; }  /* Quantité - TRÈS PETITE */
 th:nth-child(6), td:nth-child(6) { width: 12%; } /* Date */
-th:nth-child(7), td:nth-child(7) { width: 15%; } /* Catégorie */
-th:nth-child(8), td:nth-child(8) { width: 20%; } /* Actions */
+th:nth-child(7), td:nth-child(7) { width: 16%; } /* Catégorie */
+th:nth-child(8), td:nth-child(8) { width: 15%; } /* Actions */
 
 /* Centrage des colonnes numériques */
 td:nth-child(4), td:nth-child(5) {
@@ -335,7 +335,7 @@ table td:last-child .edit-btn {
     margin-bottom: 20px;
 }
 
-/* TABLETTES */
+/* TABLETTES - On commence le défilement uniquement ici */
 @media screen and (max-width: 992px) {
     .sidebar {
         width:200px;
@@ -349,6 +349,15 @@ table td:last-child .edit-btn {
     .menu {
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap:15px;
+    }
+    
+    /* Sur tablette, on active le défilement car l'écran devient plus petit */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+    .table-wrapper table {
+        min-width: 800px;
+        table-layout: auto;
     }
 }
 
@@ -388,7 +397,6 @@ table td:last-child .edit-btn {
         margin:auto;
     }
     
-    /* Formulaire en colonne */
     form {
         flex-direction: column;
         align-items: stretch;
@@ -406,7 +414,6 @@ table td:last-child .edit-btn {
         padding:20px;
     }
     
-    /* Tableau responsive */
     .table-wrapper {
         overflow-x:auto;
         -webkit-overflow-scrolling:touch;
@@ -414,6 +421,7 @@ table td:last-child .edit-btn {
     }
     .table-wrapper table {
         min-width:650px;
+        table-layout: auto;
     }
     
     .delete, .back {
