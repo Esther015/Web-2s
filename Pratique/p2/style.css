@@ -599,3 +599,67 @@ table td:last-child .delete {
 #purchase-history{
     margin-top:20px;
 }
+
+
+
+/*CE QUE J'AJOUTTE*/
+
+/* AJOUTS POUR LA PAGE MEDICINES.PHP SEULEMENT */
+
+/* Conteneurs des sections pour l'alignement */
+.search-section,
+.add-section,
+.table-section {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+/* Titres des sections */
+.add-section h2,
+.table-section h2 {
+    margin-bottom: 15px;
+    margin-top: 0;
+    font-size: 20px;
+}
+
+/* Ajustement du formulaire de recherche */
+.search-section form {
+    margin: 0 0 20px 0;
+}
+
+/* Pour que le tableau et les formulaires aient la même largeur */
+.table-section .table-wrapper {
+    width: 100%;
+}
+
+/* Réduction de la taille du champ quantité uniquement */
+.table-wrapper input[name="quantity"] {
+    width: 70px;
+    text-align: center;
+}
+
+/* Responsive pour mobile */
+@media screen and (max-width: 768px) {
+    .search-section form,
+    .add-section form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .search-section form input,
+    .search-section form button,
+    .add-section form input,
+    .add-section form select,
+    .add-section form button {
+        width: 100%;
+    }
+    
+    /* Tableau défilant sur mobile */
+    .table-wrapper {
+        overflow-x: auto;
+    }
+    
+    .table-wrapper table {
+        min-width: 650px;
+    }
+}
