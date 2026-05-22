@@ -211,11 +211,13 @@ table{
     box-shadow:0 0 10px #1d981d;
     border-radius:10px;
     overflow:hidden;
+    table-layout: auto;
 }
 
 th, td{
     border:1px solid #ddd;
     padding:10px;
+    white-space: nowrap;
 }
 
 th{
@@ -605,14 +607,6 @@ table td:last-child .delete {
 
 
 /* AJOUTS POUR LA PAGE MEDICINES.PHP SEULEMENT */
-
-/* Conteneurs des sections pour l'alignement */
-.search-section,
-.add-section,
-.table-section {
-    width: 100%;
-    margin-bottom: 30px;
-}
 
 /* Titres des sections */
 .add-section h2,
