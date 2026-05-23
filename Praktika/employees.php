@@ -35,12 +35,12 @@ if(isset($_GET['search']) && !empty($_GET['search'])) {
     $search = "%" . $_GET['search'] . "%";
     $sql = "SELECT * FROM employees WHERE full_name LIKE ? OR position LIKE ? OR phone LIKE ? ORDER BY full_name";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$search, $search]);
+    $stmt->execute([$search, $search, $search]);
     $employees = $stmt;
     $hasResults = $stmt->rowCount() > 0;
 }
 else{
-    $customers = $pdo->query("SELECT * FROM employees ORDER BY full_name");
+    $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
     $hasResults = true;
 }
 # MODIFICATION
