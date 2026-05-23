@@ -197,12 +197,6 @@ if(isset($_GET['history'])){
                                     </td>
                                 </tr>
                             <?php endif; ?>
-                <?php if(!$hasResults): ?>
-                 <tr>
-                    <td colspan="8" style="text-align: center; padding: 40px;"> сотрудник не найден </td>
-                 </tr>
-                <?php endif; ?>
-
         </table>
     </div>
 </div>
