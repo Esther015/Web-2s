@@ -1,22 +1,7 @@
 <?php
 include 'config.php';
 
-# AJOUT CLIENT
-if(isset($_POST['add'])) {
-    $name = trim($_POST['name']);
-    $phone = trim($_POST['phone']);
 
-    if(empty($name) || empty($phone)){
-        die("Заполните все поля");
-    }
-
-    $sql = "INSERT INTO customers(full_name, phone) VALUES(?, ?)";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$name, $phone]);
-
-    header("Location: clients.php");
-    exit;
-}
 
 # SUPPRESSION
 if(isset($_GET['delete'])) {
@@ -152,14 +137,14 @@ if(isset($_GET['history'])){
         <?php endif; ?>
     </form>
 
-    <!-- AJOUT CLIENT -->
-        <h2>➕ Добавить клиента</h2>
+    <!-- AJOUT CLIENT 
+        <h2> Добавить клиента</h2>
         <form method="POST">
             <input type="text" name="name" placeholder="Имя клиента" required>
             <input type="text" name="phone" placeholder="Телефон" required>
             <button type="submit" name="add">Добавить</button>
         </form>
-
+-->
     <!-- TABLEAU DES CLIENTS -->
     <div class="table-wrapper">
         <h2>📋 Список клиентов </h2>
