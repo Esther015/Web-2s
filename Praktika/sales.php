@@ -239,6 +239,15 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
                     </td>
                 </tr>
                 <?php } ?>
+<!--recherhe client -->
+                <?php if(!$hasResults): ?>
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 40px;">
+                                        Продажа не найдена
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+
             </tbody>
         </table>
     </div>
