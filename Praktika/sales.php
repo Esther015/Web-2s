@@ -1,7 +1,7 @@
 <?php
 include 'config.php';
 
-# AJAX CLIENT SEARCH (CORRIGÉ)
+# AJAX CLIENT SEARCH 
 if(isset($_GET['ajax'])){
     $search = '%' . $_GET['search'] . '%';
     
