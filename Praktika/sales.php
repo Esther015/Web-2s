@@ -184,60 +184,7 @@ $employees = $pdo->query("SELECT * FROM employees ORDER BY full_name");
     <title>Продажи</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .suggestion-item {
-            cursor: pointer;
-            padding: 8px;
-            border: 1px solid #ddd;
-            background: white;
-        }
-        .suggestion-item:hover {
-            background: #f0f0f0;
-        }
-        .cart-row {
-            margin-bottom: 10px;
-            padding: 10px;
-            border: 1px solid #eee;
-        }
-        .delete-row {
-            margin-left: 10px;
-            background: #ff4444;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .top-bar {
-    margin-bottom: 20px;
-}
-        .buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.back, .add-btn {
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: all 0.3s ease;
-}
-back {
-    margin-right: auto;
-}
-.add-btn {
-    background-color: #1d981d;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size:16px;
-}
-
-.add-btn:hover {
-    background-color: #176a17;
-}
-    </style>
+   
 </head>
 <body>
 
