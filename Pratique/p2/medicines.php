@@ -1,5 +1,4 @@
 <?php
-
 include 'config.php';
 
 # AJOUT
@@ -97,7 +96,7 @@ if(isset($_POST['update'])) {
 }
 
 # RECHERCHE
-if(isset($_GET['search'])) {
+if(isset($_GET['search']) && !empty($_GET['search'])) {
 
     $search = "%" . $_GET['search'] . "%";
 
@@ -136,142 +135,156 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
 <body>
 
-<div class="container">
-
-<h1>Лекарства</h1>
-    
-<a href="index.php" class="back">
-   Назад
-</a>
-
-    <div class="search-section">
-<form method="GET">
-    <input type="text"
-    name="search"
-    placeholder="Поиск лекарства">
-
-    <button type="submit">
-    Поиск
-    </button>
-</form>
+<div class="layout">
+    <div class="sidebar">
+        <h2>Меню</h2>
+        <a href="index.php" class="menu-link">Главная</a>
+        <a href="medicines.php" class="menu-link">Лекарства</a>
+        <a href="clients.php" class="menu-link">Клиенты</a>
+        <a href="sales.php" class="menu-link">Продажи</a>
     </div>
-    
-<div class=add-section>
-<h2>Добавить лекарство</h2>
 
-<form method="POST">
-    <input type="text"
-    name="name"
-    placeholder="Название"
-    required>
+    <div class="content">
+        <div class="page-content">
+            <div class="content-header">
+                <h1>Управление лекарствами</h1>
+            </div>
 
-    <input type="text"
-    name="manufacturer"
-    placeholder="Производитель">
-
-    <input type="number"
-    step="0.01"
-    name="price"
-    placeholder="Цена"
-    min="0"
-    required>
-
-    <input type="number"
-    name="quantity"
-    placeholder="Количество"
-    min="0"
-    required>
-
-    <input type="date"
-    name="expiration">
-
-    <select name="category_id">
-        <option value="">Выберите категорию</option>
-        <?php foreach($categories as $category): ?>
-            <option value="<?= $category['id'] ?>"
-                    title="<?= htmlspecialchars($category['description']) ?>">
-                <?= htmlspecialchars($category['name']) ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-
-    <button type="submit" name="add">
-        Добавить
-    </button>
-</form>
-</div>
-    <div class="table-section">
-        <h2> Список лекарств </h2>
-<div class="table-wrapper">
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Название</th>
-                <th>Производитель</th>
-                <th>Цена</th>
-                <th>Количество</th>
-                <th>Срок годности</th>
-                <th>Категория</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
-            <tr>
-                <form method="POST">
-                    <td>
-                        <?= $row['id'] ?>
-                        <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                    </td>
-                    <td>
-                        <input type="text" name="name" value="<?= htmlspecialchars($row['name']) ?>">
-                    </td>
-                    <td>
-                        <input type="text" name="manufacturer" value="<?= htmlspecialchars($row['manufacturer']) ?>">
-                    </td>
-                    <td>
-                        <input type="number" step="0.01" name="price" value="<?= $row['price'] ?>" min="0">
-                    </td>
-                    <td>
-                        <input type="number" name="quantity" value="<?= $row['quantity'] ?>" min="0">
-                    </td>
-                    <td>
-                        <input type="date" name="expiration" value="<?= $row['expiration_date'] ?>">
-                    </td>
-                    <td>
-                        <select name="category_id">
-                            <option value="">Без категории</option>
-                            <?php foreach($categories as $category): ?>
-                                <option value="<?= $category['id'] ?>"
-                                    <?= ($row['category_id'] == $category['id']) ? 'selected' : '' ?>
-                                    title="<?= htmlspecialchars($category['description']) ?>">
-                                    <?= htmlspecialchars($category['name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <?php if(!empty($row['category_description'])): ?>
-                            <small >
-                                <?= htmlspecialchars(substr($row['category_description'], 0, 50)) ?>...
-                            </small>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <button type="submit" name="update">Изменить</button>
-                        <a class="delete" href="?delete=<?= $row['id'] ?>">Удалить</a>
-                    </td>
+            <!-- Section Recherche -->
+            <div class="search-section">
+                <form method="GET" class="search-form">
+                    <input type="text"
+                        name="search"
+                        placeholder="Поиск лекарства по названию..."
+                        value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+                    <button type="submit">Поиск</button>
+                    <?php if(isset($_GET['search']) && !empty($_GET['search'])): ?>
+                        <a href="medicines.php" class="reset-btn">Сбросить</a>
+                    <?php endif; ?>
                 </form>
-            </tr>
-            <?php } ?>
-        </tbody>
-    </table>
-</div>
+            </div>
+            
+            <!-- Section Ajout -->
+            <div class="add-section">
+                <h2>➕ Добавить лекарство</h2>
+                <form method="POST" class="add-form">
+                    <input type="text"
+                        name="name"
+                        placeholder="Название *"
+                        required>
+
+                    <input type="text"
+                        name="manufacturer"
+                        placeholder="Производитель">
+
+                    <input type="number"
+                        step="0.01"
+                        name="price"
+                        placeholder="Цена *"
+                        min="0"
+                        required>
+
+                    <input type="number"
+                        name="quantity"
+                        placeholder="Количество *"
+                        min="0"
+                        required>
+
+                    <input type="date"
+                        name="expiration">
+
+                    <select name="category_id">
+                        <option value="">📁 Выберите категорию</option>
+                        <?php foreach($categories as $category): ?>
+                            <option value="<?= $category['id'] ?>"
+                                    title="<?= htmlspecialchars($category['description']) ?>">
+                                <?= htmlspecialchars($category['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                    <button type="submit" name="add" class="add-btn">
+                        Добавить
+                    </button>
+                </form>
+            </div>
+
+            <!-- Section Liste -->
+            <div class="table-section">
+                <h2>📋 Список лекарств</h2>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Название</th>
+                                <th>Производитель</th>
+                                <th>Цена</th>
+                                <th>Количество</th>
+                                <th>Срок годности</th>
+                                <th>Категория</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php 
+                            $hasResults = false;
+                            while($row = $result->fetch(PDO::FETCH_ASSOC)) { 
+                                $hasResults = true;
+                            ?>
+                                <tr>
+                                    <form method="POST" class="inline-form">
+                                        <td data-label="ID">
+                                            <?= $row['id'] ?>
+                                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                                        </td>
+                                        <td data-label="Название">
+                                            <input type="text" name="name" value="<?= htmlspecialchars($row['name']) ?>" required>
+                                        </td>
+                                        <td data-label="Производитель">
+                                            <input type="text" name="manufacturer" value="<?= htmlspecialchars($row['manufacturer']) ?>">
+                                        </td>
+                                        <td data-label="Цена">
+                                            <input type="number" step="0.01" name="price" value="<?= $row['price'] ?>" min="0" required>
+                                        </td>
+                                        <td data-label="Количество">
+                                            <input type="number" name="quantity" value="<?= $row['quantity'] ?>" min="0" required>
+                                        </td>
+                                        <td data-label="Срок годности">
+                                            <input type="date" name="expiration" value="<?= $row['expiration_date'] ?>">
+                                        </td>
+                                        <td data-label="Категория">
+                                            <select name="category_id">
+                                                <option value="">Без категории</option>
+                                                <?php foreach($categories as $category): ?>
+                                                    <option value="<?= $category['id'] ?>"
+                                                        <?= ($row['category_id'] == $category['id']) ? 'selected' : '' ?>
+                                                        title="<?= htmlspecialchars($category['description']) ?>">
+                                                        <?= htmlspecialchars($category['name']) ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </td>
+                                        <td data-label="Действия">
+                                            <button type="submit" name="update" class="edit-btn">💾 Изменить</button>
+                                            <a class="delete-btn" href="?delete=<?= $row['id'] ?>" onclick="return confirm('Удалить лекарство?')">🗑️ Удалить</a>
+                                        </td>
+                                    </form>
+                                </tr>
+                            <?php } ?>
+                            <?php if(!$hasResults): ?>
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 40px;">
+                                        📭 Лекарства не найдены
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-
-<?php if($result->rowCount() == 0): ?>
-    <p style="text-align: center; margin-top: 20px;">Лекарства не найдены</p>
-<?php endif; ?>
-
 </div>
 
 </body>
