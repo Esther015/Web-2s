@@ -74,8 +74,6 @@ if(isset($_POST['update'])) {
 
 $result = $pdo->query("SELECT * FROM employees");
 
-?>
-
 # HISTORIQUE CLIENT AJAX - AVEC DÉTAILS DES MÉDICAMENTS
 if(isset($_GET['history'])){
     $id = (int)$_GET['history'];
