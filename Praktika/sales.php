@@ -221,6 +221,7 @@ back {
     </div>
     
     <div class="table-wrapper">
+         <h2>📋 Список продаж </h2>
         <table>
             <thead>
                 <tr>
