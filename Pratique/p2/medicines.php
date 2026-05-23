@@ -137,11 +137,12 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
 
 <div class="layout">
     <div class="sidebar">
-        <h2>Меню</h2>
+        <h2>⚕️Аптека </h2>
         <a href="index.php" class="menu-link">Главная</a>
-        <a href="medicines.php" class="menu-link">Лекарства</a>
-        <a href="clients.php" class="menu-link">Клиенты</a>
-        <a href="sales.php" class="menu-link">Продажи</a>
+        <a href="medicines.php" class="menu-link">💊 Лекарства</a>
+        <a href="employees.php" class="menu-link">🥼 Сотрудники</a>
+        <a href="clients.php" class="menu-link">👥 Клиенты</a>
+        <a href="sales.php" class="menu-link"> 🛒 Продажи</a>
     </div>
 
     <div class="content">
@@ -194,7 +195,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                         name="expiration">
 
                     <select name="category_id">
-                        <option value="">📁 Выберите категорию</option>
+                        <option value="">Выберите категорию</option>
                         <?php foreach($categories as $category): ?>
                             <option value="<?= $category['id'] ?>"
                                     title="<?= htmlspecialchars($category['description']) ?>">
@@ -266,8 +267,8 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                                             </select>
                                         </td>
                                         <td data-label="Действия">
-                                            <button type="submit" name="update" class="edit-btn">💾 Изменить</button>
-                                            <a class="delete-btn" href="?delete=<?= $row['id'] ?>" onclick="return confirm('Удалить лекарство?')">🗑️ Удалить</a>
+                                            <button type="submit" name="update" class="edit-btn">Изменить</button>
+                                            <a class="delete-btn" href="?delete=<?= $row['id'] ?>" onclick="return confirm('Удалить лекарство?')">Удалить</a>
                                         </td>
                                     </form>
                                 </tr>
