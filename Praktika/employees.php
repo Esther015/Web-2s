@@ -1,14 +1,23 @@
 <?php
 
 include 'config.php';
-
-# AJOUT
+# AJOUT employee 
 if(isset($_POST['add'])) {
 
-    $name = $_POST['name'];
-    $position = $_POST['position'];
-    $phone = $_POST['phone'];
-    $hire_date = $_POST['hire_date'];
+    $name = trim($_POST['name']);
+    $position = trim($_POST['position']);
+    $phone = trim($_POST['phone']);
+    $hire_date = trim($_POST['hire_date']);
+
+    # VÉRIFICATION CHAMPS
+    if(
+        empty($name) ||
+        empty($position) ||
+        empty($phone) ||
+        empty($hire_date)
+    ){
+        die("Заполните все поля");
+    }
 
     $sql = "INSERT INTO employees
             (full_name, position, phone, hire_date)
@@ -16,8 +25,14 @@ if(isset($_POST['add'])) {
 
     $stmt = $pdo->prepare($sql);
 
-    $stmt->execute([$name, $position, $phone, $hire_date]);
+    $stmt->execute([
+        $name,
+        $position,
+        $phone,
+        $hire_date
+    ]);
 }
+
 
 # SUPPRESSION
 if(isset($_GET['delete'])) {
