@@ -198,6 +198,17 @@ button:hover{
     background:#176a17;
 }
 
+.add-btn {
+    background-color: #1d981d;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size:16px;
+}
+
+.add-btn:hover {
+    background-color: #176a17;
+}
 /* TABLEAUX */
 .table-wrapper{
     width:100%;
