@@ -72,8 +72,6 @@ if(isset($_POST['update'])) {
     ]);
 }
 
-$result = $pdo->query("SELECT * FROM employees");
-
 ?>
 
 <!DOCTYPE html>
@@ -151,7 +149,7 @@ name="add">
 <th>Действия</th>
 </tr>
 
-<?php while($row = $result->fetch(PDO::FETCH_ASSOC)) { ?>
+<?php while($row = $employees->fetch(PDO::FETCH_ASSOC)) { ?>
 
 <tr>
 
