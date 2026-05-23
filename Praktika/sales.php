@@ -131,14 +131,44 @@ if(isset($_GET['delete'])){
         die("Ошибка при удалении: " . htmlspecialchars($e->getMessage()));
     }
 }
+# RECHERCHE
+if(isset($_GET['search']) && !empty($_GET['search'])) {
 
-# AFFICHAGE VENTES
-$sql = "SELECT sales.*, customers.full_name AS customer, employees.full_name AS employee 
-        FROM sales
-        JOIN customers ON sales.customer_id = customers.id
-        JOIN employees ON sales.employee_id = employees.id
-        ORDER BY sales.id DESC";
-$result = $pdo->query($sql);
+    $search = "%" . trim($_GET['search']) . "%";
+
+    $sql = "SELECT sales.*, 
+                   customers.full_name AS customer,
+                   employees.full_name AS employee
+            FROM sales
+            JOIN customers ON sales.customer_id = customers.id
+            JOIN employees ON sales.employee_id = employees.id
+            WHERE customers.full_name LIKE ?
+            OR employees.full_name LIKE ?
+            OR sales.id LIKE ?
+            ORDER BY sales.id DESC";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([$search, $search, $search]);
+
+    $result = $stmt;
+
+    $hasResults = $stmt->rowCount() > 0;
+
+} else {
+
+    $sql = "SELECT sales.*, 
+                   customers.full_name AS customer,
+                   employees.full_name AS employee
+            FROM sales
+            JOIN customers ON sales.customer_id = customers.id
+            JOIN employees ON sales.employee_id = employees.id
+            ORDER BY sales.id DESC";
+
+    $result = $pdo->query($sql);
+
+    $hasResults = true;
+}
 
 # MÉDICAMENTS
 $medicines = $pdo->query("SELECT * FROM medicines ORDER BY name");
@@ -219,7 +249,20 @@ back {
             <button onclick="openModal()" class="add-btn">+ Новая продажа</button>
         </div>
     </div>
-    
+    <!-- RECHERCHE -->
+<form method="GET" class="search-form">
+    <input type="text"
+           name="search"
+           placeholder="Поиск продаж"
+           value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+
+    <button type="submit">Поиск</button>
+
+    <?php if(isset($_GET['search']) && !empty($_GET['search'])): ?>
+        <a href="sales.php" class="reset-btn">Сбросить</a>
+    <?php endif; ?>
+
+</form>
     <div class="table-wrapper">
          <h2>📋 Список продаж </h2>
         <table>
