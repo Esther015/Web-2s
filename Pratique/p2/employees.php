@@ -31,6 +31,19 @@ if(isset($_GET['delete'])) {
     $stmt->execute([$id]);
 }
 
+# RECHERCHE
+if(isset($_GET['search']) && !empty($_GET['search'])) {
+    $search = "%" . $_GET['search'] . "%";
+    $sql = "SELECT * FROM employees WHERE full_name LIKE ? OR position LIKE ? OR phone LIKE ? ORDER BY full_name";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$search, $search]);
+    $employees = $stmt;
+}
+else{
+    $customers = $pdo->query("SELECT * FROM employees ORDER BY full_name");
+}
+
+
 # MODIFICATION
 if(isset($_POST['update'])) {
 
@@ -87,6 +100,13 @@ $result = $pdo->query("SELECT * FROM employees");
    Назад
 </a>
 
+    <!-- RECHERCHE -->
+    <form method="GET" class="search-form">
+        <input type="text" name="search" placeholder="Поиск сотрудников" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+        <button type="submit">Поиск</button>
+    </form>
+
+    <!--Ajout de employee-->
 <h2>Добавить сотрудника</h2>
 
 <form method="POST">
