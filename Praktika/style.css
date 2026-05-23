@@ -588,18 +588,6 @@ table td:last-child .delete {
     margin-bottom:20px;
 }
 
-.add-client-box{
-    background:white;
-    padding:20px;
-    border-radius:10px;
-    box-shadow:0 0 10px rgba(0,0,0,0.05);
-    margin-bottom:20px;
-}
-
-.add-client-box h2{
-    margin-top:0;
-}
-
 .client-link{
     color:#1d981d;
     text-decoration:none;
