@@ -608,13 +608,6 @@ table td:last-child .delete {
 
 /* CORRECTIONS POUR medicines.php */
 
-/* Structure de la page */
-.page-content {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
 /* Section recherche */
 .search-section {
     margin-bottom: 30px;
@@ -739,7 +732,7 @@ table td input[type="number"] {
     min-width: 80px;
 }
 
-/* Boutons dans le tableau */
+/* Boutons dans le tableau 
 .edit-btn, .delete-btn {
     display: inline-block;
     padding: 6px 12px;
