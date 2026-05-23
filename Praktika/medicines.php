@@ -96,22 +96,23 @@ if(isset($_POST['update'])) {
 }
 
 # RECHERCHE
-if(isset($_GET['search'])) {
+if(isset($_GET['search']) && !empty($_GET['search'])) {
 
     $search = "%" . $_GET['search'] . "%";
 
-    $sql = "SELECT * FROM medicines
-            WHERE name LIKE ?";
+    $sql = "SELECT * FROM medicines WHERE name LIKE ? ";
 
     $stmt = $pdo->prepare($sql);
 
     $stmt->execute([$search]);
 
     $result = $stmt;
+    $hasResults = $stmt->rowCount() > 0;
 }
 else {
 
     $result = $pdo->query("SELECT * FROM medicines");
+    $hasResults = true;
 }
 
 ?>
@@ -140,18 +141,34 @@ else {
    aria-label="Назад">
    Назад
 </a>
+
+
+    <!-- Section Recherche -->
+            <div class="search-section">
+                <form method="GET" class="search-form">
+                    <input type="text"
+                        name="search"
+                        placeholder="Поиск лекарства..."
+                        value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
+                    <button type="submit">Поиск</button>
+                    <?php if(isset($_GET['search']) && !empty($_GET['search'])): ?>
+                        <a href="medicines.php" class="reset-btn">Сбросить</a>
+                    <?php endif; ?>
+                </form>
+            </div>
+    <!--
 <form method="GET">
 
 <input type="text"
 name="search"
-placeholder="Поиск лекарства">
+placeholder="">
 
 <button type="submit">
 Поиск
 </button>
 
 </form>
-
+-->
 <h2>Добавить лекарство</h2>
 
 <form method="POST">
@@ -278,6 +295,11 @@ href="?delete=<?= $row['id'] ?>">
 </tr>
 
 <?php } ?>
+<?php if(!$hasResults): ?>
+     <tr>
+        <td colspan="8" style="text-align: center; padding: 40px;"> Лекарство не найдено </td>
+     </tr>
+<?php endif; ?>
 
 </table>
 </div>
