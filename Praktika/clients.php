@@ -153,14 +153,12 @@ if(isset($_GET['history'])){
     </form>
 
     <!-- AJOUT CLIENT -->
-    <div class="add-client-box">
         <h2>Добавить клиента</h2>
         <form method="POST">
             <input type="text" name="name" placeholder="Имя клиента" required>
             <input type="text" name="phone" placeholder="Телефон" required>
             <button type="submit" name="add">Добавить</button>
         </form>
-    </div>
 
     <!-- TABLEAU DES CLIENTS -->
     <div class="table-wrapper">
@@ -214,12 +212,11 @@ if(isset($_GET['history'])){
         <h2 id="modal-name" style="margin-top:0; color:#333;">Клиент</h2>
         <p style="margin-bottom:20px;"><strong>Телефон :</strong> <span id="modal-phone"></span></p>
         
-        <h3 style="color:#4CAF50;">История покупок</h3>
+        <h3 style="color:#1d981d;align-items:center;">История покупок</h3>
         <div id="purchase-history" style="margin-top:15px;">
-            <!-- Les achats du client seront chargés ici -->
         </div>
         
-        <button onclick="closeModal()" style="margin-top:20px; padding:10px 20px; background:#6c757d; color:white; border:none; border-radius:4px; cursor:pointer; font-size:14px;">
+        <button onclick="closeModal()" style="margin-top:20px; padding:10px 20px; background:#1d981d; color:white; border:none; border-radius:4px; cursor:pointer; font-size:14px;">
             Закрыть
         </button>
     </div>
