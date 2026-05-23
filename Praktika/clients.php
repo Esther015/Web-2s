@@ -162,7 +162,7 @@ if(isset($_GET['history'])){
 
     <!-- TABLEAU DES CLIENTS -->
     <div class="table-wrapper">
-        <h2>📋 Список продаж </h2>
+        <h2>📋 Список клиентов </h2>
         <table class="customers-table">
                 <tr>
                     <th>ID</th>
