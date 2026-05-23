@@ -211,6 +211,14 @@ if(isset($_GET['history'])){
                 </tr>
                 <?php } ?>
 
+                <?php if(!$hasResults): ?>
+                                <tr>
+                                    <td colspan="8" style="text-align: center; padding: 40px;">
+                                        Клиент не найден
+                                    </td>
+                                </tr>
+                            <?php endif; ?>
+
         </table>
     </div>
 </div>
