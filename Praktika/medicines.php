@@ -134,7 +134,7 @@ else {
 
 <div class="container">
 
-<h1>Лекарства</h1>
+<h1>💊 Лекарства</h1>
     
 <a href="index.php" 
    class="back"
