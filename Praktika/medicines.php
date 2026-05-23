@@ -5,11 +5,22 @@ include 'config.php';
 # AJOUT
 if(isset($_POST['add'])) {
 
-    $name = $_POST['name'];
-    $manufacturer = $_POST['manufacturer'];
+    $name = trim($_POST['name']);
+    $manufacturer = trim($_POST['manufacturer']);
     $price = $_POST['price'];
     $quantity = $_POST['quantity'];
-    $expiration = $_POST['expiration'];
+    $expiration = trim($_POST['expiration']);
+
+    # CHAMPS OBLIGATOIRES
+    if(
+        empty($name) ||
+        empty($manufacturer) ||
+        empty($price) ||
+        $quantity === "" ||
+        empty($expiration)
+    ){
+        die("Заполните все поля");
+    }
 
     # EMPÊCHER QUANTITÉ NÉGATIVE
     if($quantity < 0){
@@ -36,7 +47,6 @@ if(isset($_POST['add'])) {
     header("Location: medicines.php");
     exit;
 }
-
 # SUPPRESSION
 if(isset($_GET['delete'])) {
 
