@@ -204,6 +204,7 @@ name="add">
 
 </form>
 <div class="table-wrapper">
+    <h2>📋 Список лекарств</h2>
 <table>
 
 <tr>
