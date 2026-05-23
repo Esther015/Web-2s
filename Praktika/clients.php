@@ -153,7 +153,7 @@ if(isset($_GET['history'])){
     </form>
 
     <!-- AJOUT CLIENT -->
-        <h2>Добавить клиента</h2>
+        <h2>➕ Добавить клиента</h2>
         <form method="POST">
             <input type="text" name="name" placeholder="Имя клиента" required>
             <input type="text" name="phone" placeholder="Телефон" required>
