@@ -204,10 +204,9 @@ name="update">
 Изменить
 </button>
 
-<a class="delete"
-href="?delete=<?= $row['id'] ?>">
-Удалить
-</a>
+<a class="delete" href="?delete=<?= htmlspecialchars($row['id']) ?>" 
+onclick="return confirm('Удалить сотрудника?')">Удалить</a>
+
 
 </td>
 
