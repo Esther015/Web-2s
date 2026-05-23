@@ -139,7 +139,7 @@ name="add">
 
 </form>
 <div class="table-wrapper">
-    <h2>📋 Список лекарств</h2>
+    <h2>📋 Список сотрудников </h2>
 <table>
 
 <tr>
