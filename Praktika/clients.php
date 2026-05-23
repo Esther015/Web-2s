@@ -49,6 +49,33 @@ else{
     $customers = $pdo->query("SELECT * FROM customers ORDER BY full_name");
 }
 
+# MODIFICATION
+if(isset($_POST['update'])) {
+
+    $id = $_POST['id'];
+
+    $name = $_POST['name'];
+    $phone = $_POST['phone'];
+
+    $sql = "UPDATE customers
+            SET
+            full_name=?,
+            phone=?,
+            WHERE id=?";
+
+    $stmt = $pdo->prepare($sql);
+
+    $stmt->execute([
+        $name,
+        $phone,
+        $id
+    ]);
+}
+
+$result = $pdo->query("SELECT * FROM employees");
+
+?>
+
 # HISTORIQUE CLIENT AJAX - AVEC DÉTAILS DES MÉDICAMENTS
 if(isset($_GET['history'])){
     $id = (int)$_GET['history'];
@@ -158,34 +185,34 @@ if(isset($_GET['history'])){
     <!-- TABLEAU DES CLIENTS -->
     <div class="table-wrapper">
         <table class="customers-table">
-            <thead>
                 <tr>
                     <th>ID</th>
                     <th>Имя клиента</th>
                     <th>Телефон</th>
-                    <th>Действие</th>
+                    <th>Действия</th>
                 </tr>
-            </thead>
-            <tbody>
+            
                 <?php while($row = $customers->fetch(PDO::FETCH_ASSOC)) { ?>
                 <tr>
-                    <td><?= htmlspecialchars($row['id']) ?></td>
-                    <td>
-                        <a href="#" class="client-link" 
-                           data-id="<?= htmlspecialchars($row['id']) ?>" 
-                           data-name="<?= htmlspecialchars($row['full_name']) ?>" 
-                           data-phone="<?= htmlspecialchars($row['phone']) ?>">
-                            <?= htmlspecialchars($row['full_name']) ?>
-                        </a>
-                    </td>
-                    <td><?= htmlspecialchars($row['phone']) ?></td>
-                    <td>
+                    <form method="POST">
+                        <td> <?= $row['id'] ?>
+                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
+                        </td>
+                        <td> 
+                            <input type="text" name="name" value="<?= $row['full_name'] ?>">
+                        </td>
+                        <td> 
+                            <input type="text" name="phone" value="<?= $row['phone'] ?>">
+                        </td>
+                        
+                        <td>
+                        <button type="submit" name="update"> Изменить </button>
                         <a class="delete" href="?delete=<?= htmlspecialchars($row['id']) ?>" 
                            onclick="return confirm('Удалить клиента?')">Удалить</a>
                     </td>
                 </tr>
                 <?php } ?>
-            </tbody>
+
         </table>
     </div>
 </div>
