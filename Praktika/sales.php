@@ -13,7 +13,7 @@ if(isset($_GET['ajax'])){
     exit;
 }
 
-# AJOUT VENTE (CORRIGÉ AVEC TRANSACTION)
+# AJOUT VENTE 
 if(isset($_POST['save_sale'])) {
     try {
         $pdo->beginTransaction();
@@ -101,7 +101,7 @@ if(isset($_POST['save_sale'])) {
     }
 }
 
-# SUPPRESSION (CORRIGÉ AVEC TRANSACTION)
+# SUPPRESSION 
 if(isset($_GET['delete'])){
     try {
         $pdo->beginTransaction();
@@ -213,7 +213,7 @@ back {
 
 <div class="container">
     <div class="top-bar">
-        <h1>Продажи</h1>
+        <h1>  🛒 Продажи</h1>
         <div class="actions">
             <a href="index.php" class="back">Назад</a>
             <button onclick="openModal()" class="add-btn">+ Новая продажа</button>
