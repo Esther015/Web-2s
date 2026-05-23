@@ -15,7 +15,9 @@ if(isset($_GET['ajax'])){
 
 # AJOUT VENTE 
 if(isset($_POST['save_sale'])) {
+
     try {
+
         $pdo->beginTransaction();
         
         $customer_name = trim($_POST['customer_name']);
@@ -23,80 +25,145 @@ if(isset($_POST['save_sale'])) {
         $employee = $_POST['employee'];
         $medicine_ids = $_POST['medicine_id'];
         $quantities = $_POST['quantity'];
-        
-        if(empty($customer_name)){
-            throw new Exception("Введите имя клиента");
+
+        # VÉRIFICATION CHAMPS
+        if(
+            empty($customer_name) ||
+            empty($customer_phone) ||
+            empty($employee)
+        ){
+            throw new Exception("Заполните все поля");
         }
-        
+
+        # VÉRIFIER MÉDICAMENTS
+        if(empty($medicine_ids)){
+            throw new Exception("Выберите лекарство");
+        }
+
+        # VÉRIFIER QUANTITÉS
+        foreach($quantities as $qty){
+
+            if(empty($qty) || $qty <= 0){
+                throw new Exception("Введите правильное количество");
+            }
+
+        }
+
         # GESTION CLIENT
         $sqlCustomer = "SELECT * FROM customers WHERE full_name=?";
         $stmtCustomer = $pdo->prepare($sqlCustomer);
         $stmtCustomer->execute([$customer_name]);
         $customer = $stmtCustomer->fetch(PDO::FETCH_ASSOC);
-        
+
         if($customer){
+
             $customer_id = $customer['id'];
+
         } else {
-            $sqlInsertCustomer = "INSERT INTO customers(full_name, phone) VALUES(?, ?)";
+
+            $sqlInsertCustomer = "INSERT INTO customers(full_name, phone)
+                                  VALUES(?, ?)";
+
             $stmtInsert = $pdo->prepare($sqlInsertCustomer);
-            $stmtInsert->execute([$customer_name, $customer_phone]);
+
+            $stmtInsert->execute([
+                $customer_name,
+                $customer_phone
+            ]);
+
             $customer_id = $pdo->lastInsertId();
         }
-        
+
         # VÉRIFICATION STOCK
         $total = 0;
         $items = [];
-        
+
         foreach($medicine_ids as $index => $med_id){
+
             $qty = (int)$quantities[$index];
-            
-            if($qty <= 0){
-                throw new Exception("Неверное количество товара");
-            }
-            
+
             $sqlMed = "SELECT * FROM medicines WHERE id=?";
             $stmtMed = $pdo->prepare($sqlMed);
             $stmtMed->execute([$med_id]);
+
             $med = $stmtMed->fetch(PDO::FETCH_ASSOC);
-            
+
             if(!$med){
                 throw new Exception("Лекарство не найдено");
             }
-            
+
             if($qty > $med['quantity']){
-                throw new Exception("Недостаточно товара: " . htmlspecialchars($med['name']));
+                throw new Exception(
+                    "Недостаточно товара: " .
+                    htmlspecialchars($med['name'])
+                );
             }
-            
+
             $total += $med['price'] * $qty;
-            $items[] = ['med' => $med, 'qty' => $qty];
+
+            $items[] = [
+                'med' => $med,
+                'qty' => $qty
+            ];
         }
-        
+
         # CRÉER VENTE
-        $sqlSale = "INSERT INTO sales (customer_id, employee_id, total_price, sale_date) VALUES(?, ?, ?, NOW())";
+        $sqlSale = "INSERT INTO sales
+                    (customer_id, employee_id,
+                    total_price, sale_date)
+                    VALUES(?, ?, ?, NOW())";
+
         $stmtSale = $pdo->prepare($sqlSale);
-        $stmtSale->execute([$customer_id, $employee, $total]);
+
+        $stmtSale->execute([
+            $customer_id,
+            $employee,
+            $total
+        ]);
+
         $sale_id = $pdo->lastInsertId();
-        
-        # INSÉRER ITEMS ET METTRE À JOUR STOCK
+
+        # ITEMS
         foreach($items as $item){
+
             $med = $item['med'];
             $qty = $item['qty'];
-            
-            $sqlItem = "INSERT INTO sale_items (sale_id, medicine_id, quantity, unit_price) VALUES(?, ?, ?, ?)";
+
+            $sqlItem = "INSERT INTO sale_items
+                        (sale_id, medicine_id,
+                        quantity, unit_price)
+                        VALUES(?, ?, ?, ?)";
+
             $stmtItem = $pdo->prepare($sqlItem);
-            $stmtItem->execute([$sale_id, $med['id'], $qty, $med['price']]);
-            
-            $sqlStock = "UPDATE medicines SET quantity = quantity - ? WHERE id=?";
+
+            $stmtItem->execute([
+                $sale_id,
+                $med['id'],
+                $qty,
+                $med['price']
+            ]);
+
+            $sqlStock = "UPDATE medicines
+                         SET quantity = quantity - ?
+                         WHERE id=?";
+
             $stmtStock = $pdo->prepare($sqlStock);
-            $stmtStock->execute([$qty, $med['id']]);
+
+            $stmtStock->execute([
+                $qty,
+                $med['id']
+            ]);
         }
-        
+
         $pdo->commit();
+
         header("Location: sales.php");
         exit;
-        
+
     } catch(Exception $e) {
+
         $pdo->rollBack();
+
         die("Ошибка: " . htmlspecialchars($e->getMessage()));
     }
 }
