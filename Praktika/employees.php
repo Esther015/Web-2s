@@ -106,7 +106,7 @@ if(isset($_POST['update'])) {
         <?php endif; ?>
     </form>
     
-<h2>Добавить сотрудника</h2>
+<h2>➕ Добавить сотрудника</h2>
 
 <form method="POST">
 
