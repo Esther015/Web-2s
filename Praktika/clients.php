@@ -53,31 +53,6 @@ else{
     $hasResults = true;
 }
 
-# MODIFICATION
-if(isset($_POST['update'])) {
-
-    $id = $_POST['id'];
-
-    $name = $_POST['name'];
-    $phone = $_POST['phone'];
-
-    $sql = "UPDATE customers
-            SET
-            full_name=?,
-            phone=?
-            WHERE id=?";
-
-    $stmt = $pdo->prepare($sql);
-
-    $stmt->execute([
-        $name,
-        $phone,
-        $id
-    ]);
-}
-
-$result = $pdo->query("SELECT * FROM employees");
-
 # HISTORIQUE CLIENT AJAX - AVEC DÉTAILS DES MÉDICAMENTS
 if(isset($_GET['history'])){
     $id = (int)$_GET['history'];
@@ -162,7 +137,7 @@ if(isset($_GET['history'])){
 <div class="container">
     <!-- HEADER -->
     <div class="top-bar">
-        <h1>Клиенты</h1>
+        <h1>👥 Клиенты</h1>
         <div class="actions">
             <a href="index.php" class="back">Назад</a>
         </div>
@@ -172,6 +147,9 @@ if(isset($_GET['history'])){
     <form method="GET" class="search-form">
         <input type="text" name="search" placeholder="Поиск клиента" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
         <button type="submit">Поиск</button>
+        <?php if(isset($_GET['search']) && !empty($_GET['search'])): ?>
+                        <a href="clients.php" class="reset-btn">Сбросить</a>
+        <?php endif; ?>
     </form>
 
     <!-- AJOUT CLIENT -->
@@ -193,28 +171,26 @@ if(isset($_GET['history'])){
                     <th>Телефон</th>
                     <th>Действия</th>
                 </tr>
-            
-                <?php while($row = $customers->fetch(PDO::FETCH_ASSOC)) { ?>
+            <?php while($row = $customers->fetch(PDO::FETCH_ASSOC)) { ?>
                 <tr>
-                    <form method="POST">
-                        <td> <?= $row['id'] ?>
-                            <input type="hidden" name="id" value="<?= $row['id'] ?>">
-                        </td>
-                        <td> 
-                            <input type="text" name="name" value="<?= $row['full_name'] ?>">
-                        </td>
-                        <td> 
-                            <input type="text" name="phone" value="<?= $row['phone'] ?>">
-                        </td>
-                        
-                        <td>
-                        <button type="submit" name="update"> Изменить </button>
+                    <td><?= htmlspecialchars($row['id']) ?></td>
+                    <td>
+                        <a href="#" class="client-link" 
+                           data-id="<?= htmlspecialchars($row['id']) ?>" 
+                           data-name="<?= htmlspecialchars($row['full_name']) ?>" 
+                           data-phone="<?= htmlspecialchars($row['phone']) ?>">
+                            <?= htmlspecialchars($row['full_name']) ?>
+                        </a>
+                    </td>
+                    <td><?= htmlspecialchars($row['phone']) ?></td>
+                    <td>
                         <a class="delete" href="?delete=<?= htmlspecialchars($row['id']) ?>" 
                            onclick="return confirm('Удалить клиента?')">Удалить</a>
                     </td>
                 </tr>
                 <?php } ?>
-
+                
+<!--recherhe client -->
                 <?php if(!$hasResults): ?>
                                 <tr>
                                     <td colspan="8" style="text-align: center; padding: 40px;">
@@ -222,6 +198,11 @@ if(isset($_GET['history'])){
                                     </td>
                                 </tr>
                             <?php endif; ?>
+                <?php if(!$hasResults): ?>
+                 <tr>
+                    <td colspan="8" style="text-align: center; padding: 40px;"> сотрудник не найден </td>
+                 </tr>
+                <?php endif; ?>
 
         </table>
     </div>
