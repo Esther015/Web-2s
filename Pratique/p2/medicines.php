@@ -268,7 +268,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY name")->fetchAll();
                                         </td>
                                         <td data-label="Действия">
                                             <button type="submit" name="update" class="edit-btn">Изменить</button>
-                                            <a class="delete-btn" href="?delete=<?= $row['id'] ?>" onclick="return confirm('Удалить лекарство?')">Удалить</a>
+                                            <a class="delete" href="?delete=<?= $row['id'] ?>" onclick="return confirm('Удалить лекарство?')">Удалить</a>
                                         </td>
                                     </form>
                                 </tr>
