@@ -40,13 +40,17 @@ if(isset($_GET['delete'])) {
 # RECHERCHE
 if(isset($_GET['search']) && !empty($_GET['search'])) {
     $search = "%" . $_GET['search'] . "%";
+    
     $sql = "SELECT * FROM customers WHERE full_name LIKE ? OR phone LIKE ? ORDER BY full_name";
     $stmt = $pdo->prepare($sql);
     $stmt->execute([$search, $search]);
     $customers = $stmt;
+
+    $hasResults = $stmt->rowCount() > 0;
 }
 else{
     $customers = $pdo->query("SELECT * FROM customers ORDER BY full_name");
+    $hasResults = true;
 }
 
 # MODIFICATION
@@ -60,7 +64,7 @@ if(isset($_POST['update'])) {
     $sql = "UPDATE customers
             SET
             full_name=?,
-            phone=?,
+            phone=?
             WHERE id=?";
 
     $stmt = $pdo->prepare($sql);
