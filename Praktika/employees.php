@@ -30,7 +30,19 @@ if(isset($_GET['delete'])) {
 
     $stmt->execute([$id]);
 }
-
+# RECHERCHE
+if(isset($_GET['search']) && !empty($_GET['search'])) {
+    $search = "%" . $_GET['search'] . "%";
+    $sql = "SELECT * FROM employees WHERE full_name LIKE ? OR position LIKE ? OR phone LIKE ? ORDER BY full_name";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$search, $search]);
+    $employees = $stmt;
+    $hasResults = $stmt->rowCount() > 0;
+}
+else{
+    $customers = $pdo->query("SELECT * FROM employees ORDER BY full_name");
+    $hasResults = true;
+}
 # MODIFICATION
 if(isset($_POST['update'])) {
 
@@ -79,14 +91,23 @@ $result = $pdo->query("SELECT * FROM employees");
 
 <div class="container">
 
-<h1>Сотрудники</h1>
+<h1>🥼 Сотрудники</h1>
 
 <a href="index.php" 
    class="back"
    aria-label="Назад">
    Назад
 </a>
-
+    
+ <!-- RECHERCHE -->
+    <form method="GET" class="search-form">
+        <input type="text" name="search" placeholder="Поиск сотрудников" value="<?php echo isset($_GET['search']) ? htmlspecialchars($_GET['search']) : ''; ?>">
+        <button type="submit">Поиск</button>
+        <?php if(isset($_GET['search']) && !empty($_GET['search'])): ?>
+                        <a href="employees.php" class="reset-btn">Сбросить</a>
+        <?php endif; ?>
+    </form>
+    
 <h2>Добавить сотрудника</h2>
 
 <form method="POST">
@@ -196,6 +217,11 @@ href="?delete=<?= $row['id'] ?>">
 </tr>
 
 <?php } ?>
+<?php if(!$hasResults): ?>
+     <tr>
+        <td colspan="8" style="text-align: center; padding: 40px;"> сотрудник не найден </td>
+     </tr>
+<?php endif; ?>
 
 </table>
 </div>
