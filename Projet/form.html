@@ -1,0 +1,64 @@
+<section id="form-section">
+            <div class="container">
+                <div class="row">
+                    <!-- Левая колонка с текстом -->
+                    <div id="text" class="col-12 col-md-6 mb-5 mb-md-0">
+                        <div class="text1">Оставить заявку на<br> поддержку сайта</div>
+                        <div class="text2">
+                            Срочно нужна поддержка сайта? Ваша команда не успевает<br> справиться самостоятельно или предыдущий подрядчик не<br>справился с работой? 
+							Тогда вам стоило к нам! Просто оставьте<br> заявку и наш менеджер с вами свяжется!
+                        </div>
+                        <div class="contacts" >
+                            <ul class="ul">
+                                <li class="phone">
+                                    <a href="tel:88002222673" class="tel">8 800 222-26-73</a>
+                                </li>
+                                <li class="block-form-email">
+                                    <a href="mailto:info@drupal-coder.ru" class="info" style="text-decoration: underline">info@drupal-coder.ru</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Правая колонка с формой -->
+                    <div id="form" class="col-12 col-md-6">
+                       
+                        <form id="feedbackForm" action="https://api.web3forms.com/submit" method="POST" class="row g-3">
+						<input type="hidden" name="access_key" value="2f150c45-44a5-4083-affa-81d1de06b6ee">
+                            <div class="col-12">
+                                <input type="text" class="form-control" id="field-name-1" name="field-name-1" placeholder="Ваше имя" required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Телефон">
+                            </div>
+                            
+                            <div class="col-12">
+                                <input type="email" class="form-control" id="field-email" name="field-email" placeholder="E-mail"required>
+                            </div>
+                            
+                            <div class="col-12">
+                                <textarea class="form-control" id="field-name-2" name="field-name-2" rows="4" placeholder="Ваш комментарий" required></textarea>
+                            </div>
+                            
+                            <!-- Чекбокс согласия -->
+                            <div class="col-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="agree" name="agree" required>
+                                    <label class="form-check-label" for="agree">
+                                        Отправляя заявку, я даю согласие на обработку своих персональных данных.
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Кнопка отправки -->
+                            <div class="col-12">
+                                <button id="submitBtn" type="submit" class="btn-submit">ОТПРАВИТЬ</button>
+                            </div>
+                        </form>
+                        
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
